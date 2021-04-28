@@ -1,0 +1,127 @@
+﻿
+:root {
+    --panelcolor: rgb(240,240,240);
+    --paneledgecolor: rgb(228,228,228);
+    --headercolor: rgb(47,47,47);
+    --controlbordercolor: rgb(200,200,200);
+    --dialogheaderbuttonhighlight: rgb(89,134,247);
+    --dialogclosebuttonhighlight: red;
+    --headermenubuttonhighlight: rgb(23,107,209);
+    --menubordercolor: rgb(111,111,111);
+    --selectedcolor: rgb(23,107,209);
+    --appmenubackground: white;
+    --appmenubuttonhighlight: rgb(221,233,249);
+    --appmenuitemhighlight: rgb(221,233,249);
+    --alternaterowcolor: rgb(250,250,250);
+    --listviewheadersplitter: rgb(220,220,220);
+    --listviewitemhover: rgb(221,233,249);
+    --tabbarselected: rgb(197,197,197);
+    --toolbarseparatorcolor: rgb(171,171,171);
+    --toolbarbuttonhover: rgb(221,233,249);
+    --tabcontrolbordercolor: rgb(197,197,197);
+    --menuitemseparator: rgb(171,171,171);
+}
+
+/***************************************************************************/
+/* reset css styling */
+
+body, header, footer, section, h1, h2, h3, h4, h5, p, ul, ol, li, menu, menuitem { margin: 0; border: none; padding: 0; }
+h1, h2, h3, h4, h5 { font-family: inherit; font-weight: inherit; font-weight: inherit; text-decoration: inherit; font-style: inherit; font-size: inherit; line-height: inherit; }
+
+/***************************************************************************/
+/* base page style */
+
+body { background: white; font: 12px/16px "Segoe UI", "Tahoma", sans-serif; color: black; }
+a, a:hover, a:visited { color: #157f8d; text-decoration: none; }
+a:hover { color: #0b434a; }
+
+/***************************************************************************/
+/* common controls */
+
+.view { position: relative; flex: 0 0 auto; }
+.vbox { display: flex; flex-direction: column; overflow: hidden; }
+.hbox { display: flex; flex-direction: row; }
+.expanding { flex: 1 1 auto; }
+.modallayer { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: 1000000; }
+.button { display: flex; flex-direction: row; cursor: pointer; align-items: center; justify-content: center; }
+.button > .imagebox { width: 24px; height: 24px; padding-right: 4px; }
+.combobox { display: block; font: inherit; padding: 2px 4px; border: 1px solid var(--controlbordercolor); }
+.lineedit { display: block; font: inherit; padding: 2px 4px; border: 1px solid var(--controlbordercolor); }
+.imagebox { display: block; }
+.svgbox { display: block; }
+.textlabel { }
+.dialog { position: fixed; background: var(--panelcolor); box-shadow: 0 0 10px rgba(0,0,0,0.25); }
+.dialogheader { background: var(--headercolor); color: white; line-height: 30px; height: 30px; }
+.dialogheader-caption.textlabel { padding-left: 40px; text-align: center; }
+.dialogheaderbutton { width: 12px; height: 12px; padding: 9px 14px; }
+.dialogheader-closebutton.dialogheaderbutton:hover { background: red; }
+.windowheader { background: var(--headercolor); color: white; line-height: 30px; height: 30px; }
+.windowheader-caption.textlabel { padding-left: 40px; text-align: center; -webkit-app-region: drag; }
+.windowheader-minbutton.dialogheaderbutton:hover { background: var(--dialogheaderbuttonhighlight); }
+.windowheader-maxbutton.dialogheaderbutton:hover { background: var(--dialogheaderbuttonhighlight); }
+.windowheader-closebutton.dialogheaderbutton:hover { background: var(--dialogclosebuttonhighlight); }
+.websiteheader { background: var(--headercolor); color: white; line-height: 48px; height: 48px; }
+.websiteheader-caption.textlabel { font-weight: 600; padding-left: 5px; font-size: 16px; }
+.websiteheader-menubutton { width: 24px; height: 24px; padding: 12px; cursor: pointer; }
+.websiteheader-menubutton:hover { background: var(--headermenubuttonhighlight); }
+.websiteheader-accountmenu { cursor: pointer; padding: 0 15px; line-height: 48px; }
+.websiteheader-accountmenu:hover { background: var(--headermenubuttonhighlight); }
+.appmenu { position: fixed; left: 0; top: 0; width: 320px; height: 100vh; background: var(--appmenubackground); box-shadow: rgba(0, 0, 0, 0.22) 0px 25.6px 57.6px 0px, rgba(0, 0, 0, 0.18) 0px 4.8px 14.4px 0px; }
+.appmenu-menubutton { width: 24px; height: 24px; padding: 12px; cursor: pointer; }
+.appmenu-menubutton:hover { background: var(--appmenubuttonhighlight); }
+.appmenu-title { font-weight: 600; padding: 10px; font-size: 16px;  }
+.appmenu-itemlist { display: flex; flex-direction: row; flex-wrap: wrap; padding: 5px 10px; }
+.appmenuitem { cursor: pointer; width: 131px; padding: 5px; margin-right: 5px; }
+.appmenuitem-icon { width: 32px; height: 32px; }
+.appmenuitem-text { padding-left: 4px; line-height: 32px; }
+.appmenuitem:hover { background: var(--appmenuitemhighlight); }
+.messagebox > .dialog-centerview { padding: 15px 15px 45px 15px; border-bottom: 1px solid var(--paneledgecolor); background: white; }
+.listview { flex: 1 1 0; }
+.listview-headersplitter { cursor: ew-resize; justify-content: center; }
+.listview-headersplitter > .view { border-left: 1px solid var(--listviewheadersplitter); width: 1px; }
+.listviewheader { background: var(--panelcolor); padding: 0 5px; font-weight: bold; line-height: 24px; }
+.listviewbody { background: white; overflow: auto; }
+.listviewheadline { font-weight: bold; }
+.listviewitem { line-height: 24px; padding: 0 5px; user-select: none; }
+.listviewbody.alternate .listviewitem:nth-child(even) { background: var(--alternaterowcolor); }
+.listviewbody.alternate .listviewitem:hover { background: var(--listviewitemhover); }
+.listviewitem:hover { background: var(--listviewitemhover); }
+.listviewitem.selected { background: var(--selectedcolor); color: white; }
+.listviewitemicon { width: 16px; height: 16px; padding-right: 4px; align-self: center; }
+.tabbartab { padding: 8px 15px; cursor: default; border: 1px solid transparent; border-bottom: none; margin-bottom: -1px; z-index: 1; }
+.tabbartab-icon { width: 16px; height: 16px; padding-right: 4px; }
+.tabbartab-label { line-height: 16px; }
+.tabbartab.selected { background: white; border-color: var(--tabbarselected); }
+.tabcontrol { flex: 1 1 auto; }
+.tabcontrol-widgetstack { background: white; border: 1px solid var(--tabcontrolbordercolor); }
+.menu { position: fixed; background: var(--panelcolor); color: black; border: 1px solid var(--menubordercolor); box-shadow: 2px 2px 2px rgba(0,0,0,0.3); }
+.menuitem { padding: 0 35px 1px 8px; }
+.menuitem-icon.imagebox { padding: 4px 12px 0 2px; width: 16px; height: 16px; }
+.menuitem-text.textlabel { line-height: 22px; white-space: pre; }
+.menuitemseparator { border-top: 1px solid var(--menuitemseparator); height: 1px; margin: 3px 5px 3px 32px; }
+.menubaritem { position: relative; margin: 3px 0; border: 1px solid transparent; padding: 0 9px; line-height: 24px; }
+.menubar { background: var(--headercolor); color: white; font: 12px/16px "Segoe UI", "Tahoma", sans-serif; line-height: 30px; }
+.menubar-spacer { flex: 1 1 0; }
+.menubarmodalitem { position: relative; margin: 3px 0; border: 1px solid transparent; padding: 0 9px; line-height: 24px; }
+.menubarmodal { background: var(--headercolor); color: white; font: 12px/16px "Segoe UI", "Tahoma", sans-serif; line-height: 30px; cursor: default; }
+.menubarmodal-spacer { flex: 1 1 0; }
+.statusbaritem { margin: 0 10px; }
+.toolbarbutton { padding-right: 5px; }
+.toolbarbutton.disabled { opacity: 0.5; filter: grayscale(); }
+.toolbarbutton:hover { background: var(--toolbarbuttonhover); }
+.toolbarbutton.disabled:hover { background: none; }
+.toolbarbutton-icon.imagebox { padding: 4px 4px 5px 5px; width: 24px; height: 24px; }
+.toolbarseparator { border-right: 1px solid var(--toolbarseparatorcolor); width: 1px; height: 24px; margin: 3px 5px; }
+.toolbardropdown { margin-left: 8px; }
+.toolbardropdown-combobox { align-self: center; margin-left: 5px; margin-bottom: 4px; background: white; border: 1px solid var(--controlbordercolor); color: black; }
+.toolbartextinput { margin: 0 6px 0 10px; }
+.toolbartextinput-edit { align-self: center; margin-left: 5px; margin-bottom: 4px; background: white; border: 1px solid var(--controlbordercolor); color: black; line-height: 16px; }
+.toolbar { padding: 4px; line-height: 30px; }
+.vtoolbarbutton { width: 65px; margin-left: 5px; margin-right: 5px; margin-top: 3px; margin-bottom: 7px; }
+.vtoolbarbutton-icon.imagebox { width: 24px; height: 24px; align-self: center; }
+.vtoolbarbutton-text.textlabel { text-align: center; line-height: 14px; }
+
+/***************************************************************************/
+/* application */
+
+.application { display: flex; flex-direction: column; position: relative; width: 100vw; height: 100vh; background: var(--panelcolor); cursor: default; font: 12px/16px "Segoe UI", "Tahoma", sans-serif; color: black; overflow: hidden; }
