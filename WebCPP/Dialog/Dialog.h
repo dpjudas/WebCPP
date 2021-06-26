@@ -8,7 +8,7 @@
 class Dialog : public VBoxView
 {
 public:
-	Dialog();
+	Dialog(const std::string& title = std::string());
 
 	void setTitle(std::string text);
 	void setSize(double width, double height, bool fixedHeight = false);
@@ -18,4 +18,8 @@ public:
 	DialogHeader* header = nullptr;
 	VBoxView* centerView = nullptr;
 	DialogButtonbar* buttonbar = nullptr;
+
+private:
+	void setupUi();
+
 };

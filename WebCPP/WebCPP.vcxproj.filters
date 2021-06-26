@@ -1,0 +1,422 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="Reset.css" />
+    <None Include="WebCPP.css" />
+    <None Include="MainWindow\Menu.css">
+      <Filter>MainWindow</Filter>
+    </None>
+    <None Include="MainWindow\Menubar.css">
+      <Filter>MainWindow</Filter>
+    </None>
+    <None Include="MainWindow\Statusbar.css">
+      <Filter>MainWindow</Filter>
+    </None>
+    <None Include="MainWindow\Toolbar.css">
+      <Filter>MainWindow</Filter>
+    </None>
+    <None Include="MainWindow\VToolbar.css">
+      <Filter>MainWindow</Filter>
+    </None>
+    <None Include="Dialog\AppMenu.css">
+      <Filter>Dialog</Filter>
+    </None>
+    <None Include="Dialog\Dialog.css">
+      <Filter>Dialog</Filter>
+    </None>
+    <None Include="Dialog\DialogButtonbar.css">
+      <Filter>Dialog</Filter>
+    </None>
+    <None Include="Dialog\Dock.css">
+      <Filter>Dialog</Filter>
+    </None>
+    <None Include="Dialog\MessageBox.css">
+      <Filter>Dialog</Filter>
+    </None>
+    <None Include="Dialog\WebsiteHeader.css">
+      <Filter>Dialog</Filter>
+    </None>
+    <None Include="Dialog\WindowHeader.css">
+      <Filter>Dialog</Filter>
+    </None>
+    <None Include="Core\DocumentBodyView.css">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="Core\JSCallback.js">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="Core\View.css">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="Controls\BorderLayoutView\BorderLayoutView.css">
+      <Filter>Controls\BorderLayoutView</Filter>
+    </None>
+    <None Include="Controls\Button\Button.css">
+      <Filter>Controls\Button</Filter>
+    </None>
+    <None Include="Controls\Checkbox\Checkbox.css">
+      <Filter>Controls\Checkbox</Filter>
+    </None>
+    <None Include="Controls\CheckboxLabel\CheckboxLabel.css">
+      <Filter>Controls\CheckboxLabel</Filter>
+    </None>
+    <None Include="Controls\Combobox\Combobox.css">
+      <Filter>Controls\Combobox</Filter>
+    </None>
+    <None Include="Controls\DateTimeEdit\DateTimeEdit.css">
+      <Filter>Controls\DateTimeEdit</Filter>
+    </None>
+    <None Include="Controls\ImageBox\ImageBox.css">
+      <Filter>Controls\ImageBox</Filter>
+    </None>
+    <None Include="Controls\LineEdit\LineEdit.css">
+      <Filter>Controls\LineEdit</Filter>
+    </None>
+    <None Include="Controls\ListView\ListView.css">
+      <Filter>Controls\ListView</Filter>
+    </None>
+    <None Include="Controls\SvgBox\SvgBox.css">
+      <Filter>Controls\SvgBox</Filter>
+    </None>
+    <None Include="Controls\TabControl\TabControl.css">
+      <Filter>Controls\TabControl</Filter>
+    </None>
+    <None Include="Controls\TextLabel\TextLabel.css">
+      <Filter>Controls\TextLabel</Filter>
+    </None>
+    <None Include="webproject.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Controls">
+      <UniqueIdentifier>{5d03bf80-1906-49bc-9ff6-e24b2f4691d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{b07a8b7f-1292-4700-aa91-5310bc5d59ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialog">
+      <UniqueIdentifier>{44e62186-a3fd-47a2-af71-d71139370b14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainWindow">
+      <UniqueIdentifier>{bf1c42d1-c9ba-4f08-9274-1b9ba716cabd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\BorderLayoutView">
+      <UniqueIdentifier>{d296f9c2-7a9b-4b07-b597-b48f5f5c2789}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\Button">
+      <UniqueIdentifier>{d39eaea3-7608-4c31-be7d-86c5e320edae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\Checkbox">
+      <UniqueIdentifier>{215a1cd3-f010-4e6c-b558-d272fb4c693d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\CheckboxLabel">
+      <UniqueIdentifier>{96167a10-bccc-4a83-ba0a-d6515648a8e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\Combobox">
+      <UniqueIdentifier>{0fad70b3-3555-4892-a0f9-51f50573791f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\DateTimeEdit">
+      <UniqueIdentifier>{85cb6985-c2c9-41ae-8a7c-7db569e1d175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\ImageBox">
+      <UniqueIdentifier>{934dfc92-a5ca-4c2f-a30c-f9929c129dd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\LineEdit">
+      <UniqueIdentifier>{eb3a3e0e-32a8-4d32-948c-2809c502ab7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\ListView">
+      <UniqueIdentifier>{02e215c6-d9c3-49a1-b7bc-5b3d093c13b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\SvgBox">
+      <UniqueIdentifier>{c09a36e6-2686-42fb-b985-e0a33dd8e554}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\TabControl">
+      <UniqueIdentifier>{216b7089-c831-4ff5-9a64-c89b186070b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controls\TextLabel">
+      <UniqueIdentifier>{417a0db3-493f-45fa-a2d9-63ff7c320f85}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainWindow\Menu.cpp">
+      <Filter>MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow\Menubar.cpp">
+      <Filter>MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow\MenubarModal.cpp">
+      <Filter>MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow\Statusbar.cpp">
+      <Filter>MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow\Toolbar.cpp">
+      <Filter>MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow\VToolbar.cpp">
+      <Filter>MainWindow</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\AppMenu.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\Dialog.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\DialogButton.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\DialogButtonbar.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\DialogHeader.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\DialogHeaderButton.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\DockHeader.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\DockHeaderButton.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\MessageBox.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\OpenFileDialog.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\WebsiteHeader.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog\WindowHeader.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DateTime.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DocumentBodyView.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Element.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Event.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\HtmlDocument.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\JSCallback.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\JsonValue.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Native.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Navigation.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\SendRequest.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Storage.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Timer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\UTF8Reader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\View.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\BorderLayoutView\BorderLayoutView.cpp">
+      <Filter>Controls\BorderLayoutView</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\Button\Button.cpp">
+      <Filter>Controls\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\Checkbox\Checkbox.cpp">
+      <Filter>Controls\Checkbox</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\CheckboxLabel\CheckboxLabel.cpp">
+      <Filter>Controls\CheckboxLabel</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\Combobox\Combobox.cpp">
+      <Filter>Controls\Combobox</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\DateTimeEdit\DateTimeEdit.cpp">
+      <Filter>Controls\DateTimeEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\ImageBox\ImageBox.cpp">
+      <Filter>Controls\ImageBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\LineEdit\LineEdit.cpp">
+      <Filter>Controls\LineEdit</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\ListView\ListView.cpp">
+      <Filter>Controls\ListView</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\ListView\ListViewItem.cpp">
+      <Filter>Controls\ListView</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\ListView\ListViewItemView.cpp">
+      <Filter>Controls\ListView</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\SvgBox\SvgBox.cpp">
+      <Filter>Controls\SvgBox</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\TabControl\TabControl.cpp">
+      <Filter>Controls\TabControl</Filter>
+    </ClCompile>
+    <ClCompile Include="Controls\TextLabel\TextLabel.cpp">
+      <Filter>Controls\TextLabel</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainWindow\Menu.h">
+      <Filter>MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow\Menubar.h">
+      <Filter>MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow\MenubarModal.h">
+      <Filter>MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow\Statusbar.h">
+      <Filter>MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow\Toolbar.h">
+      <Filter>MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow\VToolbar.h">
+      <Filter>MainWindow</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\AppMenu.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\Dialog.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\DialogButton.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\DialogButtonbar.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\DialogHeader.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\DialogHeaderButton.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\DockHeader.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\DockHeaderButton.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\MessageBox.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\OpenFileDialog.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\WebsiteHeader.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog\WindowHeader.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DateTime.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DocumentBodyView.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Element.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Event.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\HtmlDocument.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\JSCallback.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\JsonValue.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\JSValue.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Native.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Navigation.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\SendRequest.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Storage.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Timer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\UTF8Reader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\View.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\BorderLayoutView\BorderLayoutView.h">
+      <Filter>Controls\BorderLayoutView</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\Button\Button.h">
+      <Filter>Controls\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\Checkbox\Checkbox.h">
+      <Filter>Controls\Checkbox</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\CheckboxLabel\CheckboxLabel.h">
+      <Filter>Controls\CheckboxLabel</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\Combobox\Combobox.h">
+      <Filter>Controls\Combobox</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\DateTimeEdit\DateTimeEdit.h">
+      <Filter>Controls\DateTimeEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\ImageBox\ImageBox.h">
+      <Filter>Controls\ImageBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\LineEdit\LineEdit.h">
+      <Filter>Controls\LineEdit</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\ListView\ListView.h">
+      <Filter>Controls\ListView</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\ListView\ListViewItem.h">
+      <Filter>Controls\ListView</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\ListView\ListViewItemView.h">
+      <Filter>Controls\ListView</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\SvgBox\SvgBox.h">
+      <Filter>Controls\SvgBox</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\TabControl\TabControl.h">
+      <Filter>Controls\TabControl</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls\TextLabel\TextLabel.h">
+      <Filter>Controls\TextLabel</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

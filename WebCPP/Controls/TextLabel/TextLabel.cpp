@@ -30,3 +30,8 @@ std::string TextLabel::getHtml()
 {
 	return element->handle["innerHTML"].as<std::string>();
 }
+
+void TextLabel::setClickHandler(const std::function<void()>& handler)
+{
+	element->addEventListener("click", [=](Event* e) { e->stopPropagation(); handler(); });
+}

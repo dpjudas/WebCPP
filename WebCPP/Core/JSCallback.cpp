@@ -10,7 +10,7 @@ extern "C"
 	}
 }
 
-JSCallback::JSCallback(std::function<JSValue(JSValue args)> callback) : callback(std::move(callback)), handle(JSValue::global("JSCallback").new_((ptrdiff_t)this))
+JSCallback::JSCallback(std::function<JSValue(JSValue args)> callback, bool deleteOnInvoke) : callback(std::move(callback)), handle(JSValue::global("JSCallback").new_((ptrdiff_t)this)), deleteOnInvoke(deleteOnInvoke)
 {
 }
 
@@ -29,5 +29,7 @@ void JSCallback::invoke()
 	// Make a copy since ~JSCallback may be called by the callback
 	JSValue h = handle;
 	std::function<JSValue(JSValue args)> c = callback;
+	if (deleteOnInvoke)
+		delete this;
 	h.call<void>("setResult", c(h.call<JSValue>("getArgs")));
 }

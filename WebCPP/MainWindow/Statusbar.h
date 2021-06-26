@@ -2,6 +2,7 @@
 
 #include "WebCPP/Core/View.h"
 
+class ImageBox;
 class TextLabel;
 class StatusbarItem;
 
@@ -18,5 +19,6 @@ class StatusbarItem : public HBoxView
 public:
 	StatusbarItem(View* parent);
 
+	ImageBox* icon = nullptr;
 	TextLabel* text = nullptr;
 };

@@ -1,7 +1,13 @@
 
 #include "Dialog.h"
 
-Dialog::Dialog() : VBoxView(nullptr)
+Dialog::Dialog(const std::string& title) : VBoxView(nullptr)
+{
+	setupUi();
+	setTitle(title);
+}
+
+void Dialog::setupUi()
 {
 	addClass("dialog");
 	header = new DialogHeader(this);

@@ -155,6 +155,16 @@ void View::setExpanding()
 	addClass("expanding");
 }
 
+void View::show()
+{
+	removeClass("hidden");
+}
+
+void View::hide()
+{
+	addClass("hidden");
+}
+
 void View::showModal()
 {
 	ModalLayer* layer = DocumentBodyView::get()->beginModal();

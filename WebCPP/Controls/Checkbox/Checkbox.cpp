@@ -7,12 +7,17 @@ Checkbox::Checkbox(View* parent) : View(parent, "input")
 	element->setAttribute("type", "checkbox");
 }
 
-void Checkbox::setValue(bool value)
+void Checkbox::setChangeHandler(const std::function<void(bool checked)>& handler)
+{
+	element->addEventListener("change", [=](Event* e) { e->stopPropagation(); handler(isChecked()); });
+}
+
+void Checkbox::setChecked(bool value)
 {
 	element->handle.set("checked", value);
 }
 
-bool Checkbox::getValue()
+bool Checkbox::isChecked() const
 {
 	return element->handle["checked"].as<bool>();
 }

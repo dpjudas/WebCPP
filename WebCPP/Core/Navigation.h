@@ -23,6 +23,7 @@ public:
 	static JSValue getJwt();
 	static std::string getAccessToken();
 	static std::vector<std::string> getPathParts();
+	static bool matchesPath(const std::vector<std::string>& parts);
 
 	static void login(std::string oauthUrl);
 	static void navigateTo(std::string url);

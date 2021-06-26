@@ -36,6 +36,9 @@ public:
 	ListViewItem* firstChild() const { return firstChildObj; }
 	ListViewItem* lastChild() const { return lastChildObj; }
 
+	ListViewItem* prevOpenItem() const;
+	ListViewItem* nextOpenItem() const;
+
 	ListViewItemView* itemview() const { return view; }
 
 	virtual ListView* listview() const { const ListViewItem* r = root(); return (r != this) ? r->listview() : nullptr; }

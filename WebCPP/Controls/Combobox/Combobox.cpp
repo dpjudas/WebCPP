@@ -7,6 +7,11 @@ ComboBox::ComboBox(View* parent) : View(parent, "select")
 	addClass("combobox");
 }
 
+void ComboBox::setChangeHandler(const std::function<void()>& handler)
+{
+	element->addEventListener("change", [=](Event* e) { e->stopPropagation(); handler(); });
+}
+
 void ComboBox::addItem(std::string text)
 {
 	JSValue option = JSValue::global("document").call<JSValue>("createElement", std::string("option"));

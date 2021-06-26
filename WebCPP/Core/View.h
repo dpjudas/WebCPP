@@ -28,6 +28,9 @@ public:
 	void setHBoxLayout();
 	void setExpanding();
 
+	void show();
+	void hide();
+
 	void showModal();
 	void closeModal();
 

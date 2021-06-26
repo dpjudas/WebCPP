@@ -42,6 +42,8 @@ ListViewItem* ListViewItem::insertBefore(std::unique_ptr<ListViewItem> item, Lis
 		firstChildObj = item.get();
 	item->prevSiblingObj = sibling->prevSiblingObj;
 	item->nextSiblingObj = sibling;
+	if (item->prevSiblingObj)
+		item->prevSiblingObj->nextSiblingObj = item.get();
 	sibling->prevSiblingObj = item.get();
 
 	ListView* lv = listview();
@@ -53,9 +55,15 @@ ListViewItem* ListViewItem::insertBefore(std::unique_ptr<ListViewItem> item, Lis
 
 std::unique_ptr<ListViewItem> ListViewItem::remove()
 {
+	ListView* lv = listview();
+	if (lv->selectedItem() == this)
+		lv->selectItem(nullptr);
+
+	if (lv->focusedItem() == this)
+		lv->focusItem(nullptr);
+
 	removeAllChildren();
 
-	ListView* lv = listview();
 	std::unique_ptr<ListViewItem> item(this);
 
 	if (prevSiblingObj)
@@ -148,5 +156,40 @@ void ListViewItem::sort()
 	{
 		auto child = item.lvitem->remove();
 		add(std::move(child));
+	}
+}
+
+ListViewItem* ListViewItem::prevOpenItem() const
+{
+	ListViewItem* item = prevSibling();
+	if (item)
+	{
+		while (item->isOpen() && item->lastChild())
+			item = item->lastChild();
+		return item;
+	}
+	else
+	{
+		item = parent();
+		return (item && item->parent()) ? item : nullptr;
+	}
+}
+
+ListViewItem* ListViewItem::nextOpenItem() const
+{
+	if (isOpen() && firstChild())
+	{
+		return firstChild();
+	}
+	else if (nextSibling())
+	{
+		return nextSibling();
+	}
+	else
+	{
+		ListViewItem* item = parent();
+		while (item && !item->nextSibling())
+			item = item->parent();
+		return item ? item->nextSibling() : nullptr;
 	}
 }

@@ -1,6 +1,7 @@
 
 #include "Statusbar.h"
 #include "WebCPP/Controls/TextLabel/TextLabel.h"
+#include "WebCPP/Controls/ImageBox/ImageBox.h"
 
 Statusbar::Statusbar(View* parent) : HBoxView(parent)
 {
@@ -18,8 +19,10 @@ StatusbarItem* Statusbar::addItem(std::string text)
 
 StatusbarItem::StatusbarItem(View* parent) : HBoxView(parent)
 {
+	icon = new ImageBox(this);
 	text = new TextLabel(this);
 
 	addClass("statusbaritem");
+	icon->addClass("statusbaritem-icon");
 	text->addClass("statusbaritem-text");
 }

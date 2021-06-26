@@ -3,6 +3,7 @@
 #include "JSValue.h"
 #include "JSCallback.h"
 #include "Event.h"
+#include <regex>
 
 namespace
 {
@@ -109,4 +110,40 @@ std::string Navigation::pagePathToURI(const std::vector<std::string>& pathparts)
 		uri += JSValue::global("encodeURIComponent")(pathparts[i]).as<std::string>();
 	}
 	return uri;
+}
+
+bool Navigation::matchesPath(const std::vector<std::string>& parts)
+{
+	static std::regex escapeString("[.*+?^${}()|[\\]\\\\]");
+
+	size_t index = 0;
+	while (index < parts.size())
+	{
+		const std::string& text = parts[index];
+		if (text == "**")
+		{
+			return true;
+		}
+
+		if (index >= locationPathParts.size())
+			return false;
+
+		if (text != locationPathParts[index] && text != "*")
+		{
+			std::regex searchregex("^" + std::regex_replace(text, escapeString, "\\$&") + "$", std::regex::ECMAScript | std::regex::icase);
+			if (!std::regex_search(locationPathParts[index], searchregex))
+				return false;
+		}
+		index++;
+	}
+
+	// We reached the end and everything matched
+	if (index >= locationPathParts.size())
+		return true;
+
+	// We have one part left and it's empty (URL ended the path with a slash)
+	if (index + 1 == locationPathParts.size() && locationPathParts[index].empty())
+		return true;
+
+	return false;
 }

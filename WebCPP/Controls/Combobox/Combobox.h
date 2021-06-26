@@ -7,6 +7,8 @@ class ComboBox : public View
 public:
 	ComboBox(View* parent);
 
+	void setChangeHandler(const std::function<void()>& handler);
+
 	void addItem(std::string text);
 	void sort();
 	void setValue(std::string text);

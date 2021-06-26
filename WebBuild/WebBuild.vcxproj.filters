@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CefTarget.cpp" />
+    <ClCompile Include="CSSTokenizer.cpp" />
+    <ClCompile Include="EmscriptenTarget.cpp" />
+    <ClCompile Include="Environment.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="Guid.cpp" />
+    <ClCompile Include="JsonValue.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="miniz.c" />
+    <ClCompile Include="MsvcTarget.cpp" />
+    <ClCompile Include="Precomp.cpp" />
+    <ClCompile Include="UTF8Reader.cpp" />
+    <ClCompile Include="UTF16.cpp" />
+    <ClCompile Include="VSGenerator.cpp" />
+    <ClCompile Include="WebBuild.cpp" />
+    <ClCompile Include="ZipWriter.cpp" />
+    <ClCompile Include="Solution.cpp" />
+    <ClCompile Include="Project.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CefTarget.h" />
+    <ClInclude Include="CSSTokenizer.h" />
+    <ClInclude Include="EmscriptenTarget.h" />
+    <ClInclude Include="Environment.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="Guid.h" />
+    <ClInclude Include="JsonValue.h" />
+    <ClInclude Include="miniz.h" />
+    <ClInclude Include="MsvcTarget.h" />
+    <ClInclude Include="Precomp.h" />
+    <ClInclude Include="UTF8Reader.h" />
+    <ClInclude Include="UTF16.h" />
+    <ClInclude Include="VSGenerator.h" />
+    <ClInclude Include="WebBuild.h" />
+    <ClInclude Include="ZipWriter.h" />
+    <ClInclude Include="Solution.h" />
+    <ClInclude Include="Project.h" />
+  </ItemGroup>
+</Project>

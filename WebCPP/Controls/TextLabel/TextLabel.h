@@ -14,4 +14,7 @@ public:
 
 	void setHtml(std::string html);
 	std::string getHtml();
+
+	void setClickHandler(const std::function<void()>& handler);
+
 };

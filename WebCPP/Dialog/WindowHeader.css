@@ -1,0 +1,25 @@
+
+.windowheader {
+    background: var(--headercolor);
+    color: white;
+    line-height: 30px;
+    height: 30px;
+}
+
+.windowheader-caption.textlabel {
+    padding-left: 40px;
+    text-align: center;
+    -webkit-app-region: drag;
+}
+
+.windowheader-minbutton.dialogheaderbutton:hover {
+    background: var(--dialogheaderbuttonhighlight);
+}
+
+.windowheader-maxbutton.dialogheaderbutton:hover {
+    background: var(--dialogheaderbuttonhighlight);
+}
+
+.windowheader-closebutton.dialogheaderbutton:hover {
+    background: var(--dialogclosebuttonhighlight);
+}

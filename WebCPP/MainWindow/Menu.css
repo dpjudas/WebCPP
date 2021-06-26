@@ -1,0 +1,29 @@
+
+.menu {
+    position: fixed;
+    background: var(--panelcolor);
+    color: black;
+    border: 1px solid var(--menubordercolor);
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.3);
+}
+
+.menuitem {
+    padding: 0 35px 1px 8px;
+}
+
+.menuitem-icon.imagebox {
+    padding: 4px 12px 0 2px;
+    width: 16px;
+    height: 16px;
+}
+
+.menuitem-text.textlabel {
+    line-height: 22px;
+    white-space: pre;
+}
+
+.menuitemseparator {
+    border-top: 1px solid var(--menuitemseparator);
+    height: 1px;
+    margin: 3px 5px 3px 32px;
+}
