@@ -15,10 +15,12 @@ public:
 	void Build();
 	void Clean();
 
+	std::string type;
 	std::vector<std::string> InputFiles;
 
 	std::string emsdk;
 	std::string emcc;
+	std::string emar;
 
 	std::string srcDir;
 	std::string objDir;
@@ -33,6 +35,7 @@ public:
 	std::string compileFlags;
 	std::string linkFlags;
 
+	std::string outputLib;
 	std::string outputHtml;
 	std::string outputJS;
 	std::string outputWasm;
@@ -71,6 +74,16 @@ private:
 };
 
 class EmscriptenLink
+{
+public:
+	static void Build(EmscriptenTarget* target);
+	static void Clean(EmscriptenTarget* target);
+
+private:
+	static bool IsCppFile(const std::string& filename);
+};
+
+class EmscriptenLib
 {
 public:
 	static void Build(EmscriptenTarget* target);

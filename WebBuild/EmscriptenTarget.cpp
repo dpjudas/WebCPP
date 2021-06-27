@@ -15,6 +15,7 @@ void EmscriptenTarget::Setup(Solution* solution, Project* project, std::string c
 {
 	emsdk = solution->environment["emsdk"].to_string();
 	emcc = emsdk + "/upstream/emscripten/emcc";
+	emar = emsdk + "/upstream/emscripten/emar";
 
 	Environment::setVariable("EMSDK", ReplaceAll(emsdk, "\\", "/"));
 	Environment::setVariable("EM_CONFIG", emsdk + "\\.emscripten");
@@ -23,6 +24,7 @@ void EmscriptenTarget::Setup(Solution* solution, Project* project, std::string c
 	Environment::setVariable("EMSDK_PYTHON", emsdk + "\\python\\3.9.2-1_64bit\\python.exe");
 	Environment::setVariable("JAVA_HOME", emsdk + "\\java\\8.152_64bit");
 
+	type = project->type;
 	InputFiles = project->getFilteredSources({ "cpp", "cc", "ixx" });
 	srcDir = project->projectDir;
 	binDir = initbinDir;
@@ -47,22 +49,37 @@ void EmscriptenTarget::Setup(Solution* solution, Project* project, std::string c
 	outputMap = "index.wasm.map";
 	outputCSS = "index.css";
 	outputPackage = project->output;
+	outputLib = project->output;
 }
 
 void EmscriptenTarget::Build()
 {
 	EmscriptenCompile::Build(this);
-	EmscriptenLink::Build(this);
-	EmscriptenCSS::Build(this);
-	EmscriptenPackage::Build(this);
+	if (type == "wasm-static-lib")
+	{
+		EmscriptenLib::Build(this);
+	}
+	else
+	{
+		EmscriptenLink::Build(this);
+		EmscriptenCSS::Build(this);
+		EmscriptenPackage::Build(this);
+	}
 }
 
 void EmscriptenTarget::Clean()
 {
 	EmscriptenCompile::Clean(this);
-	EmscriptenLink::Clean(this);
-	EmscriptenCSS::Clean(this);
-	EmscriptenPackage::Clean(this);
+	if (type == "wasm-static-lib")
+	{
+		EmscriptenLib::Clean(this);
+	}
+	else
+	{
+		EmscriptenLink::Clean(this);
+		EmscriptenCSS::Clean(this);
+		EmscriptenPackage::Clean(this);
+	}
 }
 
 std::string EmscriptenTarget::ReplaceAll(const std::string& text, const std::string& search, const std::string& replace)
@@ -356,6 +373,83 @@ void EmscriptenLink::Clean(EmscriptenTarget* target)
 }
 
 bool EmscriptenLink::IsCppFile(const std::string& filename)
+{
+	for (const char* ext : { "cpp", "cc", "c" })
+	{
+		if (FilePath::has_extension(filename, ext))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void EmscriptenLib::Build(EmscriptenTarget* target)
+{
+	std::vector<std::string> objFiles;
+	for (const std::string& inputFile : target->InputFiles)
+	{
+		std::string filename = FilePath::last_component(inputFile);
+		if (IsCppFile(filename))
+		{
+			std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".obj");
+			objFiles.push_back(objFile);
+		}
+	}
+
+	bool needsLink = false;
+	try
+	{
+		int64_t exeTime = File::get_last_write_time(FilePath::combine(target->objDir, target->outputLib));
+		for (const std::string& dependency : objFiles)
+		{
+			int64_t depTime = File::get_last_write_time(dependency);
+			if (depTime > exeTime)
+			{
+				needsLink = true;
+				break;
+			}
+		}
+	}
+	catch (...)
+	{
+		needsLink = true;
+	}
+
+	if (needsLink)
+	{
+		std::cout << "Creating library " << target->outputLib << std::endl;
+
+		std::string responsefilename = FilePath::combine(target->objDir, "responsefile.1");
+		std::string responsefile;
+		responsefile.reserve(64 * 1024);
+		responsefile += "rcs ";
+		responsefile += FilePath::force_slash(FilePath::combine(target->objDir, target->outputLib));
+		for (const auto& file : objFiles)
+		{
+			responsefile.push_back(' ');
+			responsefile += FilePath::force_slash(file);
+		}
+		File::write_all_text(responsefilename, responsefile);
+
+		std::string cmdline = target->emar + " @\"" + responsefilename + "\"";
+		int result = std::system(("\"" + cmdline + "\"").c_str());
+		if (result != 0)
+			throw std::runtime_error("Could not create library " + target->outputLib);
+	}
+}
+
+void EmscriptenLib::Clean(EmscriptenTarget* target)
+{
+	File::try_remove(FilePath::combine(target->objDir, target->outputHtml));
+	File::try_remove(FilePath::combine(target->objDir, target->outputJS));
+	File::try_remove(FilePath::combine(target->objDir, target->outputWasm));
+	File::try_remove(FilePath::combine(target->objDir, target->outputMap));
+}
+
+bool EmscriptenLib::IsCppFile(const std::string& filename)
 {
 	for (const char* ext : { "cpp", "cc", "c" })
 	{
