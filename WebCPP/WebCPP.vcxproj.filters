@@ -42,9 +42,6 @@
     <None Include="Core\DocumentBodyView.css">
       <Filter>Core</Filter>
     </None>
-    <None Include="Core\JSCallback.js">
-      <Filter>Core</Filter>
-    </None>
     <None Include="Core\View.css">
       <Filter>Core</Filter>
     </None>
@@ -85,6 +82,7 @@
       <Filter>Controls\TextLabel</Filter>
     </None>
     <None Include="webproject.json" />
+    <None Include="Theme.css" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Controls">

@@ -1,0 +1,65 @@
+
+.player {
+    padding: 0 10px;
+    height: 64px;
+    align-self: stretch;
+    background: rgb(61, 70, 96);
+    color: rgb(222,222,222);
+}
+
+.player-statussection {
+    margin: 0 15px;
+    align-self: center;
+    align-content: center;
+}
+
+.player-tracktitle {
+    line-height: 18px;
+    height: 18px;
+}
+
+.player-progress {
+    margin-bottom: 2px;
+}
+
+.playerbutton {
+    width: 32px;
+    height: 32px;
+    align-self: center;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.playerprogress-progress {
+    height: 6px;
+    background: #292f40;
+    border-radius: 6px;
+    align-self: center;
+}
+
+.playerprogress-timelabel {
+    margin-left: 10px;
+    font: 11px/14px "Consolas", "Courier New", sans-serif;
+    text-align: right;
+    position: relative;
+    top: -1px;
+}
+
+.playervolume {
+    margin: 0 15px;
+}
+
+.playervolume-icon {
+    width: 16px;
+    height: 16px;
+    align-self: center;
+    margin: 0 5px;
+}
+
+.playervolume-volume {
+    width: 150px;
+    height: 6px;
+    background: #292f40;
+    border-radius: 6px;
+    align-self: center;
+}

@@ -60,6 +60,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Main.css" />
+    <None Include="PlayerPanel.css" />
     <None Include="webproject.json" />
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +70,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MusicPlayer.cpp" />
+    <ClCompile Include="NavPanel.cpp" />
+    <ClCompile Include="PlayerButton.cpp" />
+    <ClCompile Include="PlayerPanel.cpp" />
+    <ClCompile Include="PlayerProgress.cpp" />
+    <ClCompile Include="PlayerVolume.cpp" />
+    <ClCompile Include="Playlist.cpp" />
+    <ClCompile Include="PodcastEpisode.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MusicPlayer.h" />
+    <ClInclude Include="NavPanel.h" />
+    <ClInclude Include="PlayerButton.h" />
+    <ClInclude Include="PlayerPanel.h" />
+    <ClInclude Include="PlayerProgress.h" />
+    <ClInclude Include="PlayerVolume.h" />
+    <ClInclude Include="Playlist.h" />
+    <ClInclude Include="PodcastEpisode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

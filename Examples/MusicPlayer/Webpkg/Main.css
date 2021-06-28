@@ -1,7 +1,29 @@
 
 @import "../../../WebCPP/WebCPP.css";
 @import "../../../WebCPP/Theme.css";
+@import "PlayerPanel.css";
 
 .application {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
     background: var(--panelcolor);
+}
+
+::-webkit-scrollbar {
+    margin: 4px;
+    width: 8px;
+    height: 8px;
+    background: rgb(46, 51, 56);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(86,93,113);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-button {
+    display: none;
 }

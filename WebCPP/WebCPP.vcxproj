@@ -72,7 +72,6 @@
     <None Include="Controls\TabControl\TabControl.css" />
     <None Include="Controls\TextLabel\TextLabel.css" />
     <None Include="Core\DocumentBodyView.css" />
-    <None Include="Core\JSCallback.js" />
     <None Include="Core\View.css" />
     <None Include="Dialog\AppMenu.css" />
     <None Include="Dialog\Dialog.css" />
@@ -87,6 +86,7 @@
     <None Include="MainWindow\Toolbar.css" />
     <None Include="MainWindow\VToolbar.css" />
     <None Include="Reset.css" />
+    <None Include="Theme.css" />
     <None Include="webproject.json" />
     <None Include="WebCPP.css" />
   </ItemGroup>

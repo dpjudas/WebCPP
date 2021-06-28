@@ -27,8 +27,6 @@ public:
 	std::string binDir;
 	std::string wwwRootDir;
 
-	std::string shellfile;
-	std::string preJS;
 	std::string cssfile;
 
 	std::string flags;

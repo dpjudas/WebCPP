@@ -3,12 +3,27 @@
   "type": "wasm-webpkg",
   "output": "MusicPlayer.webpkg",
   "sources": [
-    "Main.cpp"
+    "Main.cpp",
+    "MusicPlayer.cpp",
+    "MusicPlayer.h",
+    "NavPanel.cpp",
+    "NavPanel.h",
+    "PlayerPanel.cpp",
+    "PlayerPanel.h",
+    "PlayerButton.cpp",
+    "PlayerButton.h",
+    "PlayerProgress.cpp",
+    "PlayerProgress.h",
+    "PlayerVolume.cpp",
+    "PlayerVolume.h",
+    "Playlist.cpp",
+    "Playlist.h",
+    "PodcastEpisode.cpp",
+    "PodcastEpisode.h"
   ],
   "wwwroot": "wwwroot",
   "cssfile": "Main.css",
   "shellfile": "Main.html",
-  "prejs": "../../../WebCPP/Core/JSCallback.js",
   "configurations": [
     {
       "name": "debug",

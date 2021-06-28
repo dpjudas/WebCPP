@@ -35,13 +35,18 @@ void EmscriptenTarget::Setup(Solution* solution, Project* project, std::string c
 	Directory::create(objDir);
 	Directory::create(binDir);
 
-	cssfile = FilePath::force_slash(FilePath::combine(srcDir, project->cssfile));
-	shellfile = FilePath::force_slash(FilePath::combine(srcDir, project->shellfile));
-	preJS = FilePath::force_slash(FilePath::combine(srcDir, project->prejs));
+	if (!project->cssfile.empty())
+		cssfile = FilePath::force_slash(FilePath::combine(srcDir, project->cssfile));
 
 	flags = "--bind -s DISABLE_EXCEPTION_CATCHING=0";
 	compileFlags = flags + " " + solution->getValue("cppflags", project, configuration);
-	linkFlags = flags + " --pre-js=" + preJS + " --shell-file " + shellfile + " " + solution->getValue("linkflags", project, configuration);
+
+	linkFlags = flags;
+	if (!project->prejs.empty())
+		linkFlags += " --pre-js=" + FilePath::force_slash(FilePath::combine(srcDir, project->prejs));
+	if (!project->shellfile.empty())
+		linkFlags += " --shell-file " + FilePath::force_slash(FilePath::combine(srcDir, project->shellfile));
+	linkFlags += " " + solution->getValue("linkflags", project, configuration);
 
 	outputHtml = "index.html";
 	outputJS = "index.js";

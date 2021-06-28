@@ -4,6 +4,7 @@
 #include "JSCallback.h"
 #include "Event.h"
 #include <regex>
+#include <emscripten/emscripten.h>
 
 namespace
 {
@@ -28,7 +29,7 @@ void Navigation::init(std::function<void()> onPopState)
 
 	JSValue::global("window").call<void>("addEventListener", std::string("popstate"), onPopStateCallback->getHandler());
 
-	JSValue navInfo = JSValue::global("OAuth").call<JSValue>("checkAccessToken");
+	JSValue navInfo = JSValue::global("Module")["OAuth"].call<JSValue>("checkAccessToken");
 	locationPathParts = vecFromJSArray<std::string>(navInfo["pathparts"]);
 	if (!navInfo["error"].isUndefined())
 	{
@@ -51,7 +52,7 @@ void Navigation::init(std::function<void()> onPopState)
 
 void Navigation::login(std::string oauthUrl)
 {
-	JSValue::global("OAuth").call<JSValue>("login", oauthUrl);
+	JSValue::global("Module")["OAuth"].call<JSValue>("login", oauthUrl);
 }
 
 OAuthStatus Navigation::getOAuthStatus()
@@ -147,3 +148,74 @@ bool Navigation::matchesPath(const std::vector<std::string>& parts)
 
 	return false;
 }
+
+static struct ModuleOAuth
+{
+	ModuleOAuth()
+	{
+		EM_ASM({
+			function parseJwt(token) {
+				var base64Url = token.split('.')[1];
+				var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+				var jsonPayload = decodeURIComponent(atob(base64).split(new String()).map(function (c) {
+					return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+				}).join(new String()));
+				return JSON.parse(jsonPayload);
+			}
+
+			function extractToken(name) {
+				var hash = window.location.hash.substr(1);
+				var startIndex = hash.indexOf(name + '=');
+				if (startIndex >= 0) {
+					startIndex += name.length + 1;
+					var endIndex = hash.indexOf('&', startIndex);
+					if (endIndex < 0) endIndex = hash.length;
+					return hash.substr(startIndex, endIndex - startIndex);
+				}
+				else {
+					return null;
+				}
+			}
+
+			function checkAccessToken(oauthUrl) {
+				var error = extractToken('error');
+				if (error == null) {
+					var access_token = extractToken('access_token');
+					if (access_token == null) {
+						var pathparts = window.location.pathname.substr(1).split('/').map(function(x) { return decodeURIComponent(x); });
+						var result = { };
+						result.pathparts = pathparts;
+						return result;
+					}
+					else {
+						var pathname = decodeURIComponent(extractToken('state'));
+						var pathparts = pathname.substr(1).split('/').map(function(x) { return decodeURIComponent(x); });
+						var result = { };
+						result.pathparts = pathparts;
+						result.access_token = access_token;
+						result.jwt = parseJwt(access_token);
+						return result;
+					}
+				}
+				else {
+					var pathname = decodeURIComponent(extractToken('state'));
+					var pathparts = pathname.substr(1).split('/').map(function(x) { return decodeURIComponent(x); });
+					var error_description = extractToken('error_description');
+					var result = { };
+					result.pathparts = pathparts;
+					result.error = decodeURIComponent(error);
+					result.error_description = (error_description != null) ? decodeURIComponent(error_description) : null;
+					return result;
+				}
+			}
+
+			function login(oauthUrl) {
+				window.location = oauthUrl + '&state=' + encodeURIComponent(window.location.pathname);
+			}
+
+			Module.OAuth = { };
+			Module.OAuth.checkAccessToken = checkAccessToken;
+			Module.OAuth.login = login;
+		});
+	}
+} modulejs;
