@@ -4,12 +4,15 @@
 #include <string>
 #include <memory>
 
+class Solution;
+class Project;
+
 class MsvcTarget
 {
 public:
 	std::vector<std::string> InputFiles;
 
-	void Setup(std::string configuration, std::string outputFilename, std::string sourceDir, std::string solutionDir);
+	void Setup(Solution* solution, Project* project, std::string configuration, std::string initbinDir, std::string initobjDir, std::string wrapperObjDir);
 	void Build();
 	void Clean();
 
@@ -21,8 +24,6 @@ public:
 	std::string srcDir;
 	std::string objDir;
 	std::string binDir;
-
-	std::string includePath;
 
 	std::string compileFlags;
 	std::string linkFlags;

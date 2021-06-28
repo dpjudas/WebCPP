@@ -11,13 +11,13 @@ int main(int argc, char** argv)
 		for (int i = 0; i < argc; i++)
 			args.push_back(argv[i]);
 
-		if (args.size() != 4)
+		if (args.size() != 5)
 		{
-			std::cout << "webbuild <command> <configuration> <solutiondir>" << std::endl;
+			std::cout << "webbuild <command> <project> <configuration> <solutiondir>" << std::endl;
 			return 1;
 		}
 
-		WebBuild app(args[2], args[3]);
+		WebBuild app(args[2], args[3], args[4]);
 
 		if (args[1] == "build")
 		{

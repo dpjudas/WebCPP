@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{B87C0832-E6D5-4744-BEA0-6B2BD6B10BFB}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>MusicPlayer</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe build musicplayer debug $(SolutionDir)</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe clean musicplayer debug $(SolutionDir)</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe rebuild musicplayer debug $(SolutionDir)</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>$(SolutionDir);$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <OutDir>$(SolutionDir)Build\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(Configuration)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe build musicplayer release $(SolutionDir)</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe clean musicplayer release $(SolutionDir)</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe rebuild musicplayer release $(SolutionDir)</NMakeReBuildCommandLine>
+    <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>$(SolutionDir);$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <OutDir>$(SolutionDir)Build\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)Build\$(Configuration)\obj\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="resample\LICENSE" />
+    <None Include="webproject.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\WebBuild\WebBuild.vcxproj">
+      <Project>{d7a55549-64da-4409-a1a5-999c47095e86}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="audioplayer.cpp" />
+    <ClCompile Include="audiosource.cpp" />
+    <ClCompile Include="browser_app.cpp" />
+    <ClCompile Include="browser_client.cpp" />
+    <ClCompile Include="file.cpp" />
+    <ClCompile Include="http_client.cpp" />
+    <ClCompile Include="json_value.cpp" />
+    <ClCompile Include="player_controller.cpp" />
+    <ClCompile Include="resample\pffft.cpp" />
+    <ClCompile Include="resample\r8bbase.cpp" />
+    <ClCompile Include="utf8_reader.cpp" />
+    <ClCompile Include="win32_window.cpp" />
+    <ClCompile Include="win32_window_shadow.cpp" />
+    <ClCompile Include="winmain.cpp" />
+    <ClCompile Include="xml\block_allocator.cpp" />
+    <ClCompile Include="xml\xml_document.cpp" />
+    <ClCompile Include="xml\xml_node.cpp" />
+    <ClCompile Include="xml\xml_tokenizer.cpp" />
+    <ClCompile Include="xml\xml_writer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="audioplayer.h" />
+    <ClInclude Include="audiosource.h" />
+    <ClInclude Include="browser_app.h" />
+    <ClInclude Include="browser_client.h" />
+    <ClInclude Include="dr_flac.h" />
+    <ClInclude Include="dr_wav.h" />
+    <ClInclude Include="file.h" />
+    <ClInclude Include="http_client.h" />
+    <ClInclude Include="json_value.h" />
+    <ClInclude Include="minimp3.h" />
+    <ClInclude Include="minimp3_ex.h" />
+    <ClInclude Include="player_controller.h" />
+    <ClInclude Include="resample\CDSPBlockConvolver.h" />
+    <ClInclude Include="resample\CDSPFIRFilter.h" />
+    <ClInclude Include="resample\CDSPFracInterpolator.h" />
+    <ClInclude Include="resample\CDSPHBDownsampler.h" />
+    <ClInclude Include="resample\CDSPHBUpsampler.h" />
+    <ClInclude Include="resample\CDSPProcessor.h" />
+    <ClInclude Include="resample\CDSPRealFFT.h" />
+    <ClInclude Include="resample\CDSPResampler.h" />
+    <ClInclude Include="resample\CDSPSincFilterGen.h" />
+    <ClInclude Include="resample\fft4g.h" />
+    <ClInclude Include="resample\pffft.h" />
+    <ClInclude Include="resample\r8bbase.h" />
+    <ClInclude Include="resample\r8bconf.h" />
+    <ClInclude Include="resample\r8butil.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="stb_vorbis.h" />
+    <ClInclude Include="utf8_reader.h" />
+    <ClInclude Include="win32_window.h" />
+    <ClInclude Include="win32_window_shadow.h" />
+    <ClInclude Include="xml\block_allocator.h" />
+    <ClInclude Include="xml\xml_document.h" />
+    <ClInclude Include="xml\xml_document_impl.h" />
+    <ClInclude Include="xml\xml_node.h" />
+    <ClInclude Include="xml\xml_node_impl.h" />
+    <ClInclude Include="xml\xml_token.h" />
+    <ClInclude Include="xml\xml_tokenizer.h" />
+    <ClInclude Include="xml\xml_tokenizer_impl.h" />
+    <ClInclude Include="xml\xml_tree_node.h" />
+    <ClInclude Include="xml\xml_writer.h" />
+    <ClInclude Include="xml\xml_writer_impl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="musicplayer.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="musicplayer.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

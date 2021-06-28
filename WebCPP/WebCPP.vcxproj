@@ -39,18 +39,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NMakeBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe build debug $(SolutionDir)</NMakeBuildCommandLine>
-    <NMakeCleanCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe clean debug $(SolutionDir)</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe rebuild debug $(SolutionDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe build webcpp debug $(SolutionDir)</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe clean webcpp debug $(SolutionDir)</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe rebuild webcpp debug $(SolutionDir)</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>$(SolutionDir);$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\$(Configuration)\bin\</OutDir>
     <IntDir>$(SolutionDir)Build\$(Configuration)\obj\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NMakeBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe build release $(SolutionDir)</NMakeBuildCommandLine>
-    <NMakeCleanCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe clean release $(SolutionDir)</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe rebuild release $(SolutionDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe build webcpp release $(SolutionDir)</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe clean webcpp release $(SolutionDir)</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe rebuild webcpp release $(SolutionDir)</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>$(SolutionDir);$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\$(Configuration)\bin\</OutDir>

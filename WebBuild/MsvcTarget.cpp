@@ -5,31 +5,34 @@
 #include "Environment.h"
 #include "ZipWriter.h"
 #include "JsonValue.h"
+#include "Solution.h"
+#include "Project.h"
 #include <iostream>
 
-void MsvcTarget::Setup(std::string configuration, std::string outputFilename, std::string sourceDir, std::string solutionDir)
+void MsvcTarget::Setup(Solution* solution, Project* project, std::string configuration, std::string initbinDir, std::string initobjDir, std::string wrapperObjDir)
 {
-	msvcDir = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.28.29910\\bin\\Hostx64\\x64";
+	msvcDir = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30037\\bin\\Hostx64\\x64";
 	cl = "\"" + FilePath::combine(msvcDir, "cl") + "\"";
 	link = "\"" + FilePath::combine(msvcDir, "link") + "\"";
 	lib = "\"" + FilePath::combine(msvcDir, "lib") + "\"";
 
-	srcDir = sourceDir;
-	objDir = FilePath::combine(solutionDir, "Build\\" + configuration + "\\x64\\obj");
-	binDir = FilePath::combine(solutionDir, "Build\\" + configuration + "\\x64\\bin");
-	includePath = FilePath::combine(sourceDir, "Sources");
+	InputFiles = project->getFilteredSources({ "cpp", "cc", "ixx" });
+	srcDir = project->projectDir;
+	objDir = initobjDir;
+	binDir = initbinDir;
 
 	std::string environmentDir = Environment::getVariable("EnvironmentDir");
 	std::string cef = FilePath::combine(environmentDir, "cef");
 	std::string libpath = FilePath::combine(cef, "Release");
 
-	compileFlags = "/O2 /EHsc /std:c++17 /permissive- -I \"" + includePath + "\" -I \"" + cef + "\" /DWIN32 /D_WIN32 /D_WINDOWS /DWINVER=0x0601 /D_WIN32_WINNT=0x601 /DUNICODE /D_UNICODE /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DCEF_USE_SANDBOX /DCEF_USE_ATL /DWRAPPING_CEF_SHARED";
-	linkFlags = "user32.lib gdi32.lib ole32.lib advapi32.lib version.lib winmm.lib propsys.lib setupapi.lib dbghelp.lib powrprof.lib shell32.lib ws2_32.lib shlwapi.lib delayimp.lib /LIBPATH:\"" + libpath + "\" libcef.lib cef_sandbox.lib";
-	libFlags = "/LIBPATH:\"" + libpath + "\" /MACHINE:X64";
+	compileFlags = "-I \"" + cef + "\" /DWIN32 /D_WIN32 /D_WINDOWS /DWINVER=0x0601 /D_WIN32_WINNT=0x601 /DUNICODE /D_UNICODE /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DCEF_USE_SANDBOX /DCEF_USE_ATL /DWRAPPING_CEF_SHARED " + solution->getValue("cppflags", project, configuration);
+	linkFlags = "user32.lib gdi32.lib ole32.lib advapi32.lib version.lib winmm.lib propsys.lib setupapi.lib dbghelp.lib powrprof.lib shell32.lib ws2_32.lib shlwapi.lib delayimp.lib /LIBPATH:\"" + libpath + "\" libcef.lib cef_sandbox.lib " + solution->getValue("linkflags", project, configuration);
+	libFlags = "/LIBPATH:\"" + libpath + "\" /MACHINE:X64 " + solution->getValue("libflags", project, configuration);
 
-	linkFlags += " \"" + FilePath::combine(objDir, "libcef_dll_wrapper.lib") + "\"";
+	if (!wrapperObjDir.empty())
+		linkFlags += " \"" + FilePath::combine(wrapperObjDir, "libcef_dll_wrapper.lib") + "\"";
 
-	outputExe = outputFilename;
+	outputExe = project->output;
 }
 
 void MsvcTarget::Build()

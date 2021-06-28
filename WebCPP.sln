@@ -12,6 +12,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		websolution.json = websolution.json
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MusicPlayer", "Examples\MusicPlayer\App\MusicPlayerApp.vcxproj", "{B87C0832-E6D5-4744-BEA0-6B2BD6B10BFB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{467663D0-A156-4C44-93BA-733C0BF0461E} = {467663D0-A156-4C44-93BA-733C0BF0461E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MusicPlayerWebpkg", "Examples\MusicPlayer\Webpkg\MusicPlayerWebpkg.vcxproj", "{58C8A6E3-7522-4BB2-B8E7-F5ACA706F751}"
+	ProjectSection(ProjectDependencies) = postProject
+		{467663D0-A156-4C44-93BA-733C0BF0461E} = {467663D0-A156-4C44-93BA-733C0BF0461E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -26,6 +36,14 @@ Global
 		{D7A55549-64DA-4409-A1A5-999C47095E86}.Debug|x64.Build.0 = Debug|x64
 		{D7A55549-64DA-4409-A1A5-999C47095E86}.Release|x64.ActiveCfg = Release|x64
 		{D7A55549-64DA-4409-A1A5-999C47095E86}.Release|x64.Build.0 = Release|x64
+		{B87C0832-E6D5-4744-BEA0-6B2BD6B10BFB}.Debug|x64.ActiveCfg = Debug|x64
+		{B87C0832-E6D5-4744-BEA0-6B2BD6B10BFB}.Debug|x64.Build.0 = Debug|x64
+		{B87C0832-E6D5-4744-BEA0-6B2BD6B10BFB}.Release|x64.ActiveCfg = Release|x64
+		{B87C0832-E6D5-4744-BEA0-6B2BD6B10BFB}.Release|x64.Build.0 = Release|x64
+		{58C8A6E3-7522-4BB2-B8E7-F5ACA706F751}.Debug|x64.ActiveCfg = Debug|x64
+		{58C8A6E3-7522-4BB2-B8E7-F5ACA706F751}.Debug|x64.Build.0 = Debug|x64
+		{58C8A6E3-7522-4BB2-B8E7-F5ACA706F751}.Release|x64.ActiveCfg = Release|x64
+		{58C8A6E3-7522-4BB2-B8E7-F5ACA706F751}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,7 +9,7 @@
 #include "CefTarget.h"
 #include "Solution.h"
 
-WebBuild::WebBuild(std::string configuration, std::string solutionDir) : configuration(configuration)
+WebBuild::WebBuild(std::string projectname, std::string configuration, std::string solutionDir) : projectname(projectname), configuration(configuration)
 {
 	solution = Solution::load(FilePath::combine(solutionDir, "websolution.json"));
 }
@@ -19,14 +19,35 @@ void WebBuild::build()
 	for (auto& it : solution.projects)
 	{
 		Project& p = it.second;
-		if (p.configurations.find(configuration) != p.configurations.end())
+		if (p.name == projectname && p.configurations.find(configuration) != p.configurations.end())
 		{
 			std::string binDir = FilePath::combine(solution.solutionDir, "Build\\" + configuration + "\\bin");
 			std::string objDir = FilePath::combine(solution.solutionDir, "Build\\" + configuration + "\\obj\\" + p.name);
+			std::string wrapperDir = FilePath::combine(solution.solutionDir, "Build\\" + configuration + "\\obj\\cefwrapper");
 
-			EmscriptenTarget target;
-			target.Setup(&solution, &p, configuration, binDir, objDir);
-			target.Build();
+			Directory::create(binDir);
+			Directory::create(objDir);
+
+			if (p.type == "wasm-static-lib" || p.type == "wasm-webpkg")
+			{
+				EmscriptenTarget target;
+				target.Setup(&solution, &p, configuration, binDir, objDir);
+				target.Build();
+			}
+			else if (p.type == "cef-app")
+			{
+				Directory::create(wrapperDir);
+
+				CefWrapperLib wrapperlib;
+				wrapperlib.Build(&solution, configuration, wrapperDir);
+
+				CefCopyResources copyresources;
+				copyresources.Build(binDir);
+
+				MsvcTarget target;
+				target.Setup(&solution, &p, configuration, binDir, objDir, wrapperDir);
+				target.Build();
+			}
 		}
 	}
 }
@@ -36,14 +57,30 @@ void WebBuild::clean()
 	for (auto& it : solution.projects)
 	{
 		Project& p = it.second;
-		if (p.configurations.find(configuration) != p.configurations.end())
+		if (p.name == projectname && p.configurations.find(configuration) != p.configurations.end())
 		{
 			std::string binDir = FilePath::combine(solution.solutionDir, "Build\\" + configuration + "\\bin");
 			std::string objDir = FilePath::combine(solution.solutionDir, "Build\\" + configuration + "\\obj\\" + p.name);
+			std::string wrapperDir = FilePath::combine(solution.solutionDir, "Build\\" + configuration + "\\obj\\cefwrapper");
 
-			EmscriptenTarget target;
-			target.Setup(&solution, &p, configuration, binDir, objDir);
-			target.Clean();
+			if (p.type == "wasm-static-lib" || p.type == "wasm-app")
+			{
+				EmscriptenTarget target;
+				target.Setup(&solution, &p, configuration, binDir, objDir);
+				target.Clean();
+			}
+			else if (p.type == "cef-app")
+			{
+				CefWrapperLib wrapperlib;
+				wrapperlib.Build(&solution, configuration, wrapperDir);
+
+				CefCopyResources copyresources;
+				copyresources.Build(binDir);
+
+				MsvcTarget target;
+				target.Setup(&solution, &p, configuration, binDir, objDir, wrapperDir);
+				target.Clean();
+			}
 		}
 	}
 }

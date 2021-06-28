@@ -4,25 +4,40 @@
 #include "MsvcTarget.h"
 #include "Environment.h"
 #include "File.h"
+#include "Project.h"
+#include <iostream>
 
 CefWrapperLib::CefWrapperLib()
 {
 	FindFiles(FilePath::combine(Environment::getVariable("EnvironmentDir"), "cef\\libcef_dll"), {});
 }
 
-void CefWrapperLib::Build(std::string target, std::string solutionDir)
+Project CefWrapperLib::GetWrapperProject(Solution* solution, std::string configuration)
 {
+	Project p;
+	p.name = "cefwrapper";
+	p.type = "static-lib";
+	p.output = "libcef_dll_wrapper.lib";
+	p.projectDir = FilePath::combine(Environment::getVariable("EnvironmentDir"), "cef\\libcef_dll");
+	p.sources = InputFiles;
+	p.configurations[configuration]["cppflags"] = JsonValue::string("/O2 /Zi /DEBUG:FULL /EHsc /std:c++17 /permissive-");
+	p.configurations[configuration]["libflags"] = JsonValue::string("");
+	return p;
+}
+
+void CefWrapperLib::Build(Solution* solution, std::string configuration, std::string objDir)
+{
+	Project project = GetWrapperProject(solution, configuration);
 	MsvcTarget cefwrapper;
-	cefwrapper.InputFiles = InputFiles;
-	cefwrapper.Setup(target, "libcef_dll_wrapper.lib", FilePath::combine(Environment::getVariable("EnvironmentDir"), "cef\\libcef_dll"), solutionDir);
+	cefwrapper.Setup(solution, &project, configuration, objDir, objDir, {});
 	cefwrapper.Build();
 }
 
-void CefWrapperLib::Clean(std::string target, std::string solutionDir)
+void CefWrapperLib::Clean(Solution* solution, std::string configuration, std::string objDir)
 {
+	Project project = GetWrapperProject(solution, configuration);
 	MsvcTarget cefwrapper;
-	cefwrapper.InputFiles = InputFiles;
-	cefwrapper.Setup(target, "libcef_dll_wrapper.lib", FilePath::combine(Environment::getVariable("EnvironmentDir"), "cef\\libcef_dll"), solutionDir);
+	cefwrapper.Setup(solution, &project, configuration, objDir, objDir, {});
 	cefwrapper.Clean();
 }
 
@@ -52,11 +67,11 @@ CefCopyResources::CefCopyResources()
 	FindFiles(FilePath::combine(CefDir, "Release"), {});
 }
 
-void CefCopyResources::Build(MsvcTarget* target)
+void CefCopyResources::Build(std::string binDir)
 {
 	for (const auto& file : ResourceFiles)
 	{
-		std::string destfilename = FilePath::combine(target->binDir, file.second);
+		std::string destfilename = FilePath::combine(binDir, file.second);
 		std::string destfolder = FilePath::remove_last_component(destfilename);
 		auto data = File::read_all_bytes(file.first);
 		if (!destfolder.empty())
@@ -65,11 +80,11 @@ void CefCopyResources::Build(MsvcTarget* target)
 	}
 }
 
-void CefCopyResources::Clean(MsvcTarget* target)
+void CefCopyResources::Clean(std::string binDir)
 {
 	for (const auto& file : ResourceFiles)
 	{
-		File::try_remove(FilePath::combine(target->binDir, file.second));
+		File::try_remove(FilePath::combine(binDir, file.second));
 	}
 }
 

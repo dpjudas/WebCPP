@@ -1,2 +1,5 @@
 /.vs
 /Build
+/Examples/MusicPlayer/App/*.user
+/Examples/MusicPlayer/Webpkg/*.user
+/WebCPP/*.user

@@ -1,6 +1,8 @@
 {
   "projects": [
-    "WebCPP/webproject.json"
+    "WebCPP/webproject.json",
+    "Examples/MusicPlayer/App/webproject.json",
+    "Examples/MusicPlayer/Webpkg/webproject.json"
   ],
   "environment": {
     "emsdk": "C:\\Development\\Environment\\emsdk",

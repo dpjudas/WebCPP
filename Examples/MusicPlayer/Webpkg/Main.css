@@ -1,0 +1,7 @@
+
+@import "../../../WebCPP/WebCPP.css";
+@import "../../../WebCPP/Theme.css";
+
+.application {
+    background: var(--panelcolor);
+}

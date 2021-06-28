@@ -350,6 +350,7 @@ void EmscriptenLink::Build(EmscriptenTarget* target)
 		responsefile += target->linkFlags;
 		responsefile += " -o ";
 		responsefile += FilePath::force_slash(FilePath::combine(target->objDir, target->outputHtml));
+		responsefile += " -L \"" + FilePath::force_slash(target->binDir) + "\" -lwebcpp";
 		for (const auto& file : objFiles)
 		{
 			responsefile.push_back(' ');
@@ -402,7 +403,7 @@ void EmscriptenLib::Build(EmscriptenTarget* target)
 	bool needsLink = false;
 	try
 	{
-		int64_t exeTime = File::get_last_write_time(FilePath::combine(target->objDir, target->outputLib));
+		int64_t exeTime = File::get_last_write_time(FilePath::combine(target->binDir, target->outputLib));
 		for (const std::string& dependency : objFiles)
 		{
 			int64_t depTime = File::get_last_write_time(dependency);
@@ -426,7 +427,7 @@ void EmscriptenLib::Build(EmscriptenTarget* target)
 		std::string responsefile;
 		responsefile.reserve(64 * 1024);
 		responsefile += "rcs ";
-		responsefile += FilePath::force_slash(FilePath::combine(target->objDir, target->outputLib));
+		responsefile += FilePath::force_slash(FilePath::combine(target->binDir, target->outputLib));
 		for (const auto& file : objFiles)
 		{
 			responsefile.push_back(' ');
@@ -443,10 +444,7 @@ void EmscriptenLib::Build(EmscriptenTarget* target)
 
 void EmscriptenLib::Clean(EmscriptenTarget* target)
 {
-	File::try_remove(FilePath::combine(target->objDir, target->outputHtml));
-	File::try_remove(FilePath::combine(target->objDir, target->outputJS));
-	File::try_remove(FilePath::combine(target->objDir, target->outputWasm));
-	File::try_remove(FilePath::combine(target->objDir, target->outputMap));
+	File::try_remove(FilePath::combine(target->binDir, target->outputLib));
 }
 
 bool EmscriptenLib::IsCppFile(const std::string& filename)
@@ -526,7 +524,6 @@ std::string EmscriptenCSS::ProcessCSSFile(const std::string& filename, std::stri
 		if (token.type == CSSTokenType::null)
 			break;
 
-		importEnd = token.offset;
 		if (token.type == CSSTokenType::atkeyword && token.value == "import")
 		{
 			tokenizer->read(token, true);
@@ -552,6 +549,8 @@ std::string EmscriptenCSS::ProcessCSSFile(const std::string& filename, std::stri
 			tokenizer->read(token, true);
 			if (token.type != CSSTokenType::semi_colon)
 				throw std::runtime_error(FilePath::force_filesys_slash(filename) + ": error: ';' expected after import directive");
+
+			importEnd = token.offset + 1;
 		}
 		else
 		{

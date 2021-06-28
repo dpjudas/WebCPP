@@ -1,0 +1,24 @@
+{
+  "name": "musicplayerwebpkg",
+  "type": "wasm-webpkg",
+  "output": "MusicPlayer.webpkg",
+  "sources": [
+    "Main.cpp"
+  ],
+  "wwwroot": "wwwroot",
+  "cssfile": "Main.css",
+  "shellfile": "Main.html",
+  "prejs": "../../../WebCPP/Core/JSCallback.js",
+  "configurations": [
+    {
+      "name": "debug",
+      "cppflags": "-g -O0 -DDEBUG -D_DEBUG -I $(SolutionDir)",
+      "linkflags": "-g -O0"
+    },
+    {
+      "name": "release",
+      "cppflags": "-O1 -DRELEASE -D_RELEASE -I $(SolutionDir)",
+      "linkflags": "-O1"
+    }
+  ]
+}

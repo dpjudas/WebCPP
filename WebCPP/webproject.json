@@ -1,7 +1,7 @@
 {
   "name": "webcpp",
   "type": "wasm-static-lib",
-  "output": "webcpp.a",
+  "output": "libwebcpp.a",
   "sources": [
     "Core/DateTime.cpp",
     "Core/DateTime.h",
