@@ -7,12 +7,12 @@
 
 .borderlayoutsplitter {
     cursor: ew-resize;
-    background: var(--panelcolor);
+    background: var(--splittercolor);
     width: 5px;
 }
 
 .vborderlayoutsplitter {
     cursor: ns-resize;
-    background: var(--panelcolor);
+    background: var(--splittercolor);
     height: 5px;
 }

@@ -14,47 +14,7 @@ DialogHeader::DialogHeader(View* p) : HBoxView(p)
 	caption->setExpanding();
 }
 
-const std::string DialogHeader::CloseIconSvg =
-	"77u/PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjxzdmcgeD0iMHB4IiB5"
-	"PSIwcHgiIHZpZXdCb3g9IjAgMCAxMCAxMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3"
-	"dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs"
-	"aW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0YWc9IkVsZW1lbnQyIj4NCiAgPGcgaWQ9Ikluc2lk"
-	"ZV9Cb3JkZXIiIHRhZz0iRWxlbWVudCI+DQogICAgPHBhdGggZD0iTTYsIDVMOC44LCAyLjJDOS4x"
-	"LCAxLjkgOS4xLCAxLjUgOC44LCAxLjJDOC41LCAwLjkgOC4xLCAwLjkgNy44LCAxLjJMNSwgNEwy"
-	"LjIsIDEuMkMxLjksIDAuOSAxLjUsIDAuOSAxLjIsIDEuMkMwLjksIDEuNSAwLjksIDEuOSAxLjIs"
-	"IDIuMkw0LCA1TDEuMiwgNy44QzAuOSwgOC4xIDAuOSwgOC41IDEuMiwgOC44QzEuNSwgOS4xIDEu"
-	"OSwgOS4xIDIuMiwgOC44TDUsIDZMNy44LCA4LjhDOC4xLCA5LjEgOC41LCA5LjEgOC44LCA4LjhD"
-	"OS4xLCA4LjUgOS4xLCA4LjEgOC44LCA3LjhMNiwgNXoiIGZpbGw9IiNGRkZGRkYiIGNsYXNzPSJN"
-	"YXNrIiB0YWc9Ik1hc2siIC8+DQogIDwvZz4NCiAgPGcgaWQ9IkxheWVyXzIiIHRhZz0iRWxlbWVu"
-	"dDEiIC8+DQo8L3N2Zz4=";
-
-const std::string DialogHeader::MaximizedIconSvg =
-	"77u/PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjxzdmcgeD0iMHB4IiB5"
-	"PSIwcHgiIHZpZXdCb3g9IjAgMCAxMCAxMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3"
-	"dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs"
-	"aW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0YWc9IkVsZW1lbnQyIj4NCiAgPGcgaWQ9Ikluc2lk"
-	"ZV9Cb3JkZXIiIHRhZz0iRWxlbWVudCI+DQogICAgPHBhdGggZD0iTTksIDFMMywgMUwzLCAzTDEs"
-	"IDNMMSwgOUw3LCA5TDcsIDdMOSwgN0w5LCAxek02LCA4TDIsIDhMMiwgNEw2LCA0TDYsIDh6TTgs"
-	"IDZMNywgNkw3LCAzTDQsIDNMNCwgMkw4LCAyTDgsIDZ6IiBmaWxsPSIjRkZGRkZGIiBjbGFzcz0i"
-	"TWFzayIgdGFnPSJNYXNrIiAvPg0KICA8L2c+DQogIDxnIGlkPSJMYXllcl8yIiB0YWc9IkVsZW1l"
-	"bnQxIiAvPg0KPC9zdmc+";
-
-const std::string DialogHeader::MaximizeIconSvg =
-	"77u/PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjxzdmcgeD0iMHB4IiB5"
-	"PSIwcHgiIHZpZXdCb3g9IjAgMCAxMCAxMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3"
-	"dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs"
-	"aW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0YWc9IkVsZW1lbnQyIj4NCiAgPGcgaWQ9Ikluc2lk"
-	"ZV9Cb3JkZXIiIHRhZz0iRWxlbWVudCI+DQogICAgPHBhdGggZD0iTTEsIDFMMSwgOUw5LCA5TDks"
-	"IDFMMSwgMXpNOCwgOEwyLCA4TDIsIDJMOCwgMkw4LCA4eiIgZmlsbD0iI0ZGRkZGRiIgY2xhc3M9"
-	"Ik1hc2siIHRhZz0iTWFzayIgLz4NCiAgPC9nPg0KICA8ZyBpZD0iTGF5ZXJfMiIgdGFnPSJFbGVt"
-	"ZW50MSIgLz4NCjwvc3ZnPg==";
-
-const std::string DialogHeader::MinimizeIconSvg =
-	"77u/PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjxzdmcgeD0iMHB4IiB5"
-	"PSIwcHgiIHZpZXdCb3g9IjAgMCAxMCAxMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3"
-	"dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs"
-	"aW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0YWc9IkVsZW1lbnQyIj4NCiAgPGcgaWQ9Ikluc2lk"
-	"ZV9Cb3JkZXIiIHRhZz0iRWxlbWVudCI+DQogICAgPHJlY3QgeD0iMSIgeT0iNSIgd2lkdGg9Ijgi"
-	"IGhlaWdodD0iMSIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjRkZGRkZGIiBjbGFzcz0iTWFzayIgdGFn"
-	"PSJNYXNrIiAvPg0KICA8L2c+DQogIDxnIGlkPSJMYXllcl8yIiB0YWc9IkVsZW1lbnQxIiAvPg0K"
-	"PC9zdmc+";
+const std::string DialogHeader::CloseIconSvg = "M6, 5L8.8, 2.2C9.1, 1.9 9.1, 1.5 8.8, 1.2C8.5, 0.9 8.1, 0.9 7.8, 1.2L5, 4L2.2, 1.2C1.9, 0.9 1.5, 0.9 1.2, 1.2C0.9, 1.5 0.9, 1.9 1.2, 2.2L4, 5L1.2, 7.8C0.9, 8.1 0.9, 8.5 1.2, 8.8C1.5, 9.1 1.9, 9.1 2.2, 8.8L5, 6L7.8, 8.8C8.1, 9.1 8.5, 9.1 8.8, 8.8C9.1, 8.5 9.1, 8.1 8.8, 7.8L6, 5z";
+const std::string DialogHeader::MaximizedIconSvg = "M9, 1L3, 1L3, 3L1, 3L1, 9L7, 9L7, 7L9, 7L9, 1zM6, 8L2, 8L2, 4L6, 4L6, 8zM8, 6L7, 6L7, 3L4, 3L4, 2L8, 2L8, 6z";
+const std::string DialogHeader::MaximizeIconSvg = "M1, 1L1, 9L9, 9L9, 1L1, 1zM8, 8L2, 8L2, 2L8, 2L8, 8z";
+const std::string DialogHeader::MinimizeIconSvg = "M1, 5L9, 5L9, 6L1, 6z";

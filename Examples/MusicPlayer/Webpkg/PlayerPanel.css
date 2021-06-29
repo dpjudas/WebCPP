@@ -3,8 +3,9 @@
     padding: 0 10px;
     height: 64px;
     align-self: stretch;
-    background: rgb(61, 70, 96);
-    color: rgb(222,222,222);
+    background: var(--statusbarbackground);
+    border-top: 1px solid var(--statusbaredgecolor);
+    color: var(--statusbartextcolor);
 }
 
 .player-statussection {
@@ -32,7 +33,7 @@
 
 .playerprogress-progress {
     height: 6px;
-    background: #292f40;
+    background: rgb(210,210,210);
     border-radius: 6px;
     align-self: center;
 }
@@ -59,7 +60,7 @@
 .playervolume-volume {
     width: 150px;
     height: 6px;
-    background: #292f40;
+    background: rgb(210,210,210);
     border-radius: 6px;
     align-self: center;
 }

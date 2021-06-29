@@ -105,19 +105,12 @@ MenubarModalItem::MenubarModalItem(MenubarModal* menubar, bool alignRight) : Tex
 
 void MenubarModalItem::open()
 {
-	element->setStyle("border", "1px solid rgb(10,37,62)");
-	element->setStyle("borderBottom", "none");
-	element->setStyle("color", "black");
-	element->setStyle("background", "rgb(240,240,240)");
-	element->setStyle("zIndex", "1");
+	addClass("menubarmodalitem-open");
 }
 
 void MenubarModalItem::close()
 {
-	element->setStyle("border", "1px solid transparent");
-	element->setStyle("color", "inherit");
-	element->setStyle("background", "none");
-	element->setStyle("zIndex", "0");
+	removeClass("menubarmodalitem-open");
 }
 
 void MenubarModalItem::onClick(Event* event)

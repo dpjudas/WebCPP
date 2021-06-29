@@ -1,7 +1,7 @@
 
 .windowheader {
     background: var(--headercolor);
-    color: white;
+    color: var(--headertextcolor);
     line-height: 30px;
     height: 30px;
 }
@@ -10,6 +10,10 @@
     padding-left: 40px;
     text-align: center;
     -webkit-app-region: drag;
+}
+
+.dialogheaderbutton path {
+    fill: var(--dialogheaderbuttoncolor);
 }
 
 .windowheader-minbutton.dialogheaderbutton:hover {

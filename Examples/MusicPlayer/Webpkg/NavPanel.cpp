@@ -46,12 +46,14 @@ void NavPanel::updateFolder(ListViewItem* item)
 		{
 			TextListViewItem* subitem = (TextListViewItem*)item->add(std::make_unique<TextListViewItem>("d:" + basepath + "/" + folder));
 			subitem->setText(0, folder);
+			subitem->setIcon(0, "/Resources/Icons/folder.svg");
 		}
 
 		for (std::string& file : vecFromJSArray<std::string>(response["files"]))
 		{
 			TextListViewItem* subitem = (TextListViewItem*)item->add(std::make_unique<TextListViewItem>("f:" + basepath + "/" + file));
 			subitem->setText(0, file);
+			subitem->setIcon(0, "/Resources/Icons/song.svg");
 		}
 	};
 

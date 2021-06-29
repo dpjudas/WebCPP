@@ -1,8 +1,9 @@
 
 #include "DialogHeaderButton.h"
 
-DialogHeaderButton::DialogHeaderButton(View* parent, std::string svg) : ImageBox(parent)
+DialogHeaderButton::DialogHeaderButton(View* parent, std::string path) : SvgBox(parent)
 {
 	addClass("dialogheaderbutton");
-	setSrc("data:image/svg+xml;base64, " + svg);
+	setViewbox(0, 0, 10, 10);
+	addElement("path", {{ "d", path }});
 }

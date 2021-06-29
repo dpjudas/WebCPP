@@ -21,7 +21,6 @@ private:
 	void onPlayClicked();
 	void onPauseClicked();
 	void onNextClicked();
-	void onPrevClicked();
 	void onProgressClicked(double position);
 	void onVolumeClicked(double position);
 
@@ -35,7 +34,6 @@ private:
 	ImageBox* playButton = nullptr;
 	ImageBox* stopButton = nullptr;
 	ImageBox* pauseButton = nullptr;
-	ImageBox* prevButton = nullptr;
 	ImageBox* nextButton = nullptr;
 	VBoxView* statusSection = nullptr;
 	TextLabel* trackTitle = nullptr;

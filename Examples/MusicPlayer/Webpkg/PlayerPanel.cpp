@@ -10,9 +10,8 @@
 PlayerPanel::PlayerPanel(View* parent) : HBoxView(parent)
 {
 	playButton = new PlayerButton(this, "/Resources/Icons/play.svg", [=]() { onPlayClicked(); });
-	stopButton = new PlayerButton(this, "/Resources/Icons/stop.svg", [=]() { onStopClicked(); });
 	pauseButton = new PlayerButton(this, "/Resources/Icons/pause.svg", [=]() { onPauseClicked(); });
-	prevButton = new PlayerButton(this, "/Resources/Icons/skipprev.svg", [=]() { onPrevClicked(); });
+	stopButton = new PlayerButton(this, "/Resources/Icons/stop.svg", [=]() { onStopClicked(); });
 	nextButton = new PlayerButton(this, "/Resources/Icons/skipnext.svg", [=]() { onNextClicked(); });
 
 	statusSection = new VBoxView(this);
@@ -28,10 +27,11 @@ PlayerPanel::PlayerPanel(View* parent) : HBoxView(parent)
 	progress->addClass("player-progress");
 	volume->addClass("player-volume");
 	playButton->addClass("player-playbutton");
-	stopButton->addClass("player-stopbutton");
 	pauseButton->addClass("player-pausebutton");
-	prevButton->addClass("player-prevbutton");
+	stopButton->addClass("player-stopbutton");
 	nextButton->addClass("player-nextbutton");
+
+	pauseButton->hide();
 
 	update();
 }
@@ -82,21 +82,23 @@ void PlayerPanel::update()
 
 void PlayerPanel::onStopClicked()
 {
+	playButton->show();
+	pauseButton->hide();
 }
 
 void PlayerPanel::onPlayClicked()
 {
+	playButton->hide();
+	pauseButton->show();
 }
 
 void PlayerPanel::onPauseClicked()
 {
+	playButton->show();
+	pauseButton->hide();
 }
 
 void PlayerPanel::onNextClicked()
-{
-}
-
-void PlayerPanel::onPrevClicked()
 {
 }
 

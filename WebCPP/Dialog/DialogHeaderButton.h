@@ -1,9 +1,9 @@
 #pragma once
 
-#include "WebCPP/Controls/ImageBox/ImageBox.h"
+#include "WebCPP/Controls/SvgBox/SvgBox.h"
 
-class DialogHeaderButton : public ImageBox
+class DialogHeaderButton : public SvgBox
 {
 public:
-	DialogHeaderButton(View* view, std::string svg);
+	DialogHeaderButton(View* view, std::string path);
 };

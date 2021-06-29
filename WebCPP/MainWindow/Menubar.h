@@ -32,8 +32,6 @@ public:
 
 private:
 	void onClick(Event* event);
-	void onMouseEnter(Event* event);
-	void onMouseLeave(Event* event);
 
 	Menubar* menubar = nullptr;
 	std::function<void(Menu* menu)> onOpen;

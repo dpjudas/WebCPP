@@ -60,7 +60,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Main.css" />
+    <None Include="NavPanel.css" />
     <None Include="PlayerPanel.css" />
+    <None Include="Playlist.css" />
+    <None Include="PodcastEpisode.css" />
     <None Include="webproject.json" />
   </ItemGroup>
   <ItemGroup>

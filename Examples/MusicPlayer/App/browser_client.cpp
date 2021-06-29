@@ -293,9 +293,13 @@ void BrowserClient::OnSetDraggableRegions(const std::vector<CefDraggableRegion>&
 
 	SetRectRgn(draggable_region, 0, 0, 0, 0);
 
+	HDC dc = GetDC(win32window->handle);
+	int dpi = GetDeviceCaps(dc, LOGPIXELSX);
+	ReleaseDC(win32window->handle, dc);
+
 	for (const CefDraggableRegion& area : regions)
 	{
-		HRGN region = CreateRectRgn(area.bounds.x, area.bounds.y, area.bounds.x + area.bounds.width, area.bounds.y + area.bounds.height);
+		HRGN region = CreateRectRgn(area.bounds.x * dpi / 96, area.bounds.y * dpi / 96, (area.bounds.x + area.bounds.width) * dpi / 96, (area.bounds.y + area.bounds.height) * dpi / 96);
 		CombineRgn(draggable_region, draggable_region, region, area.draggable ? RGN_OR : RGN_DIFF);
 		DeleteObject(region);
 	}
