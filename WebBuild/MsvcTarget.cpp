@@ -12,11 +12,16 @@
 void MsvcTarget::Setup(Solution* solution, Project* project, std::string configuration, std::string initbinDir, std::string initobjDir, std::string wrapperObjDir)
 {
 	msvcDir = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30037\\bin\\Hostx64\\x64";
+	windowsSdkDir = "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64";
 	cl = "\"" + FilePath::combine(msvcDir, "cl") + "\"";
 	link = "\"" + FilePath::combine(msvcDir, "link") + "\"";
 	lib = "\"" + FilePath::combine(msvcDir, "lib") + "\"";
+	rc = "\"" + FilePath::combine(windowsSdkDir, "rc") + "\"";
 
-	InputFiles = project->getFilteredSources({ "cpp", "cc", "ixx" });
+	CppFiles = project->getFilteredSources({ "cpp", "cc", "ixx" });
+	RcFiles = project->getFilteredSources({ "rc" });
+	ManifestFiles = project->getFilteredSources({ "manifest" });
+
 	srcDir = project->projectDir;
 	objDir = initobjDir;
 	binDir = initbinDir;
@@ -38,6 +43,7 @@ void MsvcTarget::Setup(Solution* solution, Project* project, std::string configu
 void MsvcTarget::Build()
 {
 	MsvcCompile::Build(this);
+	MsvcRc::Build(this);
 	if (FilePath::has_extension(outputExe, "lib"))
 		MsvcLib::Build(this);
 	else
@@ -47,6 +53,7 @@ void MsvcTarget::Build()
 void MsvcTarget::Clean()
 {
 	MsvcCompile::Clean(this);
+	MsvcRc::Clean(this);
 	if (FilePath::has_extension(outputExe, "lib"))
 		MsvcLib::Clean(this);
 	else
@@ -57,68 +64,51 @@ void MsvcTarget::Clean()
 
 void MsvcCompile::Build(MsvcTarget* target)
 {
-	for (const std::string& inputFile : target->InputFiles)
+	for (const std::string& inputFile : target->CppFiles)
 	{
 		std::string filename = FilePath::last_component(inputFile);
-		if (IsCppFile(filename))
-		{
-			std::string cppFile = FilePath::combine(target->srcDir, inputFile);
-			std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".obj");
-			std::string depFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".d");
 
-			bool needsCompile = false;
-			try
+		std::string cppFile = FilePath::combine(target->srcDir, inputFile);
+		std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".obj");
+		std::string depFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".d");
+
+		bool needsCompile = false;
+		try
+		{
+			int64_t objTime = File::get_last_write_time(objFile);
+			for (const std::string& dependency : ReadDependencyFile(depFile))
 			{
-				int64_t objTime = File::get_last_write_time(objFile);
-				for (const std::string& dependency : ReadDependencyFile(depFile))
+				int64_t depTime = File::get_last_write_time(dependency);
+				if (depTime > objTime)
 				{
-					int64_t depTime = File::get_last_write_time(dependency);
-					if (depTime > objTime)
-					{
-						needsCompile = true;
-						break;
-					}
+					needsCompile = true;
+					break;
 				}
 			}
-			catch (...)
-			{
-				needsCompile = true;
-			}
+		}
+		catch (...)
+		{
+			needsCompile = true;
+		}
 
-			if (needsCompile)
-			{
-				std::string commandline = target->cl + " " + target->compileFlags + " /nologo /sourceDependencies \"" + depFile + "\" /Fo\"" + objFile + "\" /c " + cppFile;
-				int result = std::system(("\"" + commandline + "\"").c_str());
-				if (result != 0)
-					throw std::runtime_error("Could not compile " + filename);
-			}
+		if (needsCompile)
+		{
+			std::string commandline = target->cl + " " + target->compileFlags + " /nologo /sourceDependencies \"" + depFile + "\" /Fo\"" + objFile + "\" /c " + cppFile;
+			int result = std::system(("\"" + commandline + "\"").c_str());
+			if (result != 0)
+				throw std::runtime_error("Could not compile " + filename);
 		}
 	}
 }
 
 void MsvcCompile::Clean(MsvcTarget* target)
 {
-	for (const std::string& inputFile : target->InputFiles)
+	for (const std::string& inputFile : target->CppFiles)
 	{
 		std::string filename = FilePath::last_component(inputFile);
-		if (IsCppFile(filename))
-		{
-			std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".obj");
-			File::try_remove(objFile);
-		}
+		std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".obj");
+		File::try_remove(objFile);
 	}
-}
-
-bool MsvcCompile::IsCppFile(const std::string& filename)
-{
-	for (const char* ext : { "cpp", "cc", "c" })
-	{
-		if (FilePath::has_extension(filename, ext))
-		{
-			return true;
-		}
-	}
-	return false;
 }
 
 std::vector<std::string> MsvcCompile::ReadDependencyFile(const std::string& filename)
@@ -148,17 +138,68 @@ std::vector<std::string> MsvcCompile::ReadDependencyFile(const std::string& file
 
 /////////////////////////////////////////////////////////////////////////////
 
+void MsvcRc::Build(MsvcTarget* target)
+{
+	for (const std::string& inputFile : target->RcFiles)
+	{
+		std::string filename = FilePath::last_component(inputFile);
+
+		std::string rcFile = FilePath::combine(target->srcDir, inputFile);
+		std::string resFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".res");
+
+		bool needsCompile = false;
+		try
+		{
+			int64_t objTime = File::get_last_write_time(resFile);
+			int64_t depTime = File::get_last_write_time(rcFile);
+			if (depTime > objTime)
+			{
+				needsCompile = true;
+				break;
+			}
+		}
+		catch (...)
+		{
+			needsCompile = true;
+		}
+
+		if (needsCompile)
+		{
+			std::string commandline = target->rc + " " + target->rcFlags + " /nologo /fo\"" + resFile + "\" " + rcFile;
+			int result = std::system(("\"" + commandline + "\"").c_str());
+			if (result != 0)
+				throw std::runtime_error("Could not compile " + filename);
+		}
+	}
+}
+
+void MsvcRc::Clean(MsvcTarget* target)
+{
+	for (const std::string& inputFile : target->RcFiles)
+	{
+		std::string filename = FilePath::last_component(inputFile);
+		std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".res");
+		File::try_remove(objFile);
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 void MsvcLink::Build(MsvcTarget* target)
 {
 	std::vector<std::string> objFiles;
-	for (const std::string& inputFile : target->InputFiles)
+	for (const std::string& inputFile : target->CppFiles)
 	{
 		std::string filename = FilePath::last_component(inputFile);
-		if (IsCppFile(filename))
-		{
-			std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".obj");
-			objFiles.push_back(objFile);
-		}
+		std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".obj");
+		objFiles.push_back(objFile);
+	}
+
+	for (const std::string& inputFile : target->RcFiles)
+	{
+		std::string filename = FilePath::last_component(inputFile);
+		std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".res");
+		objFiles.push_back(objFile);
 	}
 
 	bool needsLink = false;
@@ -172,6 +213,18 @@ void MsvcLink::Build(MsvcTarget* target)
 			{
 				needsLink = true;
 				break;
+			}
+		}
+		if (!needsLink)
+		{
+			for (const std::string& manifestFile : target->ManifestFiles)
+			{
+				int64_t depTime = File::get_last_write_time(FilePath::combine(target->srcDir, manifestFile));
+				if (depTime > exeTime)
+				{
+					needsLink = true;
+					break;
+				}
 			}
 		}
 	}
@@ -190,6 +243,13 @@ void MsvcLink::Build(MsvcTarget* target)
 		responsefile += target->linkFlags;
 		responsefile += " /nologo /out:";
 		responsefile += FilePath::combine(target->objDir, target->outputExe);
+		responsefile += " /manifest:embed";
+		for (const std::string& manifestFile : target->ManifestFiles)
+		{
+			responsefile += " /manifestinput:\"";
+			responsefile += FilePath::combine(target->srcDir, manifestFile);
+			responsefile += "\"";
+		}
 		for (const auto& file : objFiles)
 		{
 			responsefile.push_back(' ');
@@ -214,31 +274,16 @@ void MsvcLink::Clean(MsvcTarget* target)
 	File::try_remove(target->outputExe);
 }
 
-bool MsvcLink::IsCppFile(const std::string& filename)
-{
-	for (const char* ext : { "cpp", "cc", "c" })
-	{
-		if (FilePath::has_extension(filename, ext))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 
 void MsvcLib::Build(MsvcTarget* target)
 {
 	std::vector<std::string> objFiles;
-	for (const std::string& inputFile : target->InputFiles)
+	for (const std::string& inputFile : target->CppFiles)
 	{
 		std::string filename = FilePath::last_component(inputFile);
-		if (IsCppFile(filename))
-		{
-			std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".obj");
-			objFiles.push_back(objFile);
-		}
+		std::string objFile = FilePath::combine(target->objDir, FilePath::remove_extension(filename) + ".obj");
+		objFiles.push_back(objFile);
 	}
 
 	bool needsLib = false;
@@ -287,16 +332,4 @@ void MsvcLib::Build(MsvcTarget* target)
 void MsvcLib::Clean(MsvcTarget* target)
 {
 	File::try_remove(target->outputExe);
-}
-
-bool MsvcLib::IsCppFile(const std::string& filename)
-{
-	for (const char* ext : { "cpp", "cc", "c" })
-	{
-		if (FilePath::has_extension(filename, ext))
-		{
-			return true;
-		}
-	}
-	return false;
 }
