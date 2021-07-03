@@ -18,7 +18,7 @@ void MsvcTarget::Setup(Solution* solution, Project* project, std::string configu
 	lib = "\"" + FilePath::combine(msvcDir, "lib") + "\"";
 	rc = "\"" + FilePath::combine(windowsSdkDir, "rc") + "\"";
 
-	CppFiles = project->getFilteredSources({ "cpp", "cc", "ixx" });
+	CppFiles = project->getFilteredSources({ "cpp", "cc", "ixx", "c" });
 	RcFiles = project->getFilteredSources({ "rc" });
 	ManifestFiles = project->getFilteredSources({ "manifest" });
 
@@ -30,7 +30,7 @@ void MsvcTarget::Setup(Solution* solution, Project* project, std::string configu
 	std::string cef = FilePath::combine(environmentDir, "cef");
 	std::string libpath = FilePath::combine(cef, "Release");
 
-	compileFlags = "-I \"" + cef + "\" /DWIN32 /D_WIN32 /D_WINDOWS /DWINVER=0x0601 /D_WIN32_WINNT=0x601 /DUNICODE /D_UNICODE /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DCEF_USE_SANDBOX /DCEF_USE_ATL /DWRAPPING_CEF_SHARED " + solution->getValue("cppflags", project, configuration);
+	compileFlags = "-I \"" + cef + "\" /DWIN32 /D_WIN32 /D_WINDOWS " + solution->getValue("cppflags", project, configuration);
 	linkFlags = "user32.lib gdi32.lib ole32.lib advapi32.lib version.lib winmm.lib propsys.lib setupapi.lib dbghelp.lib powrprof.lib shell32.lib ws2_32.lib shlwapi.lib delayimp.lib /LIBPATH:\"" + libpath + "\" libcef.lib cef_sandbox.lib " + solution->getValue("linkflags", project, configuration);
 	libFlags = "/LIBPATH:\"" + libpath + "\" /MACHINE:X64 " + solution->getValue("libflags", project, configuration);
 

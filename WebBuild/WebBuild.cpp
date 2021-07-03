@@ -48,6 +48,12 @@ void WebBuild::build()
 				target.Setup(&solution, &p, configuration, binDir, objDir, wrapperDir);
 				target.Build();
 			}
+			else if (p.type == "console")
+			{
+				MsvcTarget target;
+				target.Setup(&solution, &p, configuration, binDir, objDir, {});
+				target.Build();
+			}
 		}
 	}
 }
@@ -79,6 +85,12 @@ void WebBuild::clean()
 
 				MsvcTarget target;
 				target.Setup(&solution, &p, configuration, binDir, objDir, wrapperDir);
+				target.Clean();
+			}
+			else if (p.type == "console")
+			{
+				MsvcTarget target;
+				target.Setup(&solution, &p, configuration, binDir, objDir, {});
 				target.Clean();
 			}
 		}

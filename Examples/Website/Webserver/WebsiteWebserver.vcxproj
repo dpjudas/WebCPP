@@ -12,8 +12,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{58C8A6E3-7522-4BB2-B8E7-F5ACA706F751}</ProjectGuid>
+    <ProjectGuid>{86F9C005-79E6-4486-9557-0918584CF50F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>WebsiteWebserver</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -39,18 +40,18 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NMakeBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe build musicplayerwebpkg debug $(SolutionDir)</NMakeBuildCommandLine>
-    <NMakeCleanCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe clean musicplayerwebpkg debug $(SolutionDir)</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe rebuild musicplayerwebpkg debug $(SolutionDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe build websitewebserver debug $(SolutionDir)</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe clean websitewebserver debug $(SolutionDir)</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe rebuild websitewebserver debug $(SolutionDir)</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>$(SolutionDir);$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\$(Configuration)\bin\</OutDir>
     <IntDir>$(SolutionDir)Build\$(Configuration)\obj\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NMakeBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe build musicplayerwebpkg release $(SolutionDir)</NMakeBuildCommandLine>
-    <NMakeCleanCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe clean musicplayerwebpkg release $(SolutionDir)</NMakeCleanCommandLine>
-    <NMakeReBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe rebuild musicplayerwebpkg release $(SolutionDir)</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe build websitewebserver release $(SolutionDir)</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe clean websitewebserver release $(SolutionDir)</NMakeCleanCommandLine>
+    <NMakeReBuildCommandLine>$(SolutionDir)Build\$(Configuration)\bin\WebBuild.exe rebuild websitewebserver release $(SolutionDir)</NMakeReBuildCommandLine>
     <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeIncludeSearchPath>$(SolutionDir);$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\$(Configuration)\bin\</OutDir>
@@ -59,41 +60,38 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="Main.css" />
-    <None Include="NavPanel.css" />
-    <None Include="PlayerPanel.css" />
-    <None Include="Playlist.css" />
-    <None Include="PodcastEpisode.css" />
     <None Include="webproject.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\WebBuild\WebBuild.vcxproj">
       <Project>{d7a55549-64da-4409-a1a5-999c47095e86}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\WebCPP\WebCPP.vcxproj">
-      <Project>{467663d0-a156-4c44-93ba-733c0bf0461e}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="JsonValue.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MusicPlayer.cpp" />
-    <ClCompile Include="NavPanel.cpp" />
-    <ClCompile Include="PlayerButton.cpp" />
-    <ClCompile Include="PlayerPanel.cpp" />
-    <ClCompile Include="PlayerProgress.cpp" />
-    <ClCompile Include="PlayerVolume.cpp" />
-    <ClCompile Include="Playlist.cpp" />
-    <ClCompile Include="PodcastEpisode.cpp" />
+    <ClCompile Include="miniz.c" />
+    <ClCompile Include="Service.cpp" />
+    <ClCompile Include="UTF16.cpp" />
+    <ClCompile Include="UTF8Reader.cpp" />
+    <ClCompile Include="Webserver.cpp" />
+    <ClCompile Include="WebsiteService.cpp" />
+    <ClCompile Include="ZipReader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MusicPlayer.h" />
-    <ClInclude Include="NavPanel.h" />
-    <ClInclude Include="PlayerButton.h" />
-    <ClInclude Include="PlayerPanel.h" />
-    <ClInclude Include="PlayerProgress.h" />
-    <ClInclude Include="PlayerVolume.h" />
-    <ClInclude Include="Playlist.h" />
-    <ClInclude Include="PodcastEpisode.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="JsonValue.h" />
+    <ClInclude Include="miniz.h" />
+    <ClInclude Include="Service.h" />
+    <ClInclude Include="UTF16.h" />
+    <ClInclude Include="UTF8Reader.h" />
+    <ClInclude Include="Webserver.h" />
+    <ClInclude Include="WebsiteService.h" />
+    <ClInclude Include="ZipReader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="WebsiteWebserver.manifest" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,7 +20,7 @@ Project CefWrapperLib::GetWrapperProject(Solution* solution, std::string configu
 	p.output = "libcef_dll_wrapper.lib";
 	p.projectDir = FilePath::combine(Environment::getVariable("EnvironmentDir"), "cef\\libcef_dll");
 	p.sources = InputFiles;
-	p.configurations[configuration]["cppflags"] = JsonValue::string("/O2 /Zi /DEBUG:FULL /EHsc /std:c++17 /permissive-");
+	p.configurations[configuration]["cppflags"] = JsonValue::string("/O2 /Zi /DEBUG:FULL /EHsc /std:c++17 /permissive- /DWINVER=0x0601 /D_WIN32_WINNT=0x601 /DUNICODE /D_UNICODE /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DCEF_USE_SANDBOX /DCEF_USE_ATL /DWRAPPING_CEF_SHARED");
 	p.configurations[configuration]["libflags"] = JsonValue::string("");
 	return p;
 }

@@ -25,7 +25,7 @@ void EmscriptenTarget::Setup(Solution* solution, Project* project, std::string c
 	Environment::setVariable("JAVA_HOME", emsdk + "\\java\\8.152_64bit");
 
 	type = project->type;
-	InputFiles = project->getFilteredSources({ "cpp", "cc", "ixx" });
+	InputFiles = project->getFilteredSources({ "cpp", "cc", "ixx", "c" });
 	srcDir = project->projectDir;
 	binDir = initbinDir;
 	objDir = initobjDir;

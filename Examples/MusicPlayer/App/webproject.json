@@ -71,12 +71,12 @@
   "configurations": [
     {
       "name": "debug",
-      "cppflags": "/Zi /DEBUG:FASTLINK /EHsc /std:c++17 /permissive- -I $(SolutionDir)",
+      "cppflags": "/Zi /DEBUG:FASTLINK /EHsc /std:c++17 /permissive- -I $(SolutionDir) /DWINVER=0x0601 /D_WIN32_WINNT=0x601 /DUNICODE /D_UNICODE /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DCEF_USE_SANDBOX /DCEF_USE_ATL /DWRAPPING_CEF_SHARED",
       "linkflags": "/DEBUG"
     },
     {
       "name": "release",
-      "cppflags": "/O2 /Zi /DEBUG:FULL /EHsc /std:c++17 /permissive- -I $(SolutionDir)",
+      "cppflags": "/O2 /Zi /DEBUG:FULL /EHsc /std:c++17 /permissive- -I $(SolutionDir) /DWINVER=0x0601 /D_WIN32_WINNT=0x601 /DUNICODE /D_UNICODE /DNOMINMAX /DWIN32_LEAN_AND_MEAN /DCEF_USE_SANDBOX /DCEF_USE_ATL /DWRAPPING_CEF_SHARED",
       "linkflags": "/DEBUG"
     }
   ]

@@ -1,0 +1,23 @@
+{
+  "name": "websitewebpkg",
+  "type": "wasm-webpkg",
+  "output": "Website.webpkg",
+  "sources": [
+    "Main.cpp",
+  ],
+  "wwwroot": "wwwroot",
+  "cssfile": "Main.css",
+  "shellfile": "Main.html",
+  "configurations": [
+    {
+      "name": "debug",
+      "cppflags": "-g -O0 -DDEBUG -D_DEBUG -I $(SolutionDir)",
+      "linkflags": "-g -O0"
+    },
+    {
+      "name": "release",
+      "cppflags": "-O1 -DRELEASE -D_RELEASE -I $(SolutionDir)",
+      "linkflags": "-O1"
+    }
+  ]
+}
