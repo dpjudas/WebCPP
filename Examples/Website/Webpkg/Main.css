@@ -1,61 +1,10 @@
 
 @import "../../../WebCPP/WebCPP.css";
-
-:root {
-    --panelcolor: rgb(255,255,255);
-
-    --scrollbarthumb: rgb(210,210,210);
-    --paneledgecolor: rgb(210,210,210);
-    --controlbordercolor: rgb(210,210,210);
-    --menubordercolor: rgb(210,210,210);
-    --toolbarseparatorcolor: rgb(210,210,210);
-    --menuitemseparator: rgb(210,210,210);
-
-    --headercolor: rgb(236,241,244);
-    --splittercolor: rgb(236,241,244);
-
-    --headertextcolor: black;
-    --menubaritemhighlightcolor: black;
-    --menutextcolor: black;
-    --statusbartextcolor: black;
-
-    --scrollbarbackground: rgb(247,247,247);
-    --statusbarbackground: rgb(247,247,247);
-
-    --menubackground: rgb(247,247,247);
-    --menubaritemhighlightbackground: rgb(247,247,247);
-    --dialogheaderbuttonhighlight: rgb(247,247,247);
-
-    --statusbaredgecolor: rgb(216,219,222);
-
-    --dialogheaderbuttoncolor: rgb(50,50,50);
-
-    --dialogclosebuttonhighlight: red;
-
-    --headermenubuttonhighlight: rgb(23,107,209);
-    --selectedcolor: rgb(23,107,209);
-    --appmenubackground: white;
-    --appmenubuttonhighlight: rgb(221,233,249);
-    --appmenuitemhighlight: rgb(221,233,249);
-    --alternaterowcolor: rgb(250,250,250);
-    --listviewheadersplitter: rgb(220,220,220);
-    --listviewitemhover: rgb(229,243,255);
-    --listviewitemselected: rgb(227,227,227);
-    --listviewfocuseditemselected: rgb(204,232,255);
-    --listviewitemoutline: rgb(153,209,255);
-    --toolbarbuttonhover: rgb(221,233,249);
-    --tabbarselected: rgb(197,197,197);
-    --tabcontrolbordercolor: rgb(197,197,197);
-}
-
-.webpage {
-
-}
-
-.application {
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
-    background: white;
-}
+@import "ApplicationView.css";
+@import "WebPageHeader.css";
+@import "WebPageBody.css";
+@import "WebPageFooter.css";
+@import "BigTeaser.css";
+@import "ThreeChoices.css";
+@import "TwoChoices.css";
+@import "Theme.css";

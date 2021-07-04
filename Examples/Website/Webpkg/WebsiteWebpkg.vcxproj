@@ -59,7 +59,15 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="ApplicationView.css" />
+    <None Include="BigTeaser.css" />
     <None Include="Main.css" />
+    <None Include="Theme.css" />
+    <None Include="ThreeChoices.css" />
+    <None Include="TwoChoices.css" />
+    <None Include="WebPageBody.css" />
+    <None Include="WebPageFooter.css" />
+    <None Include="WebPageHeader.css" />
     <None Include="webproject.json" />
   </ItemGroup>
   <ItemGroup>
@@ -71,7 +79,25 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ApplicationView.cpp" />
+    <ClCompile Include="BigTeaser.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ThreeChoices.cpp" />
+    <ClCompile Include="TwoChoices.cpp" />
+    <ClCompile Include="WebPageBody.cpp" />
+    <ClCompile Include="WebPageFooter.cpp" />
+    <ClCompile Include="WebPageBlock.cpp" />
+    <ClCompile Include="WebPageHeader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ApplicationView.h" />
+    <ClInclude Include="BigTeaser.h" />
+    <ClInclude Include="ThreeChoices.h" />
+    <ClInclude Include="TwoChoices.h" />
+    <ClInclude Include="WebPageBlock.h" />
+    <ClInclude Include="WebPageBody.h" />
+    <ClInclude Include="WebPageFooter.h" />
+    <ClInclude Include="WebPageHeader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
