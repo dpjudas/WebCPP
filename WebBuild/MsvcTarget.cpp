@@ -11,8 +11,8 @@
 
 void MsvcTarget::Setup(Solution* solution, Project* project, std::string configuration, std::string initbinDir, std::string initobjDir, std::string wrapperObjDir)
 {
-	msvcDir = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.29.30037\\bin\\Hostx64\\x64";
-	windowsSdkDir = "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.18362.0\\x64";
+	msvcDir = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.31.31103\\bin\\Hostx64\\x64";
+	windowsSdkDir = "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.19041.0\\x64";
 	cl = "\"" + FilePath::combine(msvcDir, "cl") + "\"";
 	link = "\"" + FilePath::combine(msvcDir, "link") + "\"";
 	lib = "\"" + FilePath::combine(msvcDir, "lib") + "\"";
