@@ -68,7 +68,7 @@ var files = [
 	"Webserver/HttpSys/HttpSysWebserver.h",
 ];
 
-var webserver = Targets.addStaticLibrary("Common");
+var webserver = Targets.addStaticLibrary("Webserver");
 webserver.addFiles(files);
 webserver.addIncludePaths([".", ".."]);
 webserver.addDefines(["WIN32", "_WIN32", "UNICODE", "_UNICODE"]);

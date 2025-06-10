@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Common/Text/StringFormat.h"
+#include "Text/StringFormat.h"
 #include <list>
 
 enum class LogLevel

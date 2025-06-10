@@ -132,4 +132,5 @@ var files = [
 
 var website = Targets.addWebLibrary("WebCPP");
 website.setCSSRootFile("WebCPP.css");
+website.addIncludePaths([".", ".."]);
 website.addFiles(files);

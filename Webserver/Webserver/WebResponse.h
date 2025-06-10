@@ -1,7 +1,7 @@
 #pragma once
 
 #include "WebHeaderName.h"
-#include "Common/IOData/DataBuffer.h"
+#include "IOData/DataBuffer.h"
 
 class WebResponse
 {
