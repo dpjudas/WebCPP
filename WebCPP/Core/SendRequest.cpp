@@ -6,22 +6,27 @@
 
 namespace
 {
-	std::vector<std::unique_ptr<JSCallback>> pendingRequests;
 	std::function<void(int statusCode, std::string contentType, std::string body)> defaultErrorHandler;
 }
 
 void sendRequest(std::string url, const JsonValue& request, std::function<void(JsonValue response)> responseHandler, std::function<void(int statusCode, std::string contentType, std::string body)> errorHandler)
 {
 	JSValue httpRequest = JSValue::global("XMLHttpRequest").new_();
-
-	auto onreadystatechange = std::make_unique<JSCallback>([=](JSValue args) -> JSValue
+	auto onreadystatechange = new JSCallback();
+	onreadystatechange->setCallback([=](JSValue args) -> JSValue
 	{
 		if (httpRequest["readyState"].as<int>() == 4 /*XMLHttpRequest.DONE*/)
 		{
 			int statusCode = httpRequest["status"].as<int>();
-			std::string contentType = statusCode != 0 ? httpRequest.call<std::string>("getResponseHeader", std::string("Content-Type")) : "";
+			std::string contentType;
+			if (statusCode != 0)
+			{
+				JSValue result = httpRequest.call<JSValue>("getResponseHeader", std::string("Content-Type"));
+				if (!result.isNull())
+					contentType = result.as<std::string>();
+			}
 			JSValue responseText = httpRequest["responseText"];
-			if (statusCode == 200 && contentType == "application/json")
+			if (statusCode == 200 && contentType.find("application/json") != std::string::npos)
 			{
 				if (responseHandler)
 				{
@@ -39,13 +44,13 @@ void sendRequest(std::string url, const JsonValue& request, std::function<void(J
 					callDefaultRequestErrorHandler(statusCode, contentType, responseText.isString() ? responseText.as<std::string>() : "");
 				}
 			}
+			delete onreadystatechange;
 		}
 
 		return JSValue::undefined();
 	});
 
 	httpRequest.set("onreadystatechange", onreadystatechange->getHandler());
-	pendingRequests.push_back(std::move(onreadystatechange));
 
 	httpRequest.call<void>("open", std::string("POST"), url, true);
 	std::string accessToken = Navigation::getAccessToken();
@@ -72,7 +77,8 @@ void sendRequestSaveResponse(std::string url, const JsonValue& request, const st
 {
 	JSValue httpRequest = JSValue::global("XMLHttpRequest").new_();
 
-	auto onreadystatechange = std::make_unique<JSCallback>([=](JSValue args) -> JSValue
+	auto onreadystatechange = new JSCallback();
+	onreadystatechange->setCallback([=](JSValue args) -> JSValue
 	{
 		if (httpRequest["readyState"].as<int>() == 4 /*XMLHttpRequest.DONE*/)
 		{
@@ -103,13 +109,13 @@ void sendRequestSaveResponse(std::string url, const JsonValue& request, const st
 					callDefaultRequestErrorHandler(statusCode, contentType, responseText.isString() ? responseText.as<std::string>() : "");
 				}
 			}
+			delete onreadystatechange;
 		}
 
 		return JSValue::undefined();
 	});
 
 	httpRequest.set("onreadystatechange", onreadystatechange->getHandler());
-	pendingRequests.push_back(std::move(onreadystatechange));
 
 	httpRequest.call<void>("open", std::string("POST"), url, true);
 	httpRequest.set("responseType", "blob");

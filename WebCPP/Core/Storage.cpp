@@ -4,7 +4,8 @@
 
 JsonValue LocalStorage::getJson(const std::string& key, const JsonValue& defaultValue)
 {
-	return JsonValue::parse(getItem(key, defaultValue.to_json()));
+	JSValue value = JSValue::global("localStorage").call<JSValue>("getItem", key);
+	return value.isNull() ? defaultValue : JsonValue::parse(value.as<std::string>());
 }
 
 double LocalStorage::getNumber(const std::string& key, double defaultValue)
@@ -66,7 +67,8 @@ std::vector<std::string> LocalStorage::keys()
 
 JsonValue SessionStorage::getJson(const std::string& key, const JsonValue& defaultValue)
 {
-	return JsonValue::parse(getItem(key, defaultValue.to_json()));
+	JSValue value = JSValue::global("sessionStorage").call<JSValue>("getItem", key);
+	return value.isNull() ? defaultValue : JsonValue::parse(value.as<std::string>());
 }
 
 double SessionStorage::getNumber(const std::string& key, double defaultValue)

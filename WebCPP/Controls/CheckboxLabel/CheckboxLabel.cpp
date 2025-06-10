@@ -1,15 +1,22 @@
+
 #include "CheckboxLabel.h"
 #include "../Checkbox/Checkbox.h"
 #include "../ImageBox/ImageBox.h"
 #include "../TextLabel/TextLabel.h"
 
-CheckboxLabel::CheckboxLabel(View* parent) : HBoxView(parent)
+CheckboxLabel::CheckboxLabel() : View("checkboxlabel-view")
 {
-	addClass("checkboxlabel");
-	element->setStyle("align-items", "center");
-	element->setStyle("margin", "2px 0");
+	checkbox = new Checkbox();
 
-	checkbox = new Checkbox(this);
+	auto layout = createHBoxLayout();
+	layout->setAlignItems(FlexAlignItems::center);
+	layout->setGap(2.0);
+	layout->addView(checkbox);
+}
+
+CheckboxLabel::CheckboxLabel(const std::string& text) : CheckboxLabel()
+{
+	setText(text);
 }
 
 void CheckboxLabel::setChangeHandler(const std::function<void(bool checked)>& handler)
@@ -33,6 +40,8 @@ bool CheckboxLabel::isChecked()
 void CheckboxLabel::setEnabled(const bool value)
 {
 	checkbox->setEnabled(value);
+	imagebox->setEnabled(value);
+	label->setEnabled(value);
 }
 
 bool CheckboxLabel::getEnabled() const
@@ -44,9 +53,11 @@ void CheckboxLabel::setSrc(const std::string& src)
 {
 	if (imagebox == nullptr)
 	{
-		imagebox = new ImageBox(this);
+		imagebox = new ImageBox();
 		imagebox->element->setStyle("padding-right", "2px");
-		imagebox->setClickHandler([=]() { setChecked(!isChecked()); });
+		imagebox->clicked = [=]() { if (getEnabled() == true) setChecked(!isChecked()); };
+
+		getLayout<HBoxLayout>()->addView(imagebox);
 	}
 	imagebox->setSrc(src);
 	imagebox->setSize(16, 16);
@@ -56,8 +67,10 @@ void CheckboxLabel::setText(const std::string& text)
 {
 	if (label == nullptr)
 	{
-		label = new TextLabel(this);
-		label->setClickHandler([=]() { setChecked(!isChecked()); });
+		label = new TextLabel();
+		label->clicked = [=]() { if (getEnabled() == true) setChecked(!isChecked()); };
+
+		getLayout<HBoxLayout>()->addView(label);
 	}
 	label->setText(text);
 }

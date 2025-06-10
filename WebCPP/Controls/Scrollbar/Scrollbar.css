@@ -1,0 +1,93 @@
+
+scrollbar-view {
+    background: rgb(240,240,240);
+}
+
+scrollbarcorner-view {
+    background: rgb(240,240,240);
+    width: 16px;
+    height: 16px;
+}
+
+.scrollbar-vert {
+    width: 16px;
+}
+
+.scrollbar-horz {
+    height: 16px;
+}
+
+.scrollbar-vert .scrollbar-button-decr {
+    width: 16px;
+    height: 16px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(167,167,167)"><polygon points="8,5 3,10 13,10"/></svg>') center;
+}
+
+    .scrollbar-vert .scrollbar-button-decr:hover {
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(147,147,147)"><polygon points="8,5 3,10 13,10"/></svg>') center;
+    }
+
+.scrollbar-vert .scrollbar-button-incr {
+    width: 16px;
+    height: 16px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(167,167,167)"><polygon points="8,11 3,6 13,6"/></svg>') center;
+}
+
+    .scrollbar-vert .scrollbar-button-incr:hover {
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(147,147,147)"><polygon points="8,11 3,6 13,6"/></svg>') center;
+    }
+
+.scrollbar-horz .scrollbar-button-decr {
+    width: 16px;
+    height: 16px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(167,167,167)"><polygon points="5,8 10,3 10,13"/></svg>') center;
+}
+
+    .scrollbar-horz .scrollbar-button-decr:hover {
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(147,147,147)"><polygon points="5,8 10,3 10,13"/></svg>') center;
+    }
+
+.scrollbar-horz .scrollbar-button-incr {
+    width: 16px;
+    height: 16px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(167,167,167)"><polygon points="11,8 6,3 6,13"/></svg>') center;
+}
+
+    .scrollbar-horz .scrollbar-button-incr:hover {
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(147,147,147)"><polygon points="11,8 6,3 6,13"/></svg>') center;
+    }
+
+.scrollbar-vert .scrollbar-track {
+    width: 16px;
+}
+
+.scrollbar-horz .scrollbar-track {
+    height: 16px;
+}
+
+.scrollbar-thumb {
+    background: rgb(197,197,197);
+}
+
+    .scrollbar-thumb:hover {
+        background: rgb(167,167,167);
+    }
+
+    .scrollbar-vert .scrollbar-thumb {
+        left: 4px;
+        right: 4px;
+        top: 0;
+        bottom: 0;
+    }
+
+.scrollbar-horz .scrollbar-thumb {
+    top: 4px;
+    bottom: 4px;
+    left: 0;
+    right: 0;
+}
+
+.uses-scrollbar {
+    scrollbar-width: none;
+    overflow: scroll;
+}

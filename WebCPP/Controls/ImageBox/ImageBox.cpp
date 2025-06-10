@@ -1,16 +1,32 @@
 
 #include "ImageBox.h"
 
-ImageBox::ImageBox(View* parent) : View(parent, "img")
+ImageBox::ImageBox() : View("img")
 {
 	addClass("imagebox");
 	element->setStyle("visibility", "hidden");
+	element->addEventListener("click", [=](Event* e) { if (getEnabled() == true) onClicked(e); });
+}
+
+void ImageBox::setEnabled(const bool value)
+{
+	enabled = value;
+}
+
+bool ImageBox::getEnabled() const
+{
+	return enabled;
 }
 
 void ImageBox::setSrc(std::string src)
 {
 	if (!src.empty())
 	{
+		if (src.size() > 2 && src[0] == ':' && src[1] == '/')
+		{
+			src = resourceUrlBase + src.substr(2);
+		}
+
 		element->setAttribute("src", src);
 		element->setStyle("visibility", "inherit");
 	}
@@ -27,7 +43,24 @@ void ImageBox::setSize(const int width, const int height)
 	element->setStyle("height", std::to_string(height) + "px");
 }
 
-void ImageBox::setClickHandler(const std::function<void()>& handler)
+void ImageBox::setAlt(const std::string& alternateText)
 {
-	element->addEventListener("click", [=](Event* e) { e->stopPropagation(); handler(); });
+	element->setAttribute("alt", alternateText);
 }
+
+void ImageBox::onClicked(Event* event)
+{
+	if (clicked != nullptr)
+	{
+		event->stopPropagation();
+		event->preventDefault();
+		clicked();
+	}
+}
+
+void ImageBox::setResourceUrlBase(const std::string& urlBase)
+{
+	resourceUrlBase = urlBase;
+}
+
+std::string ImageBox::resourceUrlBase;

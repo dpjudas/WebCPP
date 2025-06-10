@@ -1,9 +1,60 @@
 
-.combobox {
-    display: block;
-    border: 1px solid var(--controlbordercolor);
-    padding: 2px 4px;
+combobox-view {
+    user-select: none;
+
+    &:focus, &.focus {
+        outline: none;
+    }
+
+    &.disabled {
+        filter: grayscale();
+    }
+
+    .combobox-icon {
+        position: absolute;
+        padding-top: 1px;
+        padding-right: 4px;
+        width: 14px;
+        height: 14px;
+    }
+
+    .combobox-label {
+        overflow: hidden;
+    }
+
+    .combobox-label:before {
+        content: "\A0"; /* to ensure baseline with label and text in combobox */
+    }
+}
+
+comboboxpopup-view {
+    position: absolute;
+    left: -1px;
+    top: calc(22px - 2px);
+    width: 100%;
     background: white;
-    font: 12px/16px "Segoe UI", "Tahoma", sans-serif;
-    color: black;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.3);
+    z-index: 1000;
+    overflow-y: auto;
+    user-select: none;
+}
+
+comboboxpopupitem-view {
+
+    .comboboxpopup-itemselected {
+    }
+
+    .comboboxpopupitem-icon.imagebox {
+    }
+
+    textlabel-view.comboboxpopupitem-text {
+        white-space: pre;
+    }
+
+    textlabel-view.comboboxpopupitem-text:before {
+        content: "\A0"; /* to ensure baseline with label and text in combobox */
+    }
+}
+
+comboboxpopupitemseparator-view {
 }

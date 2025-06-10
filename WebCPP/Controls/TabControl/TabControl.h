@@ -1,64 +1,29 @@
 #pragma once
 
 #include "WebCPP/Core/View.h"
-#include "WebCPP/Controls/ImageBox/ImageBox.h"
-#include "WebCPP/Controls/TextLabel/TextLabel.h"
 
 class TabBar;
 class TabBarTab;
 
-class TabControl : public VBoxView
+class TabControl : public View
 {
 public:
-	TabControl(View* parent);
+	TabControl(bool tabsAtBottom = false);
 
-	void addPage(std::string icon, std::string label, View* page);
+	void addPage(std::string icon, std::string label, View* page, std::function<void(double clientX, double clientY)> onContextMenu = {});
 	void showPage(View* page);
 
-	std::function<void()> apply;
+	std::function<void(View*)> onPageShow;
 
 private:
 	TabBarTab* findTab(View* page);
 	void onPageTabClicked(View* page);
 	void setupUi();
 
+	bool tabsAtBottom = false;
 	TabBar* tabs = nullptr;
 	std::map<TabBarTab*, std::unique_ptr<View>> pages;
 	View* currentPage = nullptr;
 
-	VBoxView* widgetStack = nullptr;
-};
-
-class TabBar : public HBoxView
-{
-public:
-	TabBar(View* parent) : HBoxView(parent) { addClass("tabbar"); }
-};
-
-class TabBarTab : public HBoxView
-{
-public:
-	TabBarTab(View* parent) : HBoxView(parent)
-	{
-		icon = new ImageBox(this);
-		label = new TextLabel(this);
-
-		addClass("tabbartab");
-		icon->addClass("tabbartab-icon");
-		label->addClass("tabbartab-label");
-	}
-
-	void setText(const std::string& text)
-	{
-		label->setText(text);
-	}
-
-	void setIcon(const std::string& src)
-	{
-		icon->setSrc(src);
-	}
-
-private:
-	ImageBox* icon = nullptr;
-	TextLabel* label = nullptr;
+	View* widgetStack = nullptr;
 };

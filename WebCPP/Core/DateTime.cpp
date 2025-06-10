@@ -14,7 +14,15 @@ DateTime::DateTime(int64_t value) : handle(JSValue::global("Date").new_((double)
 {
 }
 
-DateTime::DateTime(const std::string& dateString) : handle(JSValue::global("Date").new_(dateString))
+static std::string checkForUTC(const std::string& dateString)
+{
+	if (!dateString.empty() && dateString.back() != 'Z')
+		return dateString + "Z";
+	else
+		return dateString;
+}
+
+DateTime::DateTime(const std::string& dateString, Timezone timezone) : handle(JSValue::global("Date").new_(timezone == Timezone::utc ? checkForUTC(dateString) : dateString))
 {
 }
 
@@ -45,11 +53,6 @@ DateTime::DateTime(int year, int month, int day, int hours, int minutes, int sec
 DateTime DateTime::now()
 {
 	return DateTime();
-}
-
-DateTime DateTime::parse(const std::string& dateString)
-{
-	return DateTime(dateString);
 }
 
 int64_t DateTime::getTime() const
@@ -244,17 +247,17 @@ std::string DateTime::toString() const
 
 std::string DateTime::toLocaleString() const
 {
-	return handle.call<std::string>("toLocaleString");
+	return handle.call<std::string>("toLocaleString", JSValue::global("navigator")["language"], JSValue::object());
 }
 
 std::string DateTime::toLocaleDateString() const
 {
-	return handle.call<std::string>("toLocaleDateString");
+	return handle.call<std::string>("toLocaleDateString", JSValue::global("navigator")["language"], JSValue::object());
 }
 
 std::string DateTime::toLocaleTimeString() const
 {
-	return handle.call<std::string>("toLocaleTimeString");
+	return handle.call<std::string>("toLocaleTimeString", JSValue::global("navigator")["language"], JSValue::object());
 }
 
 void DateTime::addMilliSeconds(int milliSeconds)

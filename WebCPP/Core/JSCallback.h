@@ -6,9 +6,11 @@
 class JSCallback
 {
 public:
+	JSCallback();
 	JSCallback(std::function<JSValue(JSValue args)> callback, bool deleteOnInvoke = false);
 	~JSCallback();
 
+	void setCallback(std::function<JSValue(JSValue)> callback, bool deleteOnInvoke = false);
 	JSValue getHandler();
 	void invoke();
 

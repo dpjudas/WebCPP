@@ -1,0 +1,51 @@
+
+toolbarbutton-view {
+    user-select: none;
+
+    &.disabled {
+        opacity: 0.5;
+        filter: grayscale();
+    }
+
+    &:hover {
+    }
+
+    &.disabled:hover {
+    }
+
+    &.selected {
+    }
+}
+
+.toolbarbutton-icon.imagebox {
+    width: 24px;
+    height: 24px;
+}
+
+toolbarseparator-view {
+    width: 1px;
+    height: 24px;
+}
+
+toolbardropdown-view {
+}
+
+.toolbardropdown-combobox {
+    align-self: center;
+    width: 150px;
+}
+
+toolbartextinput-view {
+}
+
+.toolbartextinput-edit {
+    align-self: center;
+    width: 200px;
+}
+
+toolbar-view {
+    align-items: center;
+}
+
+.toolbar-view {
+}

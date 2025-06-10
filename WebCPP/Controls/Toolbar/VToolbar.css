@@ -1,0 +1,29 @@
+
+vtoolbarbutton-view {
+    width: 65px;
+
+    &.disabled {
+        opacity: 0.5;
+        filter: grayscale();
+    }
+
+    &:hover {
+    }
+
+    &.disabled:hover {
+        background: none;
+    }
+
+    &.selected {
+    }
+}
+
+.vtoolbarbutton-icon.imagebox {
+    width: 24px;
+    height: 24px;
+    align-self: center;
+}
+
+textlabel-view.vtoolbarbutton-text {
+    text-align: center;
+}

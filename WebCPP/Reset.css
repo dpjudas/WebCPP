@@ -1,7 +1,7 @@
 
 /* reset css styling */
 
-body, header, footer, section, iframe, h1, h2, h3, h4, h5, p, ul, ol, li, menu, menuitem {
+body, header, footer, section, h1, h2, h3, h4, h5, p, ul, ol, li, menu, menuitem {
     margin: 0;
     border: none;
     padding: 0;
@@ -17,25 +17,7 @@ h1, h2, h3, h4, h5 {
     line-height: inherit;
 }
 
-/* base page style */
-
-body {
-    background: white;
-    font: 12px/16px "Segoe UI", "Tahoma", "Arial", "Helvetica", sans-serif;
-    color: black;
-}
-
-a, a:hover, a:visited {
-    color: #157f8d;
+a, a:hover, a:visited, a:hover {
+    color: inherit;
     text-decoration: none;
 }
-
-    a:hover {
-        color: #0b434a;
-    }
-
-/*
-::-webkit-scrollbar { margin: 4px; width: 8px; height: 8px; background: rgb(46, 51, 56); border-radius: 4px; }
-::-webkit-scrollbar-thumb { background: rgb(86,93,113); border-radius: 4px; }
-::-webkit-scrollbar-button { display: none; }
-*/

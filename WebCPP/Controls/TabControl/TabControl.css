@@ -1,11 +1,9 @@
 
-.tabbartab {
-    padding: 6px 15px;
-    cursor: default;
-    border: 1px solid transparent;
-    border-bottom: none;
-    margin-bottom: -1px;
+tabbartab-view {
     z-index: 1;
+}
+
+tabcontrol-view.tabsAtBottom > tabbar-view > tabbartab-view {
 }
 
 .tabbartab-icon {
@@ -15,19 +13,13 @@
 }
 
 .tabbartab-label {
-    line-height: 20px;
 }
 
-.tabbartab.selected {
-    background: white;
-    border-color: var(--tabbarselected);
+tabbartab-view.selected {
 }
 
-.tabcontrol {
-    flex: 1 1 auto;
+tabcontrol-view {
 }
 
 .tabcontrol-widgetstack {
-    background: white;
-    border: 1px solid var(--tabcontrolbordercolor);
 }

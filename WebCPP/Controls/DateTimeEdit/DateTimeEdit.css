@@ -1,9 +1,4 @@
 
-.datetimeedit {
-    width: 164px;
+input.datetimeedit {
     display: block;
-    border: 1px solid var(--controlbordercolor);
-    padding: 2px 4px;
-    font: 12px/16px "Consolas", "Courier New", monospace;
-    color: black;
 }

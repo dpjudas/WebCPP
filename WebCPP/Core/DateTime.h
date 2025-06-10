@@ -3,12 +3,18 @@
 #include "JSValue.h"
 #include <cstdint>
 
+enum class Timezone
+{
+	utc,
+	local
+};
+
 class DateTime
 {
 public:
 	DateTime();
 	DateTime(int64_t value);
-	DateTime(const std::string& dateString);
+	DateTime(const std::string& dateString, Timezone = Timezone::utc);
 	DateTime(int year, int month);
 	DateTime(int year, int month, int day);
 	DateTime(int year, int month, int day, int hours);
@@ -17,7 +23,6 @@ public:
 	DateTime(int year, int month, int day, int hours, int minutes, int seconds, int milliseconds);
 
 	static DateTime now();
-	static DateTime parse(const std::string& dateString);
 
 	int64_t getTime() const;
 	void setTime(int64_t value);

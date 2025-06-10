@@ -8,16 +8,26 @@ class TextLabel;
 class Button : public View
 {
 public:
-	Button(View* parent);
+	Button();
 
 	void setIcon(std::string src);
+	std::string getText() const;
 	void setText(std::string text);
 	void setEnabled(bool value);
 	bool getEnabled() const;
 
 	bool enabled = true;
 
+	bool setFocus() override;
+
+	void click(Event* event);
+
+	std::function<void()> pressed;
+
 private:
+	void onClicked(Event* event);
+	void onKeyDown(Event* event);
+
 	ImageBox* image = nullptr;
 	TextLabel* label = nullptr;
 };

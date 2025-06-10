@@ -1,0 +1,24 @@
+
+menu-view {
+    position: fixed;
+    background: rgb(240,240,240);
+    color: black;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.3);
+}
+
+menuitem-view {
+
+    .menuitem-icon.imagebox {
+        width: 16px;
+        height: 16px;
+    }
+
+    textlabel-view.menuitem-text {
+        white-space: pre;
+    }
+
+}
+
+menuitemseparator-view {
+    height: 1px;
+}

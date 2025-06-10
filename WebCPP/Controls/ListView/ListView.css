@@ -1,72 +1,34 @@
 
-.listview {
-    flex: 1 1 0;
+listview-view {
 }
 
-.listview-headersplitter {
+listviewheadersplitter-view {
     cursor: ew-resize;
     justify-content: center;
 }
 
-.listview-headersplitter > .view {
-    border-left: 1px solid var(--listviewheadersplitter);
+listviewheadersplitter-view > basic-view {
     width: 1px;
 }
 
-.listviewheader {
-    background: var(--panelcolor);
-    padding: 0 5px;
-    font-weight: bold;
-    line-height: 24px;
+listviewheader-view {
+    overflow: scroll;
+    scrollbar-width: none;
 }
 
-.listviewbody {
-    background: white;
+    listviewheader-view.sizingmode {
+        cursor: ew-resize;
+    }
+
+listviewbody-view {
     overflow: auto;
     outline: none;
 }
 
-.listviewheadline {
-    font-weight: bold;
-}
-
-.listviewitem {
-    line-height: 24px;
-    padding: 0 5px;
+listviewitem-view {
     user-select: none;
-}
 
-.listviewitem.focused {
-    outline: 1px dotted var(--listviewitemoutline);
-    outline-offset: -1px;
-}
-
-.listviewbody.alternate .listviewitem:nth-child(even) {
-    background: var(--alternaterowcolor);
-}
-
-.listviewbody.alternate .listviewitem:hover {
-    background: var(--listviewitemhover);
-}
-
-.listviewitem:hover {
-    background: var(--listviewitemhover);
-}
-
-.listviewitem.selected,
-.listviewbody.alternate .listviewitem.selected {
-    background: var(--listviewitemselected);
-}
-
-.listview.focused .listviewitem.selected,
-.listview.focused .listviewbody.alternate .listviewitem.selected {
-    background: var(--listviewfocuseditemselected);
-}
-
-.listviewitemicon {
-    width: 16px;
-    height: 16px;
-    padding-right: 4px;
-    align-self: start;
-    padding-top: 4px;
+    & > * {
+        overflow: hidden;
+    }
 }

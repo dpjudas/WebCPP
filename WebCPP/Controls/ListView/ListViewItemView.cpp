@@ -3,9 +3,10 @@
 #include "ListViewItem.h"
 #include "ListView.h"
 
-ListViewItemView::ListViewItemView(ListViewItem* item, View* parent) : HBoxView(parent), item(item)
+ListViewItemView::ListViewItemView(ListViewItem* item) : View("listviewitem-view"), item(item)
 {
-	addClass("listviewitem");
+	auto layout = createGridLayout();
+	layout->setSubgrid(true, false);
 }
 
 View* ListViewItemView::getColumnView(size_t index)
@@ -25,8 +26,10 @@ void ListViewItemView::setColumnView(size_t index, View* view)
 	{
 		delete columns[index];
 		columns[index] = view;
+
 		view->setParent(this);
-		view->moveBefore(index + 1 < columns.size() ? columns[index + 1] : nullptr);
+		getLayout<GridLayout>()->addViewBefore(view, index + 1 < columns.size() ? columns[index + 1] : nullptr);
+
 		item->listview()->onColumnViewChanged(this, index);
 	}
 }

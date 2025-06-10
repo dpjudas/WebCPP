@@ -1,4 +1,4 @@
 
-.checkboxlabel {
-    line-height: 22px;
+checkboxlabel-view {
+    user-select: none;
 }

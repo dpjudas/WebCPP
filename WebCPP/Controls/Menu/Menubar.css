@@ -1,0 +1,14 @@
+
+menubar-view, menubarmodal-view {
+}
+
+menubarmodal-view {
+    cursor: default;
+}
+
+menubarspacer-view, menubarmodalspacer-view {
+}
+
+.menubaritem, .menubarmodalitem {
+    position: relative;
+}

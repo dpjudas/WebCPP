@@ -1,29 +1,64 @@
 
 #include "ListView.h"
 #include "ListViewItem.h"
+#include "ListViewHeader.h"
+#include "ListViewBody.h"
+#include "RootListViewItem.h"
 #include "WebCPP/Controls/TextLabel/TextLabel.h"
-#include "WebCPP/MainWindow/Menu.h"
+#include "WebCPP/Controls/Scrollbar/Scrollbar.h"
+#include "WebCPP/Controls/Menu/Menu.h"
 
-ListView::ListView(View* parent) : VBoxView(parent)
+ListView::ListView() : View("listview-view")
 {
-	addClass("listview");
-	header = new ListViewHeader(this);
-	header->addClass("listview-header");
-	body = new ListViewBody(this);
-	body->setExpanding();
-	body->element->setTabIndex(0);
-	header->addClass("listview-body");
+	setupUi();
 	root.reset(new RootListViewItem(this));
-	body->element->addEventListener("click", [=](Event* e) { onBodyClick(e); });
-	body->element->addEventListener("scroll", [=](Event* e) { onBodyScroll(e); });
-	body->element->addEventListener("focus", [=](Event* e) { onBodyFocus(e); });
-	body->element->addEventListener("blur", [=](Event* e) { onBodyBlur(e); });
-	body->element->addEventListener("keydown", [=](Event* e) { onBodyKeyDown(e); });
 }
 
 ListView::~ListView()
 {
 	root.reset();
+}
+
+void ListView::setupUi()
+{
+	body = new ListViewBody();
+	body->element->setTabIndex(0);
+	header = new ListViewHeader();
+	header->addClass("listview-header");
+	header->addClass("listview-body");
+	scrollVert = new Scrollbar(ScrollbarDirection::vertical);
+	scrollVert->addClass("listview-scrollvert");
+	scrollHorz = new Scrollbar(ScrollbarDirection::horizontal);
+	scrollHorz->addClass("listview-scrollhorz");
+	scrollCorner = new ScrollbarCorner();
+	scrollCorner->addClass("listview-scrollcorner");
+	header->columnsUpdated = [=]() { body->updateColumns(header); updateScrollbars(); };
+	body->element->addEventListener("click", [=](Event* e) { onBodyClick(e); });
+	body->element->addEventListener("scroll", [=](Event* e) { onBodyScroll(e); });
+	body->element->addEventListener("focus", [=](Event* e) { onBodyFocus(e); });
+	body->element->addEventListener("blur", [=](Event* e) { onBodyBlur(e); });
+	body->element->addEventListener("keydown", [=](Event* e) { onBodyKeyDown(e); });
+	scrollVert->scroll = [=]() { onScrollbarScroll(); };
+	scrollHorz->scroll = [=]() { onScrollbarScroll(); };
+
+	auto layout = createGridLayout();
+	layout->setColumns({ GridLayout::autoSize, GridLayout::minContentSize });
+	layout->setRows({ GridLayout::autoSize, GridLayout::autoSize, GridLayout::freeSpace, GridLayout::minContentSize });
+	layout->addView(header, 1, 1);
+	layout->addView(body, 1, 2);
+	layout->addView(scrollVert, 2, 1, 1, 3);
+	layout->addView(scrollHorz, 1, 4);
+	layout->addView(scrollCorner, 2, 4);
+
+	body->addClass("uses-scrollbar");
+
+	resizeObserver.onResize = [=](std::vector<ResizeObserverEntry> entries) { onResize(std::move(entries)); };
+	resizeObserver.observe(body->element.get());
+}
+
+void ListView::onResize(std::vector<ResizeObserverEntry> entries)
+{
+	updateScrollbars();
 }
 
 void ListView::onBodyFocus(Event* event)
@@ -153,8 +188,37 @@ void ListView::onBodyClick(Event* event)
 	selectItem(nullptr);
 }
 
+void ListView::updateScrollbars()
+{
+	double scrollLeft = body->element->scrollLeft();
+	double scrollTop = body->element->scrollTop();
+	double scrollWidth = body->element->scrollWidth();// std::max(body->element->scrollWidth(), header->element->scrollWidth());
+	double scrollHeight = body->element->scrollHeight();
+	double pageWidth = body->element->clientWidth();
+	double pageHeight = body->element->clientHeight();
+	scrollHorz->setPosition(scrollLeft / scrollWidth, (scrollLeft + pageWidth) / scrollWidth);
+	scrollVert->setPosition(scrollTop / scrollHeight, (scrollTop + pageHeight) / scrollHeight);
+
+	bool horzScrollVisible = (scrollWidth > pageWidth + 1.0);
+	scrollHorz->setVisible(horzScrollVisible);
+
+	bool vertScrollVisible = (scrollHeight > pageHeight + 1.0);
+	scrollVert->setVisible(vertScrollVisible);
+
+	scrollCorner->setVisible(horzScrollVisible && vertScrollVisible);
+}
+
+void ListView::onScrollbarScroll()
+{
+	double scrollWidth = body->element->scrollWidth();// std::max(body->element->scrollWidth(), header->element->scrollWidth());
+	double scrollHeight = body->element->scrollHeight();
+	header->element->scrollTo(scrollHorz->getPosition() * scrollWidth, 0.0);
+	body->element->scrollTo(scrollHorz->getPosition() * scrollWidth, scrollVert->getPosition() * scrollHeight);
+}
+
 void ListView::onBodyScroll(Event* event)
 {
+	updateScrollbars();
 	if (scroll)
 		scroll();
 }
@@ -192,9 +256,9 @@ void ListView::onItemContextMenu(Event* event, ListViewItem* item)
 	selectItem(item);
 	if (onContextMenu)
 	{
-		double clientX = event->handle["clientX"].as<double>();
-		double clientY = event->handle["clientY"].as<double>();
-		auto openMenu = new Menu(nullptr);
+		double clientX = event->clientX();
+		double clientY = event->clientY();
+		auto openMenu = new Menu();
 		onContextMenu(item, openMenu);
 		openMenu->showModal();
 		openMenu->setLeftPosition(clientX, clientY);
@@ -215,20 +279,21 @@ void ListView::scrollToItem(ListViewItem* item, ScrollToHint hint)
 {
 	if (item->view)
 	{
+		double headerHeight = header->element->clientHeight();
 		double pageHeight = body->element->clientHeight();
 		double offsetTop = item->view->element->offsetTop();
 		double offsetHeight = item->view->element->offsetHeight();
 		if (hint == ScrollToHint::ensureVisible)
 		{
 			double scrollTop = body->element->scrollTop();
-			if (offsetTop < scrollTop)
-				body->element->setScrollTop(std::max(offsetTop, 0.0));
+			if (offsetTop < scrollTop + headerHeight)
+				body->element->setScrollTop(std::max(offsetTop - headerHeight, 0.0));
 			else if (offsetTop + offsetHeight > scrollTop + pageHeight)
 				body->element->setScrollTop(std::max(offsetTop + offsetHeight - pageHeight, 0.0));
 		}
 		else if (hint == ScrollToHint::positionAtTop)
 		{
-			body->element->setScrollTop(std::max(offsetTop, 0.0));
+			body->element->setScrollTop(std::max(offsetTop, headerHeight));
 		}
 		else if (hint == ScrollToHint::positionAtBottom)
 		{
@@ -236,9 +301,28 @@ void ListView::scrollToItem(ListViewItem* item, ScrollToHint hint)
 		}
 		else if (hint == ScrollToHint::positionAtCenter)
 		{
-			body->element->setScrollTop(std::max(offsetTop + (offsetHeight - pageHeight) / 2.0, 0.0));
+			body->element->setScrollTop(std::max(offsetTop + (offsetHeight - pageHeight) / 2.0 - headerHeight, 0.0));
 		}
 	}
+}
+
+ListViewItem* ListView::findItem(const std::string& id, const bool recursive, ListViewItem* item) const
+{
+	ListViewItem* child = item != nullptr ? item : rootItem()->firstChild();
+	while (child != nullptr)
+	{
+		if (child->id() == id)
+		{
+			return child;
+		}
+		else if (recursive && child->firstChild() != nullptr)
+		{
+			if (auto foundItem = findItem(id, recursive, child->firstChild()))
+				return foundItem;
+		}
+		child = child->nextSibling();
+	}
+	return nullptr;
 }
 
 double ListView::scrollTop() const
@@ -295,25 +379,16 @@ void ListView::clearList()
 		root->removeAllChildren();
 }
 
-void ListView::addColumn(std::string name, double width, bool expanding)
+int ListView::addColumn(std::string name, double width, bool expanding)
 {
-	ListViewHeader::Column col;
-	if (!header->columns.empty())
-	{
-		col.splitter = new HBoxView(header);
-		col.splitter->addClass("listview-headersplitter");
-		col.splitter->element->setStyle("width", "10px");
-		new View(col.splitter);
-	}
-	col.label = new TextLabel(header);
-	col.label->addClass("listview-headerlabel");
-	col.label->setText(name);
-	col.label->element->setStyle("width", std::to_string(width) + "px");
-	if (expanding)
-		col.label->element->setStyle("flexGrow", "1");
-	col.width = width;
-	col.expanding = expanding;
-	header->columns.push_back(col);
+	header->addColumn(name, width, expanding);
+	body->updateColumns(header);
+	return header->getColumnCount() - 1;
+}
+
+std::vector<std::string> ListView::columnNames() const
+{
+	return header->columnNames();
 }
 
 std::vector<ListViewItem*> ListView::selectedItems()
@@ -356,7 +431,7 @@ void ListView::onItemAttached(ListViewItem* item)
 
 		if (item->isOpen())
 		{
-			for (ListViewItem* cur = item->firstChild(); cur != nullptr; cur = cur->nextSibling())
+			for (ListViewItem* cur = item->lastChild(); cur != nullptr; cur = cur->prevSibling())
 			{
 				onItemAttached(cur);
 			}
@@ -383,7 +458,8 @@ void ListView::onItemDetached(ListViewItem* item)
 
 void ListView::createItemView(ListViewItem* item)
 {
-	item->view = new ListViewItemView(item, body);
+	item->view = new ListViewItemView(item);
+
 	item->view->element->addEventListener("click", [=](Event* e) { onItemClick(e, item); });
 	item->view->element->addEventListener("contextmenu", [=](Event* e) { onItemContextMenu(e, item); });
 
@@ -392,17 +468,17 @@ void ListView::createItemView(ListViewItem* item)
 		nextItem = nextItem->parent();
 	if (nextItem)
 		nextItem = nextItem->nextSibling();
-	if (nextItem && nextItem->view)
-		item->view->moveBefore(nextItem->view);
 
-	for (size_t i = 0; i < header->columns.size(); i++)
+	body->addViewBefore(item->view, nextItem && nextItem->view ? nextItem->view : nullptr, header);
+
+	for (size_t i = 0, count = header->getColumnCount(); i < count; i++)
 	{
 		item->updateColumn(i);
 
 		View* columnView = item->view->getColumnView(i);
 		if (!columnView)
 		{
-			columnView = new View(item->view);
+			columnView = new View();
 			item->view->setColumnView(i, columnView);
 		}
 	}
@@ -410,7 +486,7 @@ void ListView::createItemView(ListViewItem* item)
 
 void ListView::onColumnViewChanged(ListViewItemView *itemview, size_t i)
 {
-	double splitterSize = (i + 1 < header->columns.size()) ? 10 : 0;
+	double splitterSize = (i + 1 < header->getColumnCount()) ? 10 : 0;
 
 	View* columnView = itemview->getColumnView(i);
 
@@ -427,20 +503,17 @@ void ListView::onColumnViewChanged(ListViewItemView *itemview, size_t i)
 		if (i == 0 && depth > 0)
 		{
 			double padding = depth * 24;
-			double width = std::max(header->columns[i].width - padding, 0.0);
-			columnView->element->setStyle("width", std::to_string(width + splitterSize) + "px");
 			columnView->element->setStyle("padding-left", std::to_string(padding) + "px");
-		}
-		else
-		{
-			columnView->element->setStyle("width", std::to_string(header->columns[i].width + splitterSize) + "px");
 		}
 	}
 	else
 	{
-		columnView->element->setStyle("width", std::to_string(header->columns[i].width + splitterSize) + "px");
+		// columnView->element->setStyle("padding-left", "5px");
 	}
+}
 
-	if (header->columns[i].expanding)
-		columnView->element->setStyle("flexGrow", "1");
+bool ListView::setFocus()
+{
+	body->element->focus();
+	return true;
 }

@@ -5,7 +5,7 @@
 class Checkbox : public View
 {
 public:
-	Checkbox(View* parent);
+	Checkbox();
 
 	void setChangeHandler(const std::function<void(bool checked)>& handler);
 
@@ -14,6 +14,4 @@ public:
 	void setEnabled(bool value);
 	bool getEnabled() const;
 
-private:
-	bool enabled = true;
 };

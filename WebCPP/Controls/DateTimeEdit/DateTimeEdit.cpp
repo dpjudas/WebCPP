@@ -1,7 +1,7 @@
 
 #include "DateTimeEdit.h"
 
-DateTimeEdit::DateTimeEdit(View* parent) : View(parent, "input")
+DateTimeEdit::DateTimeEdit() : View("input")
 {
 	addClass("datetimeedit");
 	element->setAttribute("type", "datetime-local");
@@ -62,4 +62,10 @@ void DateTimeEdit::setEnabled(bool value)
 bool DateTimeEdit::getEnabled() const
 {
 	return enabled;
+}
+
+bool DateTimeEdit::setFocus()
+{
+	element->focus();
+	return true;
 }

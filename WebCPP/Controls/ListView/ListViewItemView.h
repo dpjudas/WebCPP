@@ -4,10 +4,10 @@
 
 class ListViewItem;
 
-class ListViewItemView : public HBoxView
+class ListViewItemView : public View
 {
 public:
-	ListViewItemView(ListViewItem* item, View* parent);
+	ListViewItemView(ListViewItem* item);
 
 	View* getColumnView(size_t index);
 	void setColumnView(size_t index, View* view);

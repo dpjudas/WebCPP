@@ -5,7 +5,7 @@
 class DateTimeEdit : public View
 {
 public:
-	DateTimeEdit(View* parent);
+	DateTimeEdit();
 
 	void setValue(const std::string& isodatetime);
 	std::string getValue();
@@ -22,7 +22,8 @@ public:
 	void setEnabled(const bool value);
 	bool getEnabled() const;
 
+	bool setFocus() override;
+
 private:
 	bool enabled = true;
-
 };

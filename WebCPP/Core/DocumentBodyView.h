@@ -31,6 +31,8 @@ class DocumentBodyView : public View
 public:
 	DocumentBodyView();
 
+	void addView(View* view, bool grow = false, bool shrink = false);
+
 	static DocumentBodyView* get();
 	template<typename T>
 	static T* get() { return static_cast<T*>(get()); }
@@ -39,6 +41,7 @@ public:
 	static void create() { new T(); }
 
 	ModalLayer* beginModal();
+	ModalLayer* beginUnshadedModal();
 	void endModal();
 
 	virtual void onNavigate() { }
@@ -53,8 +56,18 @@ private:
 class ModalLayer : public View
 {
 public:
-	ModalLayer(View* parent) : View(parent)
+	ModalLayer() : View("modallayer-view")
 	{
-		addClass("modallayer");
+	}
+
+	JSValue oldActiveElement = JSValue::undefined();
+};
+
+class ShadedModalLayer : public ModalLayer
+{
+public:
+	ShadedModalLayer()
+	{
+		addClass("shaded");
 	}
 };

@@ -70,6 +70,7 @@ public:
 	bool is_array() const { return type() == JsonType::array; }
 	bool is_number() const { return type() == JsonType::number; }
 	bool is_boolean() const { return type() == JsonType::boolean; }
+	bool is_string() const { return type() == JsonType::string; }
 
 	std::map<std::string, JsonValue> &properties() { return _properties; }
 	const std::map<std::string, JsonValue> &properties() const { return _properties; }

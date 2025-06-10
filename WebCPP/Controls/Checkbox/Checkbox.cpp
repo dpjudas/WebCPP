@@ -1,7 +1,7 @@
 
 #include "Checkbox.h"
 
-Checkbox::Checkbox(View* parent) : View(parent, "input")
+Checkbox::Checkbox() : View("input")
 {
 	addClass("checkbox");
 	element->setAttribute("type", "checkbox");
@@ -24,21 +24,10 @@ bool Checkbox::isChecked() const
 
 void Checkbox::setEnabled(bool value)
 {
-	if (enabled != value)
-	{
-		if (value)
-		{
-			element->removeAttribute("disabled");
-		}
-		else
-		{
-			element->setAttribute("disabled", "");
-		}
-		enabled = value;
-	}
+	element->handle.set("disabled", value == false);
 }
 
 bool Checkbox::getEnabled() const
 {
-	return enabled;
+	return element->handle["disabled"].as<bool>() == false;
 }

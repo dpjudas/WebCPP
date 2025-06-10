@@ -62,8 +62,6 @@ std::unique_ptr<ListViewItem> ListViewItem::remove()
 	if (lv->focusedItem() == this)
 		lv->focusItem(nullptr);
 
-	removeAllChildren();
-
 	std::unique_ptr<ListViewItem> item(this);
 
 	if (prevSiblingObj)

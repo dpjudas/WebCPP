@@ -1,0 +1,106 @@
+
+colorpicker-view {
+    user-select: none;
+
+    &:focus, &.focus {
+        outline: none;
+    }
+
+    &.disabled {
+        filter: grayscale();
+    }
+
+    .colorpicker-label {
+        overflow: hidden;
+
+        &:before {
+            content: "\A0"; /* to ensure baseline with label and text in combobox */
+        }
+    }
+}
+
+colorpickerpopup-view {
+    position: absolute;
+    left: -1px;
+    top: calc(22px - 2px);
+    width: 100%;
+    background: rgb(240,240,240);
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.3);
+    z-index: 1000;
+    overflow-y: auto;
+    user-select: none;
+    min-width: 166px;
+
+    .colorpickerform {
+        padding: 10px;
+
+        .colorpickercircle {
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+            background-color: aqua;
+        }
+
+        .colorpickeredit input {
+            width: 40px;
+            text-align: center;
+        }
+    }
+}
+
+colorpickercolors-view {
+    position: relative;
+    width: 100%;
+    height: 100px;
+
+    .colorpickercolors-sat {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-image: linear-gradient(to right, #fff, rgba(204, 154, 129, 0));
+    }
+
+    .colorpickercolors-val {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background-image: linear-gradient(to top, #000, rgba(204, 154, 129, 0));
+    }
+
+    .colorpickercolors-dragger {
+        top: calc(50% - 7px);
+        left: calc(50% - 7px);
+        cursor: pointer;
+        position: absolute;
+        z-index: 1;
+        width: 12px;
+        height: 12px;
+        border: 2px solid white;
+        border-radius: 7px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.15);
+    }
+}
+
+colorpickerhue-view {
+    position: relative;
+    height: 12px;
+    border-radius: 2px;
+    background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+
+    .colorpickerhue-dragger {
+        top: -2px;
+        left: calc(50% - 7px);
+        cursor: pointer;
+        position: absolute;
+        z-index: 1;
+        width: 12px;
+        height: 12px;
+        border: 2px solid white;
+        border-radius: 7px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.15);
+    }
+}

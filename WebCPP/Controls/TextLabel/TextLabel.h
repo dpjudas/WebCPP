@@ -5,9 +5,15 @@
 class TextLabel : public View
 {
 public:
-	TextLabel(View* parent);
+	TextLabel();
+	TextLabel(const std::string& text);
+
+	void setEnabled(const bool value);
+	bool getEnabled() const;
 
 	void setCenterAlign();
+
+	void setCenterVerticalAlign();
 
 	void setText(std::string text);
 	std::string getText();
@@ -15,6 +21,20 @@ public:
 	void setHtml(std::string html);
 	std::string getHtml();
 
-	void setClickHandler(const std::function<void()>& handler);
+	void setFixedWidth(const int width);
+	void setFixedHeight(const int height);
+
+	void setColor(const std::string& color);
+	void setBackgroundColor(const std::string& backgroundColor);
+
+	void setBold(const bool bold);
+
+	std::function<void()> clicked;
+
+private:
+	void onClicked(Event* event);
+
+private:
+	bool enabled = true;
 
 };

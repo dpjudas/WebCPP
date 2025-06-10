@@ -1,9 +1,36 @@
 
-.lineedit {
-    display: block;
-    border: 1px solid var(--controlbordercolor);
-    padding: 2px 4px;
-    background: white;
-    font: 12px/16px "Segoe UI", "Tahoma", sans-serif;
-    color: black;
+lineedit-view {
+    &.focus {
+    }
+
+    &.disabled {
+    }
+
+    input[disabled] {
+        background: inherit;
+    }
+
+    input {
+        display: block;
+        border: none;
+        padding: 0;
+        margin: 0;
+        min-width: 0;
+        background: inherit;
+        font: inherit;
+        color: inherit;
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    .lineedit-imagebox {
+    }
+
+    .lineedit-imagebox:hover {
+    }
+
+    &.flat {
+    }
 }

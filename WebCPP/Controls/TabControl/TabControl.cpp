@@ -1,31 +1,35 @@
 
 #include "TabControl.h"
-#include "WebCPP/Dialog/DialogButton.h"
+#include "TabBar.h"
+#include "TabBarTab.h"
 
-TabControl::TabControl(View* parent) : VBoxView(parent)
+TabControl::TabControl(bool tabsAtBottom) : View("tabcontrol-view"), tabsAtBottom(tabsAtBottom)
 {
 	setupUi();
 }
 
 void TabControl::setupUi()
 {
-	tabs = new TabBar(this);
+	if (tabsAtBottom)
+		addClass("tabsAtBottom");
 
-	widgetStack = new VBoxView(this);
+	tabs = new TabBar();
+
+	widgetStack = new View();
 	widgetStack->addClass("tabcontrol-widgetstack");
-	widgetStack->setExpanding();
+	widgetStack->createVBoxLayout();
 
-	addClass("tabcontrol");
+	auto layout = createVBoxLayout();
+	if (!tabsAtBottom)
+		layout->addView(tabs);
+	layout->addView(widgetStack, true, true);
+	if (tabsAtBottom)
+		layout->addView(tabs);
 }
 
-void TabControl::addPage(std::string icon, std::string label, View* page)
+void TabControl::addPage(std::string icon, std::string label, View* page, std::function<void(double clientX, double clientY)> onContextMenu)
 {
-	auto tab = new TabBarTab(tabs);
-	tab->setText(label);
-	tab->setIcon(icon);
-	tab->element->addEventListener("click", [=](Event* event) { event->stopPropagation(); onPageTabClicked(page); });
-
-	page->setExpanding();
+	TabBarTab* tab = tabs->addTab(icon, label, [=]() { onPageTabClicked(page); }, onContextMenu);
 
 	pages[tab] = std::unique_ptr<View>(page);
 	if (!currentPage)
@@ -45,6 +49,10 @@ void TabControl::showPage(View* page)
 		if (currentPage)
 		{
 			currentPage->setParent(widgetStack);
+
+			auto layout = widgetStack->createVBoxLayout();
+			layout->addView(currentPage, true, true);
+
 			findTab(currentPage)->addClass("selected");
 		}
 	}
@@ -53,6 +61,8 @@ void TabControl::showPage(View* page)
 void TabControl::onPageTabClicked(View* page)
 {
 	showPage(page);
+	if (onPageShow)
+		onPageShow(page);
 }
 
 TabBarTab* TabControl::findTab(View* page)

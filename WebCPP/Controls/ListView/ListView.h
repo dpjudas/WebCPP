@@ -1,13 +1,18 @@
 #pragma once
 
 #include "WebCPP/Core/View.h"
+#include "WebCPP/Core/ResizeObserver.h"
 #include "ListViewItem.h"
+#include "TextListViewItem.h"
 #include <list>
 
 class TextLabel;
 class ListViewHeader;
+class ListViewHeaderSplitter;
 class ListViewBody;
 class Menu;
+class Scrollbar;
+class ScrollbarCorner;
 
 enum class ScrollToHint
 {
@@ -17,16 +22,20 @@ enum class ScrollToHint
 	positionAtCenter
 };
 
-class ListView : public VBoxView
+class ListView : public View
 {
 public:
-	ListView(View* parent);
+	ListView();
 	~ListView();
 
 	void clearList();
 
-	void addColumn(std::string name, double width, bool expanding = false);
+	int addColumn(std::string name, double width, bool expanding = false);
+
+	std::vector<std::string> columnNames() const;
+
 	ListViewItem* rootItem() { return root.get(); }
+	const ListViewItem* rootItem() const { return root.get(); }
 	std::vector<ListViewItem*> selectedItems();
 	ListViewItem* selectedItem();
 	ListViewItem* focusedItem() { return curFocusItem; }
@@ -34,6 +43,8 @@ public:
 	void setAlternatingRowColors(bool enable);
 
 	void scrollToItem(ListViewItem* item, ScrollToHint hint = ScrollToHint::ensureVisible);
+
+	ListViewItem* findItem(const std::string& id, const bool recursive = false, ListViewItem* item = nullptr) const;
 
 	double scrollTop() const;
 	double scrollPage() const;
@@ -52,7 +63,10 @@ public:
 	std::function<void()> selectionChanged;
 	std::function<void()> scroll;
 
+	bool setFocus() override;
+
 private:
+	void setupUi();
 	void onBodyClick(Event* event);
 	void onBodyScroll(Event* event);
 	void onBodyFocus(Event* event);
@@ -66,41 +80,20 @@ private:
 	void closeItem(ListViewItem* item);
 	void createItemView(ListViewItem* item);
 	void onColumnViewChanged(ListViewItemView* itemview, size_t index);
+	void updateScrollbars();
+	void onScrollbarScroll();
+	void onResize(std::vector<ResizeObserverEntry> entries);
 
 	ListViewHeader* header = nullptr;
 	ListViewBody* body = nullptr;
 	std::unique_ptr<ListViewItem> root;
 	ListViewItem* curSelectedItem = nullptr;
 	ListViewItem* curFocusItem = nullptr;
+	Scrollbar* scrollVert = nullptr;
+	Scrollbar* scrollHorz = nullptr;
+	ScrollbarCorner* scrollCorner = nullptr;
+	ResizeObserver resizeObserver;
 
 	friend class ListViewItem;
 	friend class ListViewItemView;
-};
-
-class ListViewHeader : public HBoxView
-{
-public:
-	ListViewHeader(View* parent) : HBoxView(parent)
-	{
-		addClass("listviewheader");
-	}
-
-	struct Column
-	{
-		TextLabel* label = nullptr;
-		double width = 0.0;
-		bool expanding = false;
-		View* splitter = nullptr;
-	};
-
-	std::vector<Column> columns;
-};
-
-class ListViewBody : public VBoxView
-{
-public:
-	ListViewBody(View* parent) : VBoxView(parent)
-	{
-		addClass("listviewbody");
-	}
 };
