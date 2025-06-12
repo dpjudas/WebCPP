@@ -1,7 +1,7 @@
 
-#include "MenubarModal.h"
-#include "Menubar.h"
-#include "Menu.h"
+#include "WebCPP/Controls/Menu/MenubarModal.h"
+#include "WebCPP/Controls/Menu/Menubar.h"
+#include "WebCPP/Controls/Menu/Menu.h"
 
 MenubarModal::MenubarModal(Menubar* menubar, MenubarItem* openitem) : View("menubarmodal-view"), menubar(menubar)
 {

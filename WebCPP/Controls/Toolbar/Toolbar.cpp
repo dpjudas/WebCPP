@@ -1,5 +1,5 @@
 
-#include "Toolbar.h"
+#include "WebCPP/Controls/Toolbar/Toolbar.h"
 
 Toolbar::Toolbar() : View("toolbar-view")
 {

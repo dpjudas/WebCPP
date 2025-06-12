@@ -1,5 +1,5 @@
 
-#include "JSCallback.h"
+#include "WebCPP/Core/JSCallback.h"
 #include <emscripten/emscripten.h>
 
 extern "C"

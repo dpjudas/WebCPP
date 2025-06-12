@@ -1,5 +1,5 @@
 
-#include "LineEdit.h"
+#include "WebCPP/Controls/LineEdit/LineEdit.h"
 #include "WebCPP/Controls/ImageBox/ImageBox.h"
 
 LineEdit::LineEdit() : View("lineedit-view")

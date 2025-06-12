@@ -1,6 +1,6 @@
 
-#include "ShadowRoot.h"
-#include "Element.h"
+#include "WebCPP/Core/ShadowRoot.h"
+#include "WebCPP/Core/Element.h"
 #include <stdio.h>
 #include <emscripten/emscripten.h>
 

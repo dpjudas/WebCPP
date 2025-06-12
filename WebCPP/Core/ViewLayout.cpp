@@ -1,8 +1,8 @@
 
-#include "ViewLayout.h"
-#include "View.h"
-#include "Element.h"
-#include "ShadowRoot.h"
+#include "WebCPP/Core/ViewLayout.h"
+#include "WebCPP/Core/View.h"
+#include "WebCPP/Core/Element.h"
+#include "WebCPP/Core/ShadowRoot.h"
 
 ViewLayout::ViewLayout(View* owner) : owner(owner)
 {

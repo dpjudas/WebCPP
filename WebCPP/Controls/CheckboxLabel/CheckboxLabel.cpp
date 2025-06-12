@@ -1,8 +1,8 @@
 
-#include "CheckboxLabel.h"
-#include "../Checkbox/Checkbox.h"
-#include "../ImageBox/ImageBox.h"
-#include "../TextLabel/TextLabel.h"
+#include "WebCPP/Controls/CheckboxLabel/CheckboxLabel.h"
+#include "WebCPP/Controls/Checkbox/Checkbox.h"
+#include "WebCPP/Controls/ImageBox/ImageBox.h"
+#include "WebCPP/Controls/TextLabel/TextLabel.h"
 
 CheckboxLabel::CheckboxLabel() : View("checkboxlabel-view")
 {

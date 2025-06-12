@@ -1,7 +1,7 @@
 
-#include "TabControl.h"
-#include "TabBar.h"
-#include "TabBarTab.h"
+#include "WebCPP/Controls/TabControl/TabControl.h"
+#include "WebCPP/Controls/TabControl/TabBar.h"
+#include "WebCPP/Controls/TabControl/TabBarTab.h"
 
 TabControl::TabControl(bool tabsAtBottom) : View("tabcontrol-view"), tabsAtBottom(tabsAtBottom)
 {

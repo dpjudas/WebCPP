@@ -1,6 +1,6 @@
 
-#include "Native.h"
-#include "JSCallback.h"
+#include "WebCPP/Core/Native.h"
+#include "WebCPP/Core/JSCallback.h"
 
 Native* Native::get()
 {

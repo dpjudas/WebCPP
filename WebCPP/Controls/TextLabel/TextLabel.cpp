@@ -1,5 +1,5 @@
 
-#include "TextLabel.h"
+#include "WebCPP/Controls/TextLabel/TextLabel.h"
 
 TextLabel::TextLabel() : View("textlabel-view")
 {

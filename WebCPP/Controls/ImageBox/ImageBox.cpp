@@ -1,5 +1,5 @@
 
-#include "ImageBox.h"
+#include "WebCPP/Controls/ImageBox/ImageBox.h"
 
 ImageBox::ImageBox() : View("img")
 {

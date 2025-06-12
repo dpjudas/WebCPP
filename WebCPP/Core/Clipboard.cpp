@@ -1,8 +1,8 @@
 
-#include "Clipboard.h"
-#include "JSCallback.h"
-#include "JSValue.h"
-#include "Permissions.h"
+#include "WebCPP/Core/Clipboard.h"
+#include "WebCPP/Core/JSCallback.h"
+#include "WebCPP/Core/JSValue.h"
+#include "WebCPP/Core/Permissions.h"
 
 void Clipboard::setText(const std::string& text)
 {

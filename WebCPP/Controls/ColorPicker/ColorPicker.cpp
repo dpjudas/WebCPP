@@ -1,5 +1,5 @@
 
-#include "ColorPicker.h"
+#include "WebCPP/Controls/ColorPicker/ColorPicker.h"
 #include "WebCPP/Controls/TextLabel/TextLabel.h"
 #include "WebCPP/Controls/LineEdit/LineEdit.h"
 #include "WebCPP/Controls/CheckboxLabel/CheckboxLabel.h"

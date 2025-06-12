@@ -1,8 +1,8 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "JsonValue.h"
-#include "UTF8Reader.h"
+#include "WebCPP/Core/JsonValue.h"
+#include "WebCPP/Core/UTF8Reader.h"
 #include <stdexcept>
 
 class JsonValueImpl

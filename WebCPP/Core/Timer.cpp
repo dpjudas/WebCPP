@@ -1,6 +1,6 @@
 
-#include "Timer.h"
-#include "JSCallback.h"
+#include "WebCPP/Core/Timer.h"
+#include "WebCPP/Core/JSCallback.h"
 #include <map>
 
 namespace

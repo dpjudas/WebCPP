@@ -1,6 +1,6 @@
 
-#include "Storage.h"
-#include "JSValue.h"
+#include "WebCPP/Core/Storage.h"
+#include "WebCPP/Core/JSValue.h"
 
 JsonValue LocalStorage::getJson(const std::string& key, const JsonValue& defaultValue)
 {

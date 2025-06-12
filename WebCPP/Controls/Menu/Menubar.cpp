@@ -1,6 +1,6 @@
 
-#include "Menubar.h"
-#include "MenubarModal.h"
+#include "WebCPP/Controls/Menu/Menubar.h"
+#include "WebCPP/Controls/Menu/MenubarModal.h"
 
 Menubar::Menubar() : View("menubar-view")
 {

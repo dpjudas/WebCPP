@@ -1,5 +1,5 @@
 
-#include "Guid.h"
+#include "WebCPP/Core/Guid.h"
 #include <stdexcept>
 
 Guid Guid::fromString(const std::string& value)

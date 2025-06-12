@@ -1,7 +1,7 @@
 
-#include "ResizeObserver.h"
-#include "JSCallback.h"
-#include "Element.h"
+#include "WebCPP/Core/ResizeObserver.h"
+#include "WebCPP/Core/JSCallback.h"
+#include "WebCPP/Core/Element.h"
 
 ResizeObserver::ResizeObserver()
 {

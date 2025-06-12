@@ -1,7 +1,7 @@
 
-#include "Element.h"
-#include "Event.h"
-#include "JSCallback.h"
+#include "WebCPP/Core/Element.h"
+#include "WebCPP/Core/Event.h"
+#include "WebCPP/Core/JSCallback.h"
 
 Element::Element(JSValue handle) : handle(std::move(handle))
 {

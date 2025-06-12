@@ -1,6 +1,6 @@
-#include "Permissions.h"
-#include "JSCallback.h"
-#include "JSValue.h"
+#include "WebCPP/Core/Permissions.h"
+#include "WebCPP/Core/JSCallback.h"
+#include "WebCPP/Core/JSValue.h"
 
 void Permissions::query(const std::string& permission, std::function<void(const std::string& state)> onThen)
 {

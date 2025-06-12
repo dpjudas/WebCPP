@@ -1,5 +1,5 @@
 
-#include "Scrollbar.h"
+#include "WebCPP/Controls/Scrollbar/Scrollbar.h"
 
 Scrollbar::Scrollbar(ScrollbarDirection direction) : View("scrollbar-view"), direction(direction)
 {

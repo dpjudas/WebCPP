@@ -1,8 +1,8 @@
 
-#include "SendRequest.h"
-#include "JSCallback.h"
-#include "Navigation.h"
-#include "Timer.h"
+#include "WebCPP/Core/SendRequest.h"
+#include "WebCPP/Core/JSCallback.h"
+#include "WebCPP/Core/Navigation.h"
+#include "WebCPP/Core/Timer.h"
 
 namespace
 {

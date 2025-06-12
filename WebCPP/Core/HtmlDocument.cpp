@@ -20,8 +20,8 @@
 **
 */
 
-#include "HtmlDocument.h"
-#include "JSValue.h"
+#include "WebCPP/Core/HtmlDocument.h"
+#include "WebCPP/Core/JSValue.h"
 
 void HtmlDocument::setTitle(const std::string& title)
 {

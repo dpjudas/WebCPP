@@ -1,8 +1,8 @@
 
-#include "RadioButtonLabel.h"
-#include "../ImageBox/ImageBox.h"
-#include "../RadioButton/RadioButton.h"
-#include "../TextLabel/TextLabel.h"
+#include "WebCPP/Controls/RadioButtonLabel/RadioButtonLabel.h"
+#include "WebCPP/Controls/ImageBox/ImageBox.h"
+#include "WebCPP/Controls/RadioButton/RadioButton.h"
+#include "WebCPP/Controls/TextLabel/TextLabel.h"
 
 RadioButtonLabel::RadioButtonLabel() : View("radiobuttonlabel-view")
 {

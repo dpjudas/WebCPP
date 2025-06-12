@@ -1,7 +1,7 @@
 
-#include "View.h"
-#include "DocumentBodyView.h"
-#include "ShadowRoot.h"
+#include "WebCPP/Core/View.h"
+#include "WebCPP/Core/DocumentBodyView.h"
+#include "WebCPP/Core/ShadowRoot.h"
 #include <stdexcept>
 
 View::View(std::string elementType)

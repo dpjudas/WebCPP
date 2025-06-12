@@ -1,5 +1,5 @@
 
-#include "MessageBox.h"
+#include "WebCPP/Controls/MessageBox/MessageBox.h"
 
 void MessageBox::show(const std::string& title, const std::string& text, std::function<void()> okClicked, const std::string& okLabel)
 {

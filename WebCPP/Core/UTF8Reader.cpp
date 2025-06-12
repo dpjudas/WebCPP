@@ -19,7 +19,7 @@
 **
 */
 
-#include "UTF8Reader.h"
+#include "WebCPP/Core/UTF8Reader.h"
 
 class UTF8_Reader_Impl
 {

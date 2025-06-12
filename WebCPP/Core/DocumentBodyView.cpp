@@ -20,8 +20,8 @@
 **
 */
 
-#include "DocumentBodyView.h"
-#include "Navigation.h"
+#include "WebCPP/Core/DocumentBodyView.h"
+#include "WebCPP/Core/Navigation.h"
 #include <stdexcept>
 
 DocumentBodyView::DocumentBodyView() : View(std::make_unique<Element>(JSValue::global("document")["body"]))

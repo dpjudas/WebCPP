@@ -1,5 +1,5 @@
 
-#include "VToolbar.h"
+#include "WebCPP/Controls/Toolbar/VToolbar.h"
 
 VToolbar::VToolbar() : View("vtoolbar-view")
 {

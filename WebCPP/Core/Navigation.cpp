@@ -1,8 +1,8 @@
 
-#include "Navigation.h"
-#include "JSValue.h"
-#include "JSCallback.h"
-#include "Event.h"
+#include "WebCPP/Core/Navigation.h"
+#include "WebCPP/Core/JSValue.h"
+#include "WebCPP/Core/JSCallback.h"
+#include "WebCPP/Core/Event.h"
 #include <regex>
 #include <emscripten/emscripten.h>
 

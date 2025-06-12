@@ -1,6 +1,6 @@
 
-#include "TabBar.h"
-#include "TabBarTab.h"
+#include "WebCPP/Controls/TabControl/TabBar.h"
+#include "WebCPP/Controls/TabControl/TabBarTab.h"
 
 TabBar::TabBar() : View("tabbar-view")
 {
