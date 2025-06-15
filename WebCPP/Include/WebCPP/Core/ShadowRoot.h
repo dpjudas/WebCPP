@@ -4,19 +4,22 @@
 #include <vector>
 #include "JSValue.h"
 
-class Element;
-
-class ShadowRoot
+namespace web
 {
-public:
-	ShadowRoot(JSValue handle);
-	~ShadowRoot();
+	class Element;
 
-	void insertBefore(Element* newElement, Element* insertPoint);
-	void appendChild(Element* newElement);
-	void removeChild(Element* childElement);
+	class ShadowRoot
+	{
+	public:
+		ShadowRoot(JSValue handle);
+		~ShadowRoot();
 
-	static void setComponentStyleSheet(const std::string& value);
+		void insertBefore(Element* newElement, Element* insertPoint);
+		void appendChild(Element* newElement);
+		void removeChild(Element* childElement);
 
-	JSValue handle;
-};
+		static void setComponentStyleSheet(const std::string& value);
+
+		JSValue handle;
+	};
+}

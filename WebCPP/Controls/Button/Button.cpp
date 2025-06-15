@@ -3,79 +3,82 @@
 #include "WebCPP/Controls/ImageBox/ImageBox.h"
 #include "WebCPP/Controls/TextLabel/TextLabel.h"
 
-Button::Button() : View("button")
+namespace web
 {
-	addClass("button");
-	label = new TextLabel();
-
-	auto layout = createHBoxLayout();
-	layout->addView(label);
-
-	element->addEventListener("click", [=](Event* e) { onClicked(e); });
-	element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
-}
-
-void Button::setIcon(std::string src)
-{
-	if (!image)
+	Button::Button() : View("button")
 	{
-		image = new ImageBox();
-		getLayout<HBoxLayout>()->addViewBefore(image, label);
+		addClass("button");
+		label = new TextLabel();
+
+		auto layout = createHBoxLayout();
+		layout->addView(label);
+
+		element->addEventListener("click", [=](Event* e) { onClicked(e); });
+		element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
 	}
-	image->setSrc(src);
-}
 
-std::string Button::getText() const
-{
-	return label->getText();
-}
-
-void Button::setText(std::string text)
-{
-	label->setText(text);
-}
-
-void Button::setEnabled(bool value)
-{
-	if (enabled != value)
+	void Button::setIcon(std::string src)
 	{
-		if (value)
-			element->removeAttribute("disabled");
-		else
-			element->setAttribute("disabled", "");
-		enabled = value;
+		if (!image)
+		{
+			image = new ImageBox();
+			getLayout<HBoxLayout>()->addViewBefore(image, label);
+		}
+		image->setSrc(src);
 	}
-}
 
-bool Button::getEnabled() const
-{
-	return enabled;
-}
+	std::string Button::getText() const
+	{
+		return label->getText();
+	}
 
-bool Button::setFocus()
-{
-	element->focus();
-	return true;
-}
+	void Button::setText(std::string text)
+	{
+		label->setText(text);
+	}
 
-void Button::click(Event* event)
-{
-	onClicked(event);
-}
+	void Button::setEnabled(bool value)
+	{
+		if (enabled != value)
+		{
+			if (value)
+				element->removeAttribute("disabled");
+			else
+				element->setAttribute("disabled", "");
+			enabled = value;
+		}
+	}
 
-void Button::onClicked(Event* event)
-{
-	event->stopPropagation();
-	event->preventDefault();
-	if (pressed)
-		pressed();
-}
+	bool Button::getEnabled() const
+	{
+		return enabled;
+	}
 
-void Button::onKeyDown(Event* event)
-{
-	int keyCode = event->handle["keyCode"].as<int>();
-	if (keyCode == 13 || keyCode == 32) // Enter or space
+	bool Button::setFocus()
+	{
+		element->focus();
+		return true;
+	}
+
+	void Button::click(Event* event)
+	{
+		onClicked(event);
+	}
+
+	void Button::onClicked(Event* event)
 	{
 		event->stopPropagation();
+		event->preventDefault();
+		if (pressed)
+			pressed();
+	}
+
+	void Button::onKeyDown(Event* event)
+	{
+		int keyCode = event->handle["keyCode"].as<int>();
+		if (keyCode == 13 || keyCode == 32) // Enter or space
+		{
+			event->stopPropagation();
+		}
 	}
 }

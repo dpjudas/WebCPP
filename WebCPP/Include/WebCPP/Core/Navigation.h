@@ -6,35 +6,38 @@
 #include <functional>
 #include "JSValue.h"
 
-class JSCallback;
-
-enum class OAuthStatus
+namespace web
 {
-	unauthenticated,
-	authenticated,
-	loginError
-};
+	class JSCallback;
 
-class Navigation
-{
-public:
-	static OAuthStatus getOAuthStatus();
-	static std::string getLoginError();
-	static JSValue getJwt();
-	static std::string getAccessToken();
-	static std::vector<std::string> getPathParts();
-	static bool matchesPath(const std::vector<std::string>& parts);
+	enum class OAuthStatus
+	{
+		unauthenticated,
+		authenticated,
+		loginError
+	};
 
-	static void login(std::string oauthUrl);
-	static void navigateTo(std::string url);
+	class Navigation
+	{
+	public:
+		static OAuthStatus getOAuthStatus();
+		static std::string getLoginError();
+		static JSValue getJwt();
+		static std::string getAccessToken();
+		static std::vector<std::string> getPathParts();
+		static bool matchesPath(const std::vector<std::string>& parts);
 
-	static void pushState(std::string pageTitle, std::vector<std::string> pathParts);
-	static void replaceState(std::string pageTitle, std::vector<std::string> pathParts);
+		static void login(std::string oauthUrl);
+		static void navigateTo(std::string url);
 
-	static std::string pagePathToURI(const std::vector<std::string>& pathparts);
+		static void pushState(std::string pageTitle, std::vector<std::string> pathParts);
+		static void replaceState(std::string pageTitle, std::vector<std::string> pathParts);
 
-private:
-	static void init(std::function<void()> onPopState);
+		static std::string pagePathToURI(const std::vector<std::string>& pathparts);
 
-	friend class DocumentBodyView;
-};
+	private:
+		static void init(std::function<void()> onPopState);
+
+		friend class DocumentBodyView;
+	};
+}

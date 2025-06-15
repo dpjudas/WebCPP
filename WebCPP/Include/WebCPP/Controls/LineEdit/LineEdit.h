@@ -2,36 +2,39 @@
 
 #include "../../Core/View.h"
 
-class ImageBox;
-
-class LineEdit : public View
+namespace web
 {
-public:
-	LineEdit();
+	class ImageBox;
 
-	ImageBox* addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler);
+	class LineEdit : public View
+	{
+	public:
+		LineEdit();
 
-	bool getPasswordMode() const;
-	void setPasswordMode(bool value);
-	void setText(std::string text);
-	void setPlaceholder(std::string text);
-	std::string getText();
-	void setEnabled(bool value);
-	bool getEnabled() const;
-	void setReadOnly(const bool value);
-	bool getReadOnly() const;
-	void setMaxLength(const int value);
+		ImageBox* addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler);
 
-	void setFlat();
+		bool getPasswordMode() const;
+		void setPasswordMode(bool value);
+		void setText(std::string text);
+		void setPlaceholder(std::string text);
+		std::string getText();
+		void setEnabled(bool value);
+		bool getEnabled() const;
+		void setReadOnly(const bool value);
+		bool getReadOnly() const;
+		void setMaxLength(const int value);
 
-	bool setFocus() override;
-	bool setFocusWithoutSelect();
+		void setFlat();
 
-	void setInputHandler(const std::function<void(const std::string& text)>& handler);
-	void setChangeHandler(const std::function<void(const std::string& text)>& handler);
+		bool setFocus() override;
+		bool setFocusWithoutSelect();
 
-private:
-	bool enabled = true;
-	bool readonly = false;
-	View* input = nullptr;
-};
+		void setInputHandler(const std::function<void(const std::string& text)>& handler);
+		void setChangeHandler(const std::function<void(const std::string& text)>& handler);
+
+	private:
+		bool enabled = true;
+		bool readonly = false;
+		View* input = nullptr;
+	};
+}

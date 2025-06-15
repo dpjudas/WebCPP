@@ -2,19 +2,22 @@
 
 #include "../../Core/View.h"
 
-class ListViewItem;
-
-class ListViewItemView : public View
+namespace web
 {
-public:
-	ListViewItemView(ListViewItem* item);
+	class ListViewItem;
 
-	View* getColumnView(size_t index);
-	void setColumnView(size_t index, View* view);
+	class ListViewItemView : public View
+	{
+	public:
+		ListViewItemView(ListViewItem* item);
 
-	ListViewItem* getItem() const { return item; }
+		View* getColumnView(size_t index);
+		void setColumnView(size_t index, View* view);
 
-private:
-	ListViewItem* item = nullptr;
-	std::vector<View*> columns;
-};
+		ListViewItem* getItem() const { return item; }
+
+	private:
+		ListViewItem* item = nullptr;
+		std::vector<View*> columns;
+	};
+}

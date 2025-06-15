@@ -2,25 +2,28 @@
 
 #include "../../Core/View.h"
 
-class ImageBox : public View
+namespace web
 {
-public:
-	ImageBox();
+	class ImageBox : public View
+	{
+	public:
+		ImageBox();
 
-	void setEnabled(const bool value);
-	bool getEnabled() const;
+		void setEnabled(const bool value);
+		bool getEnabled() const;
 
-	void setSrc(std::string src);
-	void setSize(const int width, const int height);
-	void setAlt(const std::string& alternateText);
+		void setSrc(std::string src);
+		void setSize(const int width, const int height);
+		void setAlt(const std::string& alternateText);
 
-	std::function<void()> clicked = nullptr;
+		std::function<void()> clicked = nullptr;
 
-	static void setResourceUrlBase(const std::string& urlBase);
+		static void setResourceUrlBase(const std::string& urlBase);
 
-private:
-	void onClicked(Event* event);
+	private:
+		void onClicked(Event* event);
 
-	bool enabled = true;
-	static std::string resourceUrlBase;
-};
+		bool enabled = true;
+		static std::string resourceUrlBase;
+	};
+}

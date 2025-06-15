@@ -3,36 +3,39 @@
 #include "../../Core/View.h"
 #include "../../Controls/TextLabel/TextLabel.h"
 
-class Menu;
-class MenubarItem;
-
-class Menubar : public View
+namespace web
 {
-public:
-	Menubar();
+	class Menu;
+	class MenubarItem;
 
-	MenubarItem* addItem(std::string text, std::function<void(Menu* menu)> onOpen, bool alignRight = false);
+	class Menubar : public View
+	{
+	public:
+		Menubar();
 
-private:
-	View* spacer = nullptr;
-	std::vector<MenubarItem*> menuItems;
+		MenubarItem* addItem(std::string text, std::function<void(Menu* menu)> onOpen, bool alignRight = false);
 
-	friend class MenubarModal;
-};
+	private:
+		View* spacer = nullptr;
+		std::vector<MenubarItem*> menuItems;
 
-class MenubarItem : public TextLabel
-{
-public:
-	MenubarItem(Menubar* menubar, bool alignRight);
+		friend class MenubarModal;
+	};
 
-	void setOpenCallback(std::function<void(Menu* menu)> callback) { onOpen = std::move(callback); }
-	const std::function<void(Menu* menu)>& getOpenCallback() const { return onOpen; }
+	class MenubarItem : public TextLabel
+	{
+	public:
+		MenubarItem(Menubar* menubar, bool alignRight);
 
-	bool alignRight = false;
+		void setOpenCallback(std::function<void(Menu* menu)> callback) { onOpen = std::move(callback); }
+		const std::function<void(Menu* menu)>& getOpenCallback() const { return onOpen; }
 
-private:
-	void onClick(Event* event);
+		bool alignRight = false;
 
-	Menubar* menubar = nullptr;
-	std::function<void(Menu* menu)> onOpen;
-};
+	private:
+		void onClick(Event* event);
+
+		Menubar* menubar = nullptr;
+		std::function<void(Menu* menu)> onOpen;
+	};
+}

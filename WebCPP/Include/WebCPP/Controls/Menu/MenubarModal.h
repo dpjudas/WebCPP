@@ -3,48 +3,51 @@
 #include "../../Core/View.h"
 #include "../../Controls/TextLabel/TextLabel.h"
 
-class Menu;
-class Menubar;
-class MenubarItem;
-class MenubarModalItem;
-
-class MenubarModal : public View
+namespace web
 {
-public:
-	MenubarModal(Menubar* menubar, MenubarItem* openitem);
+	class Menu;
+	class Menubar;
+	class MenubarItem;
+	class MenubarModalItem;
 
-	void updateLayout();
-	void itemClicked(MenubarModalItem* item);
-	void itemMouseEnter(MenubarModalItem* item);
-	void showMenu(MenubarModalItem* item);
-	void onClose(Event* event);
-	void onModalAttach() override;
+	class MenubarModal : public View
+	{
+	public:
+		MenubarModal(Menubar* menubar, MenubarItem* openitem);
 
-private:
-	Menubar* menubar = nullptr;
-	Menu* openMenu = nullptr;
-	MenubarModalItem* firstOpenMenuItem = nullptr;
-	View* spacer = nullptr;
-	std::vector<MenubarModalItem*> items;
-};
+		void updateLayout();
+		void itemClicked(MenubarModalItem* item);
+		void itemMouseEnter(MenubarModalItem* item);
+		void showMenu(MenubarModalItem* item);
+		void onClose(Event* event);
+		void onModalAttach() override;
 
-class MenubarModalItem : public TextLabel
-{
-public:
-	MenubarModalItem(MenubarModal* menubar, bool alignRight);
+	private:
+		Menubar* menubar = nullptr;
+		Menu* openMenu = nullptr;
+		MenubarModalItem* firstOpenMenuItem = nullptr;
+		View* spacer = nullptr;
+		std::vector<MenubarModalItem*> items;
+	};
 
-	void setOpenCallback(std::function<void(Menu* menu)> callback) { onOpen = std::move(callback); }
-	const std::function<void(Menu* menu)>& getOpenCallback() const { return onOpen; }
+	class MenubarModalItem : public TextLabel
+	{
+	public:
+		MenubarModalItem(MenubarModal* menubar, bool alignRight);
 
-	void open();
-	void close();
+		void setOpenCallback(std::function<void(Menu* menu)> callback) { onOpen = std::move(callback); }
+		const std::function<void(Menu* menu)>& getOpenCallback() const { return onOpen; }
 
-	bool alignRight = false;
+		void open();
+		void close();
 
-private:
-	void onClick(Event* event);
-	void onMouseEnter(Event* event);
+		bool alignRight = false;
 
-	MenubarModal* menubar = nullptr;
-	std::function<void(Menu* menu)> onOpen;
-};
+	private:
+		void onClick(Event* event);
+		void onMouseEnter(Event* event);
+
+		MenubarModal* menubar = nullptr;
+		std::function<void(Menu* menu)> onOpen;
+	};
+}

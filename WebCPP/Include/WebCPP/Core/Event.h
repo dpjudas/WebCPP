@@ -2,26 +2,29 @@
 
 #include "JSValue.h"
 
-class Event
+namespace web
 {
-public:
-	Event(JSValue handle);
+	class Event
+	{
+	public:
+		Event(JSValue handle);
 
-	double clientX();
-	double clientY();
-	double offsetX();
-	double offsetY();
-	JSValue getPointerId();
+		double clientX();
+		double clientY();
+		double offsetX();
+		double offsetY();
+		JSValue getPointerId();
 
-	int getKeyCode();
+		int getKeyCode();
 
-	void stopPropagation();
-	void stopImmediatePropagation();
-	void preventDefault();
+		void stopPropagation();
+		void stopImmediatePropagation();
+		void preventDefault();
 
-	JSValue pointerId() const;
+		JSValue pointerId() const;
 
-	JSValue target() const;
+		JSValue target() const;
 
-	JSValue handle;
-};
+		JSValue handle;
+	};
+}

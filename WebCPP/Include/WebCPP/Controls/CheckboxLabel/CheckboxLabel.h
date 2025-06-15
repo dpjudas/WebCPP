@@ -2,29 +2,32 @@
 
 #include "../../Core/View.h"
 
-class Checkbox;
-class ImageBox;
-class TextLabel;
-
-class CheckboxLabel : public View
+namespace web
 {
-public:
-	CheckboxLabel();
-	CheckboxLabel(const std::string& text);
+	class Checkbox;
+	class ImageBox;
+	class TextLabel;
 
-	void setChangeHandler(const std::function<void(bool checked)>& handler);
+	class CheckboxLabel : public View
+	{
+	public:
+		CheckboxLabel();
+		CheckboxLabel(const std::string& text);
 
-	void setEnabled(const bool value);
-	bool getEnabled() const;
+		void setChangeHandler(const std::function<void(bool checked)>& handler);
 
-	void setChecked(const bool value);
-	bool isChecked();
+		void setEnabled(const bool value);
+		bool getEnabled() const;
 
-	void setSrc(const std::string& src);
-	void setText(const std::string& text);
+		void setChecked(const bool value);
+		bool isChecked();
 
-private:
-	Checkbox* checkbox = nullptr;
-	ImageBox* imagebox = nullptr;
-	TextLabel* label = nullptr;
-};
+		void setSrc(const std::string& src);
+		void setText(const std::string& text);
+
+	private:
+		Checkbox* checkbox = nullptr;
+		ImageBox* imagebox = nullptr;
+		TextLabel* label = nullptr;
+	};
+}

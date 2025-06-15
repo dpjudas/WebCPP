@@ -2,38 +2,41 @@
 #include "WebCPP/Controls/Menu/Menubar.h"
 #include "WebCPP/Controls/Menu/MenubarModal.h"
 
-Menubar::Menubar() : View("menubar-view")
+namespace web
 {
-	spacer = new View("menubarspacer-view");
+	Menubar::Menubar() : View("menubar-view")
+	{
+		spacer = new View("menubarspacer-view");
 
-	auto layout = createHBoxLayout();
-	layout->addView(spacer, true, true);
-}
+		auto layout = createHBoxLayout();
+		layout->addView(spacer, true, true);
+	}
 
-MenubarItem* Menubar::addItem(std::string text, std::function<void(Menu* menu)> onOpen, bool alignRight)
-{
-	auto item = new MenubarItem(this, alignRight);
-	item->addClass("menubar-item");
-	item->setText(text);
-	item->setOpenCallback(std::move(onOpen));
+	MenubarItem* Menubar::addItem(std::string text, std::function<void(Menu* menu)> onOpen, bool alignRight)
+	{
+		auto item = new MenubarItem(this, alignRight);
+		item->addClass("menubar-item");
+		item->setText(text);
+		item->setOpenCallback(std::move(onOpen));
 
-	getLayout<HBoxLayout>()->addViewBefore(item, !alignRight ? spacer : nullptr);
+		getLayout<HBoxLayout>()->addViewBefore(item, !alignRight ? spacer : nullptr);
 
-	menuItems.push_back(item);
-	return item;
-}
+		menuItems.push_back(item);
+		return item;
+	}
 
-/////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////
 
-MenubarItem::MenubarItem(Menubar* menubar, bool alignRight) : menubar(menubar), alignRight(alignRight)
-{
-	addClass("menubaritem");
-	element->addEventListener("click", [=](Event* event) { onClick(event); });
-}
+	MenubarItem::MenubarItem(Menubar* menubar, bool alignRight) : menubar(menubar), alignRight(alignRight)
+	{
+		addClass("menubaritem");
+		element->addEventListener("click", [=](Event* event) { onClick(event); });
+	}
 
-void MenubarItem::onClick(Event* event)
-{
-	event->stopPropagation();
-	auto modal = new MenubarModal(menubar, this);
-	modal->showModal();
+	void MenubarItem::onClick(Event* event)
+	{
+		event->stopPropagation();
+		auto modal = new MenubarModal(menubar, this);
+		modal->showModal();
+	}
 }

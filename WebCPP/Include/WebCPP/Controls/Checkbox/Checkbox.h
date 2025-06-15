@@ -2,16 +2,19 @@
 
 #include "../../Core/View.h"
 
-class Checkbox : public View
+namespace web
 {
-public:
-	Checkbox();
+	class Checkbox : public View
+	{
+	public:
+		Checkbox();
 
-	void setChangeHandler(const std::function<void(bool checked)>& handler);
+		void setChangeHandler(const std::function<void(bool checked)>& handler);
 
-	void setChecked(bool value);
-	bool isChecked() const;
-	void setEnabled(bool value);
-	bool getEnabled() const;
+		void setChecked(bool value);
+		bool isChecked() const;
+		void setEnabled(bool value);
+		bool getEnabled() const;
 
-};
+	};
+}

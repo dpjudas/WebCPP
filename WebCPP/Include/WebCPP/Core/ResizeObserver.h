@@ -3,44 +3,47 @@
 #include "JSValue.h"
 #include <functional>
 
-class Element;
-class JSCallback;
-
-class ResizeBoxSize
+namespace web
 {
-public:
-	double inlineSize = 0.0;
-	double blockSize = 0.0;
-};
+	class Element;
+	class JSCallback;
 
-class ResizeObserverEntry
-{
-public:
-	ResizeObserverEntry(JSValue entry);
+	class ResizeBoxSize
+	{
+	public:
+		double inlineSize = 0.0;
+		double blockSize = 0.0;
+	};
 
-	std::vector<ResizeBoxSize> getBorderBoxSize();
-	std::vector<ResizeBoxSize> getContentBoxSize();
+	class ResizeObserverEntry
+	{
+	public:
+		ResizeObserverEntry(JSValue entry);
 
-private:
-	JSValue entry;
-};
+		std::vector<ResizeBoxSize> getBorderBoxSize();
+		std::vector<ResizeBoxSize> getContentBoxSize();
 
-class ResizeObserver
-{
-public:
-	ResizeObserver();
-	~ResizeObserver();
+	private:
+		JSValue entry;
+	};
 
-	void observe(Element* element);
-	void unobserve(Element* element);
+	class ResizeObserver
+	{
+	public:
+		ResizeObserver();
+		~ResizeObserver();
 
-	std::function<void(std::vector<ResizeObserverEntry> entries)> onResize;
+		void observe(Element* element);
+		void unobserve(Element* element);
 
-private:
-	ResizeObserver(const ResizeObserver&) = delete;
-	ResizeObserver& operator=(const ResizeObserver&) = delete;
+		std::function<void(std::vector<ResizeObserverEntry> entries)> onResize;
 
-	JSValue handle;
-	std::unique_ptr<JSCallback> callback;
-	std::vector<Element*> observers;
-};
+	private:
+		ResizeObserver(const ResizeObserver&) = delete;
+		ResizeObserver& operator=(const ResizeObserver&) = delete;
+
+		JSValue handle;
+		std::unique_ptr<JSCallback> callback;
+		std::vector<Element*> observers;
+	};
+}

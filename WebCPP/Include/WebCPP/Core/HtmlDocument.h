@@ -24,12 +24,15 @@
 
 #include <string>
 
-class HtmlDocument
+namespace web
 {
-public:
-	static void setTitle(const std::string& title);
-	static std::string getTitle();
+	class HtmlDocument
+	{
+	public:
+		static void setTitle(const std::string& title);
+		static std::string getTitle();
 
-	static void setIcon(const std::string& href);
-	static std::string getIcon();
-};
+		static void setIcon(const std::string& href);
+		static std::string getIcon();
+	};
+}

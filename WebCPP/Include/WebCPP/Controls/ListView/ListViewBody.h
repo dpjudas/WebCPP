@@ -2,14 +2,17 @@
 
 #include "../../Core/View.h"
 
-class ListViewHeader;
-class ListViewItemView;
-
-class ListViewBody : public View
+namespace web
 {
-public:
-	ListViewBody();
+	class ListViewHeader;
+	class ListViewItemView;
 
-	void updateColumns(ListViewHeader* header);
-	void addViewBefore(ListViewItemView* view, ListViewItemView* sibling, ListViewHeader* header);
-};
+	class ListViewBody : public View
+	{
+	public:
+		ListViewBody();
+
+		void updateColumns(ListViewHeader* header);
+		void addViewBefore(ListViewItemView* view, ListViewItemView* sibling, ListViewHeader* header);
+	};
+}

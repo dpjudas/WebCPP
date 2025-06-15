@@ -2,28 +2,31 @@
 
 #include "../../Core/View.h"
 
-class TabBar;
-class TabBarTab;
-
-class TabControl : public View
+namespace web
 {
-public:
-	TabControl(bool tabsAtBottom = false);
+	class TabBar;
+	class TabBarTab;
 
-	void addPage(std::string icon, std::string label, View* page, std::function<void(double clientX, double clientY)> onContextMenu = {});
-	void showPage(View* page);
+	class TabControl : public View
+	{
+	public:
+		TabControl(bool tabsAtBottom = false);
 
-	std::function<void(View*)> onPageShow;
+		void addPage(std::string icon, std::string label, View* page, std::function<void(double clientX, double clientY)> onContextMenu = {});
+		void showPage(View* page);
 
-private:
-	TabBarTab* findTab(View* page);
-	void onPageTabClicked(View* page);
-	void setupUi();
+		std::function<void(View*)> onPageShow;
 
-	bool tabsAtBottom = false;
-	TabBar* tabs = nullptr;
-	std::map<TabBarTab*, std::unique_ptr<View>> pages;
-	View* currentPage = nullptr;
+	private:
+		TabBarTab* findTab(View* page);
+		void onPageTabClicked(View* page);
+		void setupUi();
 
-	View* widgetStack = nullptr;
-};
+		bool tabsAtBottom = false;
+		TabBar* tabs = nullptr;
+		std::map<TabBarTab*, std::unique_ptr<View>> pages;
+		View* currentPage = nullptr;
+
+		View* widgetStack = nullptr;
+	};
+}

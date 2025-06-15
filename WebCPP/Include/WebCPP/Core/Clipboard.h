@@ -3,9 +3,12 @@
 #include <string>
 #include <functional>
 
-class Clipboard
+namespace web
 {
-public:
-	static void setText(const std::string& text);
-	static void getText(std::function<void(std::string text)> onResult);
-};
+	class Clipboard
+	{
+	public:
+		static void setText(const std::string& text);
+		static void getText(std::function<void(std::string text)> onResult);
+	};
+}

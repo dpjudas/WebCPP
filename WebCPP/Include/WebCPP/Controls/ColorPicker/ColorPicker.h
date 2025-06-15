@@ -3,166 +3,169 @@
 #include "../../Core/ResizeObserver.h"
 #include "../../Core/View.h"
 
-class TextLabel;
-class ColorPickerPopup;
-class ColorPickerSatValBox;
-class ColorPickerHueBox;
-class LineEdit;
-class LineEdit;
-class CheckboxLabel;
-struct RGBColorf;
-struct HSVColorf;
-
-class ColorPicker : public View
+namespace web
 {
-public:
-	ColorPicker();
+	class TextLabel;
+	class ColorPickerPopup;
+	class ColorPickerSatValBox;
+	class ColorPickerHueBox;
+	class LineEdit;
+	class LineEdit;
+	class CheckboxLabel;
+	struct RGBColorf;
+	struct HSVColorf;
 
-	void setChangeHandler(const std::function<void()>& handler);
-	void setColor(int red, int green, int blue, bool noColor);
+	class ColorPicker : public View
+	{
+	public:
+		ColorPicker();
 
-	int getRed() const { return red; }
-	int getGreen() const { return green; }
-	int getBlue() const { return blue; }
-	bool isNoColor() const { return noColor; }
+		void setChangeHandler(const std::function<void()>& handler);
+		void setColor(int red, int green, int blue, bool noColor);
 
-	void closePopup();
+		int getRed() const { return red; }
+		int getGreen() const { return green; }
+		int getBlue() const { return blue; }
+		bool isNoColor() const { return noColor; }
 
-private:
-	void setupUi();
-	void updateUi();
-	void onClick(Event* e);
-	void onFocusIn(Event* e);
-	void onColorPickerChanged();
+		void closePopup();
 
-	std::function<void()> changeHandler;
-	TextLabel* label = nullptr;
+	private:
+		void setupUi();
+		void updateUi();
+		void onClick(Event* e);
+		void onFocusIn(Event* e);
+		void onColorPickerChanged();
 
-	bool noColor = true;
-	int red = 0;
-	int green = 0;
-	int blue = 0;
+		std::function<void()> changeHandler;
+		TextLabel* label = nullptr;
 
-	ColorPickerPopup* popup = nullptr;
-};
+		bool noColor = true;
+		int red = 0;
+		int green = 0;
+		int blue = 0;
 
-class ColorPickerPopup : public View
-{
-public:
-	ColorPickerPopup(ColorPicker* combo);
+		ColorPickerPopup* popup = nullptr;
+	};
 
-	void setChangeHandler(const std::function<void()>& handler);
-	void setColor(int red, int green, int blue, bool noColor);
+	class ColorPickerPopup : public View
+	{
+	public:
+		ColorPickerPopup(ColorPicker* combo);
 
-	int getRed();
-	int getGreen();
-	int getBlue();
-	bool isNoColor();
+		void setChangeHandler(const std::function<void()>& handler);
+		void setColor(int red, int green, int blue, bool noColor);
 
-private:
-	void setupUi();
-	void updateRGBFromHSV();
-	void updateHSVFromRGB();
-	void updateColorCircle();
-	void onSatValChanged();
-	void onHueChanged();
-	void onRgbChanged();
-	void onNoColorChanged();
-	void onKeyDown(Event* event);
+		int getRed();
+		int getGreen();
+		int getBlue();
+		bool isNoColor();
 
-	ColorPicker* combo = nullptr;
-	ResizeObserver observer;
+	private:
+		void setupUi();
+		void updateRGBFromHSV();
+		void updateHSVFromRGB();
+		void updateColorCircle();
+		void onSatValChanged();
+		void onHueChanged();
+		void onRgbChanged();
+		void onNoColorChanged();
+		void onKeyDown(Event* event);
 
-	std::function<void()> changeHandler;
+		ColorPicker* combo = nullptr;
+		ResizeObserver observer;
 
-	ColorPickerSatValBox* satvalBox = nullptr;
-	ColorPickerHueBox* hueBox = nullptr;
-	View* colorCircle = nullptr;
-	LineEdit* red = nullptr;
-	LineEdit* green = nullptr;
-	LineEdit* blue = nullptr;
-	CheckboxLabel* noColor = nullptr;
-};
+		std::function<void()> changeHandler;
 
-class ColorPickerSatValBox : public View
-{
-public:
-	ColorPickerSatValBox();
+		ColorPickerSatValBox* satvalBox = nullptr;
+		ColorPickerHueBox* hueBox = nullptr;
+		View* colorCircle = nullptr;
+		LineEdit* red = nullptr;
+		LineEdit* green = nullptr;
+		LineEdit* blue = nullptr;
+		CheckboxLabel* noColor = nullptr;
+	};
 
-	void setHue(float hue);
-	void setValue(float value);
-	void setSaturation(float saturation);
+	class ColorPickerSatValBox : public View
+	{
+	public:
+		ColorPickerSatValBox();
 
-	float getHue() const { return hue; }
-	float getValue() const { return value; }
-	float getSaturation() const { return saturation; }
+		void setHue(float hue);
+		void setValue(float value);
+		void setSaturation(float saturation);
 
-	void setChangeHandler(const std::function<void()>& handler);
+		float getHue() const { return hue; }
+		float getValue() const { return value; }
+		float getSaturation() const { return saturation; }
 
-private:
-	void updateUi();
-	void updateDraggerPos(Event* e);
-	void onPointerDown(Event* e);
-	void onPointerMove(Event* e);
-	void onPointerUp(Event* e);
+		void setChangeHandler(const std::function<void()>& handler);
 
-	std::function<void()> changeHandler;
-	float hue = 0.5f;
-	float value = 0.5f;
-	float saturation = 0.5f;
-	bool pointerCaptureActive = false;
+	private:
+		void updateUi();
+		void updateDraggerPos(Event* e);
+		void onPointerDown(Event* e);
+		void onPointerMove(Event* e);
+		void onPointerUp(Event* e);
 
-	View* saturationGradient = nullptr;
-	View* valueGradient = nullptr;
-	View* dragger = nullptr;
-};
+		std::function<void()> changeHandler;
+		float hue = 0.5f;
+		float value = 0.5f;
+		float saturation = 0.5f;
+		bool pointerCaptureActive = false;
 
-class ColorPickerHueBox : public View
-{
-public:
-	ColorPickerHueBox();
+		View* saturationGradient = nullptr;
+		View* valueGradient = nullptr;
+		View* dragger = nullptr;
+	};
 
-	void setHue(float hue);
-	float getHue() const { return hue; }
+	class ColorPickerHueBox : public View
+	{
+	public:
+		ColorPickerHueBox();
 
-	void setChangeHandler(const std::function<void()>& handler);
+		void setHue(float hue);
+		float getHue() const { return hue; }
 
-private:
-	void updateUi();
-	void updateDraggerPos(Event* e);
-	void onPointerDown(Event* e);
-	void onPointerMove(Event* e);
-	void onPointerUp(Event* e);
+		void setChangeHandler(const std::function<void()>& handler);
 
-	std::function<void()> changeHandler;
-	float hue = 0.5f;
-	bool pointerCaptureActive = false;
+	private:
+		void updateUi();
+		void updateDraggerPos(Event* e);
+		void onPointerDown(Event* e);
+		void onPointerMove(Event* e);
+		void onPointerUp(Event* e);
 
-	View* dragger = nullptr;
-};
+		std::function<void()> changeHandler;
+		float hue = 0.5f;
+		bool pointerCaptureActive = false;
 
-struct HSVColorf
-{
-	HSVColorf() = default;
-	HSVColorf(float h, float s, float v) : h(h), s(s), v(v) { }
+		View* dragger = nullptr;
+	};
 
-	float h = 0.0f;
-	float s = 0.0f;
-	float v = 0.0f;
+	struct HSVColorf
+	{
+		HSVColorf() = default;
+		HSVColorf(float h, float s, float v) : h(h), s(s), v(v) {}
 
-	RGBColorf toRGB() const;
-	std::string toCSSColor() const;
-};
+		float h = 0.0f;
+		float s = 0.0f;
+		float v = 0.0f;
 
-struct RGBColorf
-{
-	RGBColorf() = default;
-	RGBColorf(float r, float g, float b) : r(r), g(g), b(b) { }
+		RGBColorf toRGB() const;
+		std::string toCSSColor() const;
+	};
 
-	float r = 0.0f;
-	float g = 0.0f;
-	float b = 0.0f;
+	struct RGBColorf
+	{
+		RGBColorf() = default;
+		RGBColorf(float r, float g, float b) : r(r), g(g), b(b) {}
 
-	HSVColorf toHSV() const;
-	std::string toCSSColor() const;
-};
+		float r = 0.0f;
+		float g = 0.0f;
+		float b = 0.0f;
+
+		HSVColorf toHSV() const;
+		std::string toCSSColor() const;
+	};
+}

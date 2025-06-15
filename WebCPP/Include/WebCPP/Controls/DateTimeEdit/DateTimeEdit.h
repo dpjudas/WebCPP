@@ -2,28 +2,31 @@
 
 #include "../../Core/View.h"
 
-class DateTimeEdit : public View
+namespace web
 {
-public:
-	DateTimeEdit();
+	class DateTimeEdit : public View
+	{
+	public:
+		DateTimeEdit();
 
-	void setValue(const std::string& isodatetime);
-	std::string getValue();
+		void setValue(const std::string& isodatetime);
+		std::string getValue();
 
-	void setMin(const std::string& isodatetime);
-	std::string getMin();
+		void setMin(const std::string& isodatetime);
+		std::string getMin();
 
-	void setMax(const std::string& isodatetime);
-	std::string getMax();
+		void setMax(const std::string& isodatetime);
+		std::string getMax();
 
-	void setStep(const int seconds);
-	int getStep();
+		void setStep(const int seconds);
+		int getStep();
 
-	void setEnabled(const bool value);
-	bool getEnabled() const;
+		void setEnabled(const bool value);
+		bool getEnabled() const;
 
-	bool setFocus() override;
+		bool setFocus() override;
 
-private:
-	bool enabled = true;
-};
+	private:
+		bool enabled = true;
+	};
+}

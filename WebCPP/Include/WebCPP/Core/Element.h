@@ -5,83 +5,86 @@
 #include "Event.h"
 #include "JSValue.h"
 
-class JSCallback;
-
-class Rect
+namespace web
 {
-public:
-	Rect() = default;
-	Rect(double x, double y, double width, double height) : x(x), y(y), width(width), height(height) { }
+	class JSCallback;
 
-	static Rect ltrb(double left, double top, double right, double bottom) { return Rect(left, top, right - left, bottom - top); }
+	class Rect
+	{
+	public:
+		Rect() = default;
+		Rect(double x, double y, double width, double height) : x(x), y(y), width(width), height(height) {}
 
-	double x = 0;
-	double y = 0;
-	double width = 0;
-	double height = 0;
-};
+		static Rect ltrb(double left, double top, double right, double bottom) { return Rect(left, top, right - left, bottom - top); }
 
-class Element
-{
-public:
-	Element(JSValue handle);
-	Element(std::string elementType);
-	Element(std::string ns, std::string elementType);
-	~Element();
+		double x = 0;
+		double y = 0;
+		double width = 0;
+		double height = 0;
+	};
 
-	void insertBefore(Element* newElement, Element* insertPoint);
-	void appendChild(Element* newElement);
-	void removeChild(Element* childElement);
+	class Element
+	{
+	public:
+		Element(JSValue handle);
+		Element(std::string elementType);
+		Element(std::string ns, std::string elementType);
+		~Element();
 
-	std::string getAttribute(std::string name) const;
-	void setAttribute(std::string name, std::string value);
-	void removeAttribute(std::string name);
-	std::string getAttribute(std::string name);
+		void insertBefore(Element* newElement, Element* insertPoint);
+		void appendChild(Element* newElement);
+		void removeChild(Element* childElement);
 
-	static std::string attributeFromPoint(std::string name, double clientX, double clientY, const std::string& defaultValue = {});
+		std::string getAttribute(std::string name) const;
+		void setAttribute(std::string name, std::string value);
+		void removeAttribute(std::string name);
+		std::string getAttribute(std::string name);
 
-	std::string getStyle(std::string name) const;
-	void setStyle(std::string name, std::string value);
-	void removeStyle(std::string name);
+		static std::string attributeFromPoint(std::string name, double clientX, double clientY, const std::string& defaultValue = {});
 
-	void addEventListener(std::string name, std::function<void(Event* event)> handler);
-	void dispatchEvent(std::string name, bool bubbles = true);
+		std::string getStyle(std::string name) const;
+		void setStyle(std::string name, std::string value);
+		void removeStyle(std::string name);
 
-	void setPointerCapture(JSValue id);
-	void releasePointerCapture(JSValue id);
+		void addEventListener(std::string name, std::function<void(Event* event)> handler);
+		void dispatchEvent(std::string name, bool bubbles = true);
 
-	void setInnerText(const std::string& text);
-	void setInnerHtml(const std::string& html);
+		void setPointerCapture(JSValue id);
+		void releasePointerCapture(JSValue id);
 
-	void click();
-	void focus();
-	void setTabIndex(int index) { setAttribute("tabindex", std::to_string(index)); }
-	void removeTabIndex() { removeAttribute("tabindex"); }
+		void setInnerText(const std::string& text);
+		void setInnerHtml(const std::string& html);
 
-	Rect getBoundingClientRect();
+		void click();
+		void focus();
+		void setTabIndex(int index) { setAttribute("tabindex", std::to_string(index)); }
+		void removeTabIndex() { removeAttribute("tabindex"); }
 
-	double clientTop() const;
-	double clientLeft() const;
-	double clientWidth() const;
-	double clientHeight() const;
+		Rect getBoundingClientRect();
 
-	double offsetLeft() const;
-	double offsetTop() const;
-	double offsetWidth() const;
-	double offsetHeight() const;
+		double clientTop() const;
+		double clientLeft() const;
+		double clientWidth() const;
+		double clientHeight() const;
 
-	double scrollLeft() const;
-	double scrollTop() const;
-	double scrollWidth() const;
-	double scrollHeight() const;
+		double offsetLeft() const;
+		double offsetTop() const;
+		double offsetWidth() const;
+		double offsetHeight() const;
 
-	void scrollTo(double x, double y);
-	void scrollBy(double x, double y);
-	void setScrollLeft(double x);
-	void setScrollTop(double y);
+		double scrollLeft() const;
+		double scrollTop() const;
+		double scrollWidth() const;
+		double scrollHeight() const;
 
-	JSValue handle;
+		void scrollTo(double x, double y);
+		void scrollBy(double x, double y);
+		void setScrollLeft(double x);
+		void setScrollTop(double y);
 
-private:
-	std::vector<std::unique_ptr<JSCallback>> eventListeners;
-};
+		JSValue handle;
+
+	private:
+		std::vector<std::unique_ptr<JSCallback>> eventListeners;
+	};
+}

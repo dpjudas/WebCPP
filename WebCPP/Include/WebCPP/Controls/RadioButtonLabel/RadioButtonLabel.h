@@ -1,38 +1,42 @@
 #pragma once
+
 #include "../../Core/View.h"
 
-class ImageBox;
-class RadioButton;
-class TextLabel;
-
-class RadioButtonLabel : public View
+namespace web
 {
-public:
-	RadioButtonLabel();
-	RadioButtonLabel(const std::string& text);
-	RadioButtonLabel(const std::string& text, const std::string& name);
+	class ImageBox;
+	class RadioButton;
+	class TextLabel;
 
-	void setChangeHandler(const std::function<void(bool checked)>& handler);
+	class RadioButtonLabel : public View
+	{
+	public:
+		RadioButtonLabel();
+		RadioButtonLabel(const std::string& text);
+		RadioButtonLabel(const std::string& text, const std::string& name);
 
-	void setEnabled(const bool value);
-	bool getEnabled() const;
+		void setChangeHandler(const std::function<void(bool checked)>& handler);
 
-	// RadioButton
-	RadioButton* getRadioButton() const { return radiobutton; }
-	void setChecked(const bool value = true);
-	bool isChecked();
-	void setName(const std::string& value);
-	void setValue(const std::string& value);
+		void setEnabled(const bool value);
+		bool getEnabled() const;
 
-	// ImageBox
-	void setSrc(const std::string& src);
+		// RadioButton
+		RadioButton* getRadioButton() const { return radiobutton; }
+		void setChecked(const bool value = true);
+		bool isChecked();
+		void setName(const std::string& value);
+		void setValue(const std::string& value);
 
-	// TextLabel
-	void setText(const std::string& text);
+		// ImageBox
+		void setSrc(const std::string& src);
 
-private:
-	RadioButton* radiobutton = nullptr;
-	ImageBox* imagebox = nullptr;
-	TextLabel* label = nullptr;
+		// TextLabel
+		void setText(const std::string& text);
 
-};
+	private:
+		RadioButton* radiobutton = nullptr;
+		ImageBox* imagebox = nullptr;
+		TextLabel* label = nullptr;
+
+	};
+}

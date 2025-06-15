@@ -3,33 +3,36 @@
 #include "WebCPP/Controls/ListView/ListViewItem.h"
 #include "WebCPP/Controls/ListView/ListView.h"
 
-ListViewItemView::ListViewItemView(ListViewItem* item) : View("listviewitem-view"), item(item)
+namespace web
 {
-	auto layout = createGridLayout();
-	layout->setSubgrid(true, false);
-}
-
-View* ListViewItemView::getColumnView(size_t index)
-{
-	if (index < columns.size())
-		return columns[index];
-	else
-		return nullptr;
-}
-
-void ListViewItemView::setColumnView(size_t index, View* view)
-{
-	if (index >= columns.size())
-		columns.resize(index + 1);
-
-	if (columns[index] != view)
+	ListViewItemView::ListViewItemView(ListViewItem* item) : View("listviewitem-view"), item(item)
 	{
-		delete columns[index];
-		columns[index] = view;
+		auto layout = createGridLayout();
+		layout->setSubgrid(true, false);
+	}
 
-		view->setParent(this);
-		getLayout<GridLayout>()->addViewBefore(view, index + 1 < columns.size() ? columns[index + 1] : nullptr);
+	View* ListViewItemView::getColumnView(size_t index)
+	{
+		if (index < columns.size())
+			return columns[index];
+		else
+			return nullptr;
+	}
 
-		item->listview()->onColumnViewChanged(this, index);
+	void ListViewItemView::setColumnView(size_t index, View* view)
+	{
+		if (index >= columns.size())
+			columns.resize(index + 1);
+
+		if (columns[index] != view)
+		{
+			delete columns[index];
+			columns[index] = view;
+
+			view->setParent(this);
+			getLayout<GridLayout>()->addViewBefore(view, index + 1 < columns.size() ? columns[index + 1] : nullptr);
+
+			item->listview()->onColumnViewChanged(this, index);
+		}
 	}
 }

@@ -2,17 +2,20 @@
 
 #include "ListViewItem.h"
 
-class RootListViewItem : public ListViewItem
+namespace web
 {
-public:
-	RootListViewItem(ListView* listview) : listviewObj(listview) {}
+	class RootListViewItem : public ListViewItem
+	{
+	public:
+		RootListViewItem(ListView* listview) : listviewObj(listview) {}
 
-	ListView* listview() const override { return listviewObj; }
+		ListView* listview() const override { return listviewObj; }
 
-protected:
-	std::string sortCompareString() override { return {}; }
-	void updateColumnView(size_t index) override {}
+	protected:
+		std::string sortCompareString() override { return {}; }
+		void updateColumnView(size_t index) override {}
 
-private:
-	ListView* listviewObj = nullptr;
-};
+	private:
+		ListView* listviewObj = nullptr;
+	};
+}

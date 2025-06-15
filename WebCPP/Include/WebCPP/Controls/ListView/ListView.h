@@ -6,94 +6,97 @@
 #include "TextListViewItem.h"
 #include <list>
 
-class TextLabel;
-class ListViewHeader;
-class ListViewHeaderSplitter;
-class ListViewBody;
-class Menu;
-class Scrollbar;
-class ScrollbarCorner;
-
-enum class ScrollToHint
+namespace web
 {
-	ensureVisible,
-	positionAtTop,
-	positionAtBottom,
-	positionAtCenter
-};
+	class TextLabel;
+	class ListViewHeader;
+	class ListViewHeaderSplitter;
+	class ListViewBody;
+	class Menu;
+	class Scrollbar;
+	class ScrollbarCorner;
 
-class ListView : public View
-{
-public:
-	ListView();
-	~ListView();
+	enum class ScrollToHint
+	{
+		ensureVisible,
+		positionAtTop,
+		positionAtBottom,
+		positionAtCenter
+	};
 
-	void clearList();
+	class ListView : public View
+	{
+	public:
+		ListView();
+		~ListView();
 
-	int addColumn(std::string name, double width, bool expanding = false);
+		void clearList();
 
-	std::vector<std::string> columnNames() const;
+		int addColumn(std::string name, double width, bool expanding = false);
 
-	ListViewItem* rootItem() { return root.get(); }
-	const ListViewItem* rootItem() const { return root.get(); }
-	std::vector<ListViewItem*> selectedItems();
-	ListViewItem* selectedItem();
-	ListViewItem* focusedItem() { return curFocusItem; }
+		std::vector<std::string> columnNames() const;
 
-	void setAlternatingRowColors(bool enable);
+		ListViewItem* rootItem() { return root.get(); }
+		const ListViewItem* rootItem() const { return root.get(); }
+		std::vector<ListViewItem*> selectedItems();
+		ListViewItem* selectedItem();
+		ListViewItem* focusedItem() { return curFocusItem; }
 
-	void scrollToItem(ListViewItem* item, ScrollToHint hint = ScrollToHint::ensureVisible);
+		void setAlternatingRowColors(bool enable);
 
-	ListViewItem* findItem(const std::string& id, const bool recursive = false, ListViewItem* item = nullptr) const;
+		void scrollToItem(ListViewItem* item, ScrollToHint hint = ScrollToHint::ensureVisible);
 
-	double scrollTop() const;
-	double scrollPage() const;
-	double scrollMax() const;
-	void setScrollTop(double y);
+		ListViewItem* findItem(const std::string& id, const bool recursive = false, ListViewItem* item = nullptr) const;
 
-	void selectItem(ListViewItem* item);
-	void focusItem(ListViewItem* item);
+		double scrollTop() const;
+		double scrollPage() const;
+		double scrollMax() const;
+		void setScrollTop(double y);
 
-	std::function<void(ListViewItem*)> activated;
-	std::function<void(ListViewItem*)> clicked;
-	std::function<void(ListViewItem*)> doubleClicked;
-	std::function<void(ListViewItem*, Menu*)> onContextMenu;
-	std::function<void(ListViewItem*)> collapsed;
-	std::function<void(ListViewItem*)> expanded;
-	std::function<void()> selectionChanged;
-	std::function<void()> scroll;
+		void selectItem(ListViewItem* item);
+		void focusItem(ListViewItem* item);
 
-	bool setFocus() override;
+		std::function<void(ListViewItem*)> activated;
+		std::function<void(ListViewItem*)> clicked;
+		std::function<void(ListViewItem*)> doubleClicked;
+		std::function<void(ListViewItem*, Menu*)> onContextMenu;
+		std::function<void(ListViewItem*)> collapsed;
+		std::function<void(ListViewItem*)> expanded;
+		std::function<void()> selectionChanged;
+		std::function<void()> scroll;
 
-private:
-	void setupUi();
-	void onBodyClick(Event* event);
-	void onBodyScroll(Event* event);
-	void onBodyFocus(Event* event);
-	void onBodyBlur(Event* event);
-	void onBodyKeyDown(Event* event);
-	void onItemClick(Event* event, ListViewItem* item);
-	void onItemContextMenu(Event* event, ListViewItem* item);
-	void onItemAttached(ListViewItem* item);
-	void onItemDetached(ListViewItem* item);
-	void openItem(ListViewItem* item);
-	void closeItem(ListViewItem* item);
-	void createItemView(ListViewItem* item);
-	void onColumnViewChanged(ListViewItemView* itemview, size_t index);
-	void updateScrollbars();
-	void onScrollbarScroll();
-	void onResize(std::vector<ResizeObserverEntry> entries);
+		bool setFocus() override;
 
-	ListViewHeader* header = nullptr;
-	ListViewBody* body = nullptr;
-	std::unique_ptr<ListViewItem> root;
-	ListViewItem* curSelectedItem = nullptr;
-	ListViewItem* curFocusItem = nullptr;
-	Scrollbar* scrollVert = nullptr;
-	Scrollbar* scrollHorz = nullptr;
-	ScrollbarCorner* scrollCorner = nullptr;
-	ResizeObserver resizeObserver;
+	private:
+		void setupUi();
+		void onBodyClick(Event* event);
+		void onBodyScroll(Event* event);
+		void onBodyFocus(Event* event);
+		void onBodyBlur(Event* event);
+		void onBodyKeyDown(Event* event);
+		void onItemClick(Event* event, ListViewItem* item);
+		void onItemContextMenu(Event* event, ListViewItem* item);
+		void onItemAttached(ListViewItem* item);
+		void onItemDetached(ListViewItem* item);
+		void openItem(ListViewItem* item);
+		void closeItem(ListViewItem* item);
+		void createItemView(ListViewItem* item);
+		void onColumnViewChanged(ListViewItemView* itemview, size_t index);
+		void updateScrollbars();
+		void onScrollbarScroll();
+		void onResize(std::vector<ResizeObserverEntry> entries);
 
-	friend class ListViewItem;
-	friend class ListViewItemView;
-};
+		ListViewHeader* header = nullptr;
+		ListViewBody* body = nullptr;
+		std::unique_ptr<ListViewItem> root;
+		ListViewItem* curSelectedItem = nullptr;
+		ListViewItem* curFocusItem = nullptr;
+		Scrollbar* scrollVert = nullptr;
+		Scrollbar* scrollHorz = nullptr;
+		ScrollbarCorner* scrollCorner = nullptr;
+		ResizeObserver resizeObserver;
+
+		friend class ListViewItem;
+		friend class ListViewItemView;
+	};
+}

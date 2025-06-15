@@ -2,32 +2,35 @@
 
 #include "../../Core/View.h"
 
-class ImageBox;
-class TextLabel;
-
-class Button : public View
+namespace web
 {
-public:
-	Button();
+	class ImageBox;
+	class TextLabel;
 
-	void setIcon(std::string src);
-	std::string getText() const;
-	void setText(std::string text);
-	void setEnabled(bool value);
-	bool getEnabled() const;
+	class Button : public View
+	{
+	public:
+		Button();
 
-	bool enabled = true;
+		void setIcon(std::string src);
+		std::string getText() const;
+		void setText(std::string text);
+		void setEnabled(bool value);
+		bool getEnabled() const;
 
-	bool setFocus() override;
+		bool enabled = true;
 
-	void click(Event* event);
+		bool setFocus() override;
 
-	std::function<void()> pressed;
+		void click(Event* event);
 
-private:
-	void onClicked(Event* event);
-	void onKeyDown(Event* event);
+		std::function<void()> pressed;
 
-	ImageBox* image = nullptr;
-	TextLabel* label = nullptr;
-};
+	private:
+		void onClicked(Event* event);
+		void onKeyDown(Event* event);
+
+		ImageBox* image = nullptr;
+		TextLabel* label = nullptr;
+	};
+}

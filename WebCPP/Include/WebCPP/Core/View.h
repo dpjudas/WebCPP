@@ -11,82 +11,85 @@
 #include "Element.h"
 #include "ViewLayout.h"
 
-class ModalLayer;
-class ShadowRoot;
-
-class View
+namespace web
 {
-public:
-	View(std::string elementType = "basic-view");
-	View(std::string ns, std::string elementType);
-	View(std::unique_ptr<Element> element);
-	virtual ~View();
+	class ModalLayer;
+	class ShadowRoot;
 
-	void setParent(View* parent);
+	class View
+	{
+	public:
+		View(std::string elementType = "basic-view");
+		View(std::string ns, std::string elementType);
+		View(std::unique_ptr<Element> element);
+		virtual ~View();
 
-	void addClass(std::string name);
-	void removeClass(std::string name);
-	bool hasClass(std::string name) const;
+		void setParent(View* parent);
 
-	template<typename T> T* createLayout() { layout = std::make_unique<T>(this); return getLayout<T>(); }
-	FlowLayout* createFlowLayout() { return createLayout<FlowLayout>(); }
-	FlexLayout* createFlexLayout() { return createLayout<FlexLayout>(); }
-	VBoxLayout* createVBoxLayout() { return createLayout<VBoxLayout>(); }
-	HBoxLayout* createHBoxLayout() { return createLayout<HBoxLayout>(); }
-	GridLayout* createGridLayout() { return createLayout<GridLayout>(); }
+		void addClass(std::string name);
+		void removeClass(std::string name);
+		bool hasClass(std::string name) const;
 
-	ViewLayout* getLayout() { return layout.get(); }
-	template<typename T> T* getLayout() { return static_cast<T*>(layout.get()); }
+		template<typename T> T* createLayout() { layout = std::make_unique<T>(this); return getLayout<T>(); }
+		FlowLayout* createFlowLayout() { return createLayout<FlowLayout>(); }
+		FlexLayout* createFlexLayout() { return createLayout<FlexLayout>(); }
+		VBoxLayout* createVBoxLayout() { return createLayout<VBoxLayout>(); }
+		HBoxLayout* createHBoxLayout() { return createLayout<HBoxLayout>(); }
+		GridLayout* createGridLayout() { return createLayout<GridLayout>(); }
 
-	void show() { setVisible(true); }
-	void hide() { setVisible(false); }
-	bool getVisible() const { return !getHidden(); }
-	void setVisible(bool value) { setHidden(!value); }
-	bool getHidden() const;
-	void setHidden(bool value);
+		ViewLayout* getLayout() { return layout.get(); }
+		template<typename T> T* getLayout() { return static_cast<T*>(layout.get()); }
 
-	ModalLayer* showModal();
-	ModalLayer* showUnshadedModal(const bool setFocus = true);
-	void closeModal();
+		void show() { setVisible(true); }
+		void hide() { setVisible(false); }
+		bool getVisible() const { return !getHidden(); }
+		void setVisible(bool value) { setHidden(!value); }
+		bool getHidden() const;
+		void setHidden(bool value);
 
-	void attachShadow(const std::string& mode = "open");
+		ModalLayer* showModal();
+		ModalLayer* showUnshadedModal(const bool setFocus = true);
+		void closeModal();
 
-	virtual void setDefaultFocus();
-	virtual bool setFocus();
-	virtual void onModalAttach() { }
+		void attachShadow(const std::string& mode = "open");
 
-	std::unique_ptr<Element> element;
-	std::unique_ptr<ShadowRoot> shadowRoot;
+		virtual void setDefaultFocus();
+		virtual bool setFocus();
+		virtual void onModalAttach() {}
 
-	View* parent() const { return parentObj; }
+		std::unique_ptr<Element> element;
+		std::unique_ptr<ShadowRoot> shadowRoot;
 
-	void setCursor(const std::string& cursor) { element->setAttribute("cursor", cursor); }
-	void setPointerEvents(const std::string& value) { element->setAttribute("pointer-events", value); }
+		View* parent() const { return parentObj; }
 
-private:
-	View* prevSibling() const { return prevSiblingObj; }
-	View* nextSibling() const { return nextSiblingObj; }
-	View* firstChild() const { return firstChildObj; }
-	View* lastChild() const { return lastChildObj; }
+		void setCursor(const std::string& cursor) { element->setAttribute("cursor", cursor); }
+		void setPointerEvents(const std::string& value) { element->setAttribute("pointer-events", value); }
 
-	bool forceFocus();
-	bool focusFirstChild();
-	void detachFromParent(bool notifyLayout);
-	void updateClassAttribute();
+	private:
+		View* prevSibling() const { return prevSiblingObj; }
+		View* nextSibling() const { return nextSiblingObj; }
+		View* firstChild() const { return firstChildObj; }
+		View* lastChild() const { return lastChildObj; }
 
-	View* parentObj = nullptr;
-	View* prevSiblingObj = nullptr;
-	View* nextSiblingObj = nullptr;
-	View* firstChildObj = nullptr;
-	View* lastChildObj = nullptr;
+		bool forceFocus();
+		bool focusFirstChild();
+		void detachFromParent(bool notifyLayout);
+		void updateClassAttribute();
 
-	std::unique_ptr<ViewLayout> layout;
-	std::unique_ptr<ViewLayoutItem> layoutItem;
+		View* parentObj = nullptr;
+		View* prevSiblingObj = nullptr;
+		View* nextSiblingObj = nullptr;
+		View* firstChildObj = nullptr;
+		View* lastChildObj = nullptr;
 
-	std::set<std::string> classes;
+		std::unique_ptr<ViewLayout> layout;
+		std::unique_ptr<ViewLayoutItem> layoutItem;
 
-	bool defaultFocused = false;
+		std::set<std::string> classes;
 
-	friend class ViewLayout;
-	friend class SvgElementView;
-};
+		bool defaultFocused = false;
+
+		friend class ViewLayout;
+		friend class SvgElementView;
+	};
+}

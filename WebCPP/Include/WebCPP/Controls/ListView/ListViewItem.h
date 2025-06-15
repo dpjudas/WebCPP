@@ -7,60 +7,63 @@
 #include <list>
 #include <memory>
 
-class View;
-class ListView;
-class ListViewItemView;
-
-class ListViewItem
+namespace web
 {
-public:
-	ListViewItem();
-	virtual ~ListViewItem();
+	class View;
+	class ListView;
+	class ListViewItemView;
 
-	ListViewItem* add(std::unique_ptr<ListViewItem> item);
-	ListViewItem* insertBefore(std::unique_ptr<ListViewItem> item, ListViewItem* sibling);
-	std::unique_ptr<ListViewItem> remove();
-	void removeAllChildren();
+	class ListViewItem
+	{
+	public:
+		ListViewItem();
+		virtual ~ListViewItem();
 
-	void open();
-	void close();
-	bool isOpen() const { return openFlag; }
+		ListViewItem* add(std::unique_ptr<ListViewItem> item);
+		ListViewItem* insertBefore(std::unique_ptr<ListViewItem> item, ListViewItem* sibling);
+		std::unique_ptr<ListViewItem> remove();
+		void removeAllChildren();
 
-	const std::string& id() const { return itemId; }
-	void setId(std::string id) { itemId = std::move(id); }
+		void open();
+		void close();
+		bool isOpen() const { return openFlag; }
 
-	const ListViewItem* root() const;
-	ListViewItem* parent() const { return parentObj; }
-	ListViewItem* prevSibling() const { return prevSiblingObj; }
-	ListViewItem* nextSibling() const { return nextSiblingObj; }
-	ListViewItem* firstChild() const { return firstChildObj; }
-	ListViewItem* lastChild() const { return lastChildObj; }
+		const std::string& id() const { return itemId; }
+		void setId(std::string id) { itemId = std::move(id); }
 
-	ListViewItem* prevOpenItem() const;
-	ListViewItem* nextOpenItem() const;
+		const ListViewItem* root() const;
+		ListViewItem* parent() const { return parentObj; }
+		ListViewItem* prevSibling() const { return prevSiblingObj; }
+		ListViewItem* nextSibling() const { return nextSiblingObj; }
+		ListViewItem* firstChild() const { return firstChildObj; }
+		ListViewItem* lastChild() const { return lastChildObj; }
 
-	ListViewItemView* itemview() const { return view; }
+		ListViewItem* prevOpenItem() const;
+		ListViewItem* nextOpenItem() const;
 
-	virtual ListView* listview() const { const ListViewItem* r = root(); return (r != this) ? r->listview() : nullptr; }
+		ListViewItemView* itemview() const { return view; }
 
-	void updateColumn(size_t index);
+		virtual ListView* listview() const { const ListViewItem* r = root(); return (r != this) ? r->listview() : nullptr; }
 
-	void sort();
+		void updateColumn(size_t index);
 
-protected:
-	virtual std::string sortCompareString() { return id(); }
-	virtual void updateColumnView(size_t index) = 0;
+		void sort();
 
-private:
-	ListViewItem* parentObj = nullptr;
-	ListViewItem* prevSiblingObj = nullptr;
-	ListViewItem* nextSiblingObj = nullptr;
-	ListViewItem* firstChildObj = nullptr;
-	ListViewItem* lastChildObj = nullptr;
+	protected:
+		virtual std::string sortCompareString() { return id(); }
+		virtual void updateColumnView(size_t index) = 0;
 
-	std::string itemId;
-	ListViewItemView* view = nullptr;
-	bool openFlag = true;
+	private:
+		ListViewItem* parentObj = nullptr;
+		ListViewItem* prevSiblingObj = nullptr;
+		ListViewItem* nextSiblingObj = nullptr;
+		ListViewItem* firstChildObj = nullptr;
+		ListViewItem* lastChildObj = nullptr;
 
-	friend class ListView;
-};
+		std::string itemId;
+		ListViewItemView* view = nullptr;
+		bool openFlag = true;
+
+		friend class ListView;
+	};
+}

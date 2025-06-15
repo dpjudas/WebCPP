@@ -2,47 +2,50 @@
 
 #include "../../Core/View.h"
 
-class MenuItem;
-class MenuItemSeparator;
-class ImageBox;
-class TextLabel;
-
-enum class MenuOpenCorner
+namespace web
 {
-	topLeft,
-	topRight,
-	bottomLeft,
-	bottomRight
-};
+	class MenuItem;
+	class MenuItemSeparator;
+	class ImageBox;
+	class TextLabel;
 
-class Menu : public View
-{
-public:
-	Menu();
-
-	void showContextMenu(double clientX, double clientY, MenuOpenCorner openCorner = MenuOpenCorner::topLeft);
-
-	void setLeftPosition(double x, double y);
-	void setRightPosition(double x, double y);
-	MenuItem* addItem(std::string icon, std::string text, std::function<void()> onClick = {});
-	MenuItemSeparator* addSeparator();
-
-	std::function<void()> closeMenu;
-};
-
-class MenuItem : public View
-{
-public:
-	MenuItem();
-
-	ImageBox* icon = nullptr;
-	TextLabel* text = nullptr;
-};
-
-class MenuItemSeparator : public View
-{
-public:
-	MenuItemSeparator() : View("menuitemseparator-view")
+	enum class MenuOpenCorner
 	{
-	}
-};
+		topLeft,
+		topRight,
+		bottomLeft,
+		bottomRight
+	};
+
+	class Menu : public View
+	{
+	public:
+		Menu();
+
+		void showContextMenu(double clientX, double clientY, MenuOpenCorner openCorner = MenuOpenCorner::topLeft);
+
+		void setLeftPosition(double x, double y);
+		void setRightPosition(double x, double y);
+		MenuItem* addItem(std::string icon, std::string text, std::function<void()> onClick = {});
+		MenuItemSeparator* addSeparator();
+
+		std::function<void()> closeMenu;
+	};
+
+	class MenuItem : public View
+	{
+	public:
+		MenuItem();
+
+		ImageBox* icon = nullptr;
+		TextLabel* text = nullptr;
+	};
+
+	class MenuItemSeparator : public View
+	{
+	public:
+		MenuItemSeparator() : View("menuitemseparator-view")
+		{
+		}
+	};
+}

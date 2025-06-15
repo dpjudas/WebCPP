@@ -4,63 +4,66 @@
 #include "../../Controls/TextLabel/TextLabel.h"
 #include "../../Controls/ImageBox/ImageBox.h"
 
-class VToolbarButton;
-
-class VToolbar : public View
+namespace web
 {
-public:
-	VToolbar();
+	class VToolbarButton;
 
-	VToolbarButton* addButton(std::string img, std::string text, std::function<void()> onClick);
-};
-
-class VToolbarButton : public View
-{
-public:
-	VToolbarButton() : View("vtoolbarbutton-view")
+	class VToolbar : public View
 	{
-		icon = new ImageBox();
-		text = new TextLabel();
+	public:
+		VToolbar();
 
-		icon->addClass("vtoolbarbutton-icon");
-		text->addClass("vtoolbarbutton-text");
+		VToolbarButton* addButton(std::string img, std::string text, std::function<void()> onClick);
+	};
 
-		auto layout = createVBoxLayout();
-		layout->addView(icon);
-		layout->addView(text);
-	}
-
-	void setEnabled(bool value)
+	class VToolbarButton : public View
 	{
-		if (enabled != value)
+	public:
+		VToolbarButton() : View("vtoolbarbutton-view")
 		{
-			enabled = value;
-			if (enabled)
-				removeClass("disabled");
-			else
-				addClass("disabled");
-		}
-	}
+			icon = new ImageBox();
+			text = new TextLabel();
 
-	void setSelected(bool value)
-	{
-		if (selected != value)
+			icon->addClass("vtoolbarbutton-icon");
+			text->addClass("vtoolbarbutton-text");
+
+			auto layout = createVBoxLayout();
+			layout->addView(icon);
+			layout->addView(text);
+		}
+
+		void setEnabled(bool value)
 		{
-			selected = value;
-			if (selected)
-				addClass("selected");
-			else
-				removeClass("selected");
+			if (enabled != value)
+			{
+				enabled = value;
+				if (enabled)
+					removeClass("disabled");
+				else
+					addClass("disabled");
+			}
 		}
-	}
 
-	bool getEnabled() const { return enabled; }
-	bool getSelected() const { return selected; }
+		void setSelected(bool value)
+		{
+			if (selected != value)
+			{
+				selected = value;
+				if (selected)
+					addClass("selected");
+				else
+					removeClass("selected");
+			}
+		}
 
-	ImageBox* icon = nullptr;
-	TextLabel* text = nullptr;
+		bool getEnabled() const { return enabled; }
+		bool getSelected() const { return selected; }
 
-private:
-	bool enabled = true;
-	bool selected = false;
-};
+		ImageBox* icon = nullptr;
+		TextLabel* text = nullptr;
+
+	private:
+		bool enabled = true;
+		bool selected = false;
+	};
+}

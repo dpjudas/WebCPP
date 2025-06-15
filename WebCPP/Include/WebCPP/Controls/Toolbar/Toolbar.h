@@ -6,128 +6,131 @@
 #include "../../Controls/LineEdit/LineEdit.h"
 #include "../../Controls/ImageBox/ImageBox.h"
 
-class ToolbarButton;
-class ToolbarSeparator;
-class ToolbarDropdown;
-class ToolbarTextInput;
-class TextLabel;
-class ComboBox;
-class LineEdit;
-
-class Toolbar : public View
+namespace web
 {
-public:
-	Toolbar();
+	class ToolbarButton;
+	class ToolbarSeparator;
+	class ToolbarDropdown;
+	class ToolbarTextInput;
+	class TextLabel;
+	class ComboBox;
+	class LineEdit;
 
-	ToolbarButton* addButton(std::string img, std::string text, std::function<void()> onClick);
-	ToolbarSeparator* addSeparator();
-	ToolbarDropdown* addDropdown(std::string label, std::vector<std::string> items);
-	ToolbarTextInput* addTextInput(std::string label, std::string text = std::string());
-	ToolbarButton* addRadioButton(std::string img);
-	void addView(View* view);
-	void addSpacer();
-};
-
-class ToolbarButton : public View
-{
-public:
-	ToolbarButton() : View("toolbarbutton-view")
+	class Toolbar : public View
 	{
-		icon = new ImageBox();
-		text = new TextLabel();
+	public:
+		Toolbar();
 
-		icon->addClass("toolbarbutton-icon");
-		text->addClass("toolbarbutton-text");
+		ToolbarButton* addButton(std::string img, std::string text, std::function<void()> onClick);
+		ToolbarSeparator* addSeparator();
+		ToolbarDropdown* addDropdown(std::string label, std::vector<std::string> items);
+		ToolbarTextInput* addTextInput(std::string label, std::string text = std::string());
+		ToolbarButton* addRadioButton(std::string img);
+		void addView(View* view);
+		void addSpacer();
+	};
 
-		auto layout = createHBoxLayout();
-		layout->addView(icon);
-		layout->addView(text);
-	}
-
-	void setEnabled(bool value)
+	class ToolbarButton : public View
 	{
-		if (enabled != value)
+	public:
+		ToolbarButton() : View("toolbarbutton-view")
 		{
-			enabled = value;
-			if (enabled)
-				removeClass("disabled");
-			else
-				addClass("disabled");
-		}
-	}
+			icon = new ImageBox();
+			text = new TextLabel();
 
-	void setSelected(bool value)
-	{
-		if (selected != value)
+			icon->addClass("toolbarbutton-icon");
+			text->addClass("toolbarbutton-text");
+
+			auto layout = createHBoxLayout();
+			layout->addView(icon);
+			layout->addView(text);
+		}
+
+		void setEnabled(bool value)
 		{
-			selected = value;
-			if (selected)
-				addClass("selected");
-			else
-				removeClass("selected");
+			if (enabled != value)
+			{
+				enabled = value;
+				if (enabled)
+					removeClass("disabled");
+				else
+					addClass("disabled");
+			}
 		}
-	}
 
-	bool getEnabled() const { return enabled; }
-	bool getSelected() const { return selected; }
+		void setSelected(bool value)
+		{
+			if (selected != value)
+			{
+				selected = value;
+				if (selected)
+					addClass("selected");
+				else
+					removeClass("selected");
+			}
+		}
 
-	ImageBox* icon = nullptr;
-	TextLabel* text = nullptr;
+		bool getEnabled() const { return enabled; }
+		bool getSelected() const { return selected; }
 
-private:
-	bool enabled = true;
-	bool selected = false;
-};
+		ImageBox* icon = nullptr;
+		TextLabel* text = nullptr;
 
-class ToolbarSeparator : public View
-{
-public:
-	ToolbarSeparator() : View("toolbarseparator-view")
+	private:
+		bool enabled = true;
+		bool selected = false;
+	};
+
+	class ToolbarSeparator : public View
 	{
-	}
-};
+	public:
+		ToolbarSeparator() : View("toolbarseparator-view")
+		{
+		}
+	};
 
-class ToolbarDropdown : public View
-{
-public:
-	ToolbarDropdown() : View("toolbardropdown-view")
+	class ToolbarDropdown : public View
 	{
-		label = new TextLabel();
-		combobox = new ComboBox();
+	public:
+		ToolbarDropdown() : View("toolbardropdown-view")
+		{
+			label = new TextLabel();
+			combobox = new ComboBox();
 
-		label->addClass("toolbardropdown-label");
-		combobox->addClass("toolbardropdown-combobox");
+			label->addClass("toolbardropdown-label");
+			combobox->addClass("toolbardropdown-combobox");
 
-		auto layout = createHBoxLayout();
-		layout->addView(label);
-		layout->addView(combobox);
-	}
+			auto layout = createHBoxLayout();
+			layout->addView(label);
+			layout->addView(combobox);
+		}
 
-	TextLabel* label = nullptr;
-	ComboBox* combobox = nullptr;
-};
+		TextLabel* label = nullptr;
+		ComboBox* combobox = nullptr;
+	};
 
-class ToolbarTextInput : public View
-{
-public:
-	ToolbarTextInput() : View("toolbartextinput-view")
+	class ToolbarTextInput : public View
 	{
-		label = new TextLabel();
-		edit = new LineEdit();
+	public:
+		ToolbarTextInput() : View("toolbartextinput-view")
+		{
+			label = new TextLabel();
+			edit = new LineEdit();
 
-		label->addClass("toolbartextinput-label");
-		edit->addClass("toolbartextinput-edit");
+			label->addClass("toolbartextinput-label");
+			edit->addClass("toolbartextinput-edit");
 
-		auto layout = createHBoxLayout();
-		layout->addView(label);
-		layout->addView(edit);
-	}
+			auto layout = createHBoxLayout();
+			layout->addView(label);
+			layout->addView(edit);
+		}
 
-	void setPlaceholder(std::string text)
-	{
-		edit->setPlaceholder(text);
-	}
+		void setPlaceholder(std::string text)
+		{
+			edit->setPlaceholder(text);
+		}
 
-	TextLabel* label = nullptr;
-	LineEdit* edit = nullptr;
-};
+		TextLabel* label = nullptr;
+		LineEdit* edit = nullptr;
+	};
+}
