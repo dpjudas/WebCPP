@@ -1,6 +1,6 @@
 
 #include "Precomp.h"
-#include "WebResponse.h"
+#include "Webserver/WebResponse.h"
 
 std::string WebResponse::getHeader(const WebHeaderName& str) const
 {

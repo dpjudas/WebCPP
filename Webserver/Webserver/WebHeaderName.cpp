@@ -1,6 +1,6 @@
 
 #include "Precomp.h"
-#include "WebHeaderName.h"
+#include "Webserver/WebHeaderName.h"
 
 // Create case insensitive spelling string
 static const int stricmptable[] =

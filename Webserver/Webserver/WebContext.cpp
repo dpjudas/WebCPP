@@ -1,7 +1,7 @@
 
 #include "Precomp.h"
-#include "WebContext.h"
-#include "Json/JsonValue.h"
+#include "Webserver/WebContext.h"
+#include "Webserver/JsonValue.h"
 
 JsonValue WebContext::getJsonRequest() const
 {

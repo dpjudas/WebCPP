@@ -1,7 +1,7 @@
 
 #include "Precomp.h"
-#include "WebController.h"
-#include "WebContext.h"
+#include "Webserver/WebController.h"
+#include "Webserver/WebContext.h"
 
 WebController::WebController(std::string baseRoute) : WebModule(baseRoute)
 {

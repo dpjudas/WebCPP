@@ -1,6 +1,6 @@
 
 #include "Precomp.h"
-#include "WebRequestUrl.h"
+#include "Webserver/WebRequestUrl.h"
 
 WebRequestUrl::WebRequestUrl(std::string initFullUrl) : fullUrl(std::move(initFullUrl))
 {

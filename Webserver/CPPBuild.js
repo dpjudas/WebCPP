@@ -2,6 +2,18 @@ import { Targets } from "cppbuild";
 
 var files = [
 	"CPPBuild.js",
+	"Include/Webserver/ActionModule.h",
+	"Include/Webserver/FileModule.h",
+	"Include/Webserver/WebContext.h",
+	"Include/Webserver/WebController.h",
+	"Include/Webserver/WebHeaderName.h",
+	"Include/Webserver/WebModule.h",
+	"Include/Webserver/WebRequest.h",
+	"Include/Webserver/WebRequestUrl.h",
+	"Include/Webserver/WebRequestVerb.h",
+	"Include/Webserver/WebResponse.h",
+	"Include/Webserver/Webserver.h",
+	"Include/Webserver/JsonValue.h",
 	"Precomp.cpp",
 	"Precomp.h",
 	"Text/StringFormat.cpp",
@@ -13,7 +25,6 @@ var files = [
 	"Text/UTF8Reader.cpp",
 	"Text/UTF8Reader.h",
 	"Json/JsonValue.cpp",
-	"Json/JsonValue.h",
 	"IOData/DataBuffer.cpp",
 	"IOData/DataBuffer.h",
 	"IOData/Directory.cpp",
@@ -34,25 +45,14 @@ var files = [
 	"Logger/Logger.cpp",
 	"Logger/Logger.h",
 	"Webserver/ActionModule.cpp",
-	"Webserver/ActionModule.h",
 	"Webserver/FileModule.cpp",
-	"Webserver/FileModule.h",
 	"Webserver/WebContext.cpp",
-	"Webserver/WebContext.h",
 	"Webserver/WebController.cpp",
-	"Webserver/WebController.h",
 	"Webserver/WebHeaderName.cpp",
-	"Webserver/WebHeaderName.h",
-	"Webserver/WebModule.h",
 	"Webserver/WebRequest.cpp",
-	"Webserver/WebRequest.h",
 	"Webserver/WebRequestUrl.cpp",
-	"Webserver/WebRequestUrl.h",
-	"Webserver/WebRequestVerb.h",
 	"Webserver/WebResponse.cpp",
-	"Webserver/WebResponse.h",
 	"Webserver/Webserver.cpp",
-	"Webserver/Webserver.h",
 	"Webserver/Socket/BufferedSocket.cpp",
 	"Webserver/Socket/BufferedSocket.h",
 	"Webserver/Socket/SocketHandle.cpp",
@@ -70,5 +70,5 @@ var files = [
 
 var webserver = Targets.addStaticLibrary("Webserver");
 webserver.addFiles(files);
-webserver.addIncludePaths([".", ".."]);
+webserver.addIncludePaths([".", "..", "Include"]);
 webserver.addDefines(["WIN32", "_WIN32", "UNICODE", "_UNICODE"]);

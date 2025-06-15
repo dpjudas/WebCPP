@@ -1,7 +1,7 @@
 #pragma once
 
 #include "WebModule.h"
-#include "Json/JsonValue.h"
+#include "JsonValue.h"
 
 class WebController : public WebModule
 {
