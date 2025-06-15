@@ -1,27 +1,30 @@
 #pragma once
 
-class WebModule;
-class WebContext;
-
-enum class WebserverType
+namespace web
 {
-	httpSys,
-	tcpSocket
-};
+	class WebModule;
+	class WebContext;
 
-class Webserver
-{
-public:
-	Webserver();
-	virtual ~Webserver() = default;
+	enum class WebserverType
+	{
+		httpSys,
+		tcpSocket
+	};
 
-	void addModule(std::shared_ptr<WebModule> module);
-	virtual void start(const std::string& listenUrl = "http://+:8080/") = 0;
+	class Webserver
+	{
+	public:
+		Webserver();
+		virtual ~Webserver() = default;
 
-	static std::unique_ptr<Webserver> create(WebserverType type);
+		void addModule(std::shared_ptr<WebModule> module);
+		virtual void start(const std::string& listenUrl = "http://+:8080/") = 0;
 
-	void processRequest(WebContext* context);
+		static std::unique_ptr<Webserver> create(WebserverType type);
 
-private:
-	std::vector<std::shared_ptr<WebModule>> modules;
-};
+		void processRequest(WebContext* context);
+
+	private:
+		std::vector<std::shared_ptr<WebModule>> modules;
+	};
+}

@@ -3,31 +3,34 @@
 #include "Webserver/WebController.h"
 #include "Webserver/WebContext.h"
 
-WebController::WebController(std::string baseRoute) : WebModule(baseRoute)
+namespace web
 {
-}
-
-void WebController::process(WebContext* context)
-{
-	if (context->request.verb != WebRequestVerb::post)
-		return;
-
-	try
+	WebController::WebController(std::string baseRoute) : WebModule(baseRoute)
 	{
-		auto it = bindings.find(context->requestedPath);
-		if (it != bindings.end())
-		{
-			context->setJsonResponse(it->second(context->getJsonRequest()));
-		}
-		else
-		{
-			context->setTextResponse("Endpoint not found", "text/plain", 404, "Not Found");
-		}
 	}
-	catch (const std::exception& e)
+
+	void WebController::process(WebContext* context)
 	{
-		auto response = JsonValue::object();
-		response["Error"] = JsonValue::string(e.what());
-		context->setJsonResponse(response, 500, "Internal Server Error");
+		if (context->request.verb != WebRequestVerb::post)
+			return;
+
+		try
+		{
+			auto it = bindings.find(context->requestedPath);
+			if (it != bindings.end())
+			{
+				context->setJsonResponse(it->second(context->getJsonRequest()));
+			}
+			else
+			{
+				context->setTextResponse("Endpoint not found", "text/plain", 404, "Not Found");
+			}
+		}
+		catch (const std::exception& e)
+		{
+			auto response = JsonValue::object();
+			response["Error"] = JsonValue::string(e.what());
+			context->setJsonResponse(response, 500, "Internal Server Error");
+		}
 	}
 }

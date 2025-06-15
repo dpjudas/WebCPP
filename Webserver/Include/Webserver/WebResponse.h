@@ -1,18 +1,21 @@
 #pragma once
 
 #include "WebHeaderName.h"
-#include "IOData/DataBuffer.h"
+#include "DataBuffer.h"
 
-class WebResponse
+namespace web
 {
-public:
-	struct
+	class WebResponse
 	{
-		int code = 0;
-		std::string text;
-	} status;
-	std::map<WebHeaderName, std::string> headers;
-	std::shared_ptr<DataBuffer> content;
+	public:
+		struct
+		{
+			int code = 0;
+			std::string text;
+		} status;
+		std::map<WebHeaderName, std::string> headers;
+		std::shared_ptr<DataBuffer> content;
 
-	std::string getHeader(const WebHeaderName& str) const;
-};
+		std::string getHeader(const WebHeaderName& str) const;
+	};
+}

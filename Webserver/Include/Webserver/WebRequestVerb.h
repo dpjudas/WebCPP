@@ -1,13 +1,16 @@
 #pragma once
 
-enum class WebRequestVerb
+namespace web
 {
-	any,
-	delete_,
-	get,
-	head,
-	options,
-	patch,
-	put,
-	post
-};
+	enum class WebRequestVerb
+	{
+		any,
+		delete_,
+		get,
+		head,
+		options,
+		patch,
+		put,
+		post
+	};
+}

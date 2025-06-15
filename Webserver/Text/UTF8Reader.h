@@ -21,38 +21,41 @@
 
 #pragma once
 
-class UTF8Reader
+namespace web
 {
-public:
-	/// Important: text is not copied by this class and must remain valid during its usage.
-	UTF8Reader(const std::string::value_type* text, std::string::size_type length);
+	class UTF8Reader
+	{
+	public:
+		/// Important: text is not copied by this class and must remain valid during its usage.
+		UTF8Reader(const std::string::value_type* text, std::string::size_type length);
 
-	/// \brief Returns true if the current position is at the end of the string
-	bool is_end();
+		/// \brief Returns true if the current position is at the end of the string
+		bool is_end();
 
-	/// \brief Get the character at the current position
-	unsigned int character();
+		/// \brief Get the character at the current position
+		unsigned int character();
 
-	/// \brief Returns the length of the current character
-	std::string::size_type char_length();
+		/// \brief Returns the length of the current character
+		std::string::size_type char_length();
 
-	/// \brief Moves position to the previous character
-	void prev();
+		/// \brief Moves position to the previous character
+		void prev();
 
-	/// \brief Moves position to the next character
-	void next();
+		/// \brief Moves position to the next character
+		void next();
 
-	/// \brief Moves position to the lead byte of the character
-	void move_to_leadbyte();
+		/// \brief Moves position to the lead byte of the character
+		void move_to_leadbyte();
 
-	/// \brief Get the current position of the reader
-	std::string::size_type position();
+		/// \brief Get the current position of the reader
+		std::string::size_type position();
 
-	/// \brief Set the current position of the reader
-	void set_position(std::string::size_type position);
+		/// \brief Set the current position of the reader
+		void set_position(std::string::size_type position);
 
-private:
-	std::string::size_type current_position = 0;
-	std::string::size_type length = 0;
-	const unsigned char* data = nullptr;
-};
+	private:
+		std::string::size_type current_position = 0;
+		std::string::size_type length = 0;
+		const unsigned char* data = nullptr;
+	};
+}

@@ -3,32 +3,35 @@
 #include "WebRequest.h"
 #include "WebResponse.h"
 
-class JsonValue;
-class DataBuffer;
-
-class WebContext
+namespace web
 {
-public:
-	// Path relative to the module handling the request
-	std::string requestedPath;
+	class JsonValue;
+	class DataBuffer;
 
-	// The received web request
-	WebRequest request;
+	class WebContext
+	{
+	public:
+		// Path relative to the module handling the request
+		std::string requestedPath;
 
-	// The response to the request
-	WebResponse response;
+		// The received web request
+		WebRequest request;
 
-	// Set to true if the request was handled by the module
-	bool handled = false;
+		// The response to the request
+		WebResponse response;
 
-	JsonValue getJsonRequest() const;
+		// Set to true if the request was handled by the module
+		bool handled = false;
 
-	void setJsonResponse(const JsonValue& value, int statusCode = 200, const std::string& statusText = "OK");
-	void setHtmlResponse(const std::string& html, int statusCode = 200, const std::string& statusText = "OK");
-	void setTextResponse(const std::string& text, const std::string& contentType = "text/plain", int statusCode = 200, const std::string& statusText = "OK");
-	void setBinaryResponse(const void* data, size_t size, const std::string& contentType = "application/octet-stream", int statusCode = 200, const std::string& statusText = "OK");
-	void setBinaryResponse(std::shared_ptr<DataBuffer> data, const std::string& contentType = "application/octet-stream", int statusCode = 200, const std::string& statusText = "OK");
-	void setNoContentResponse(int statusCode = 204, const std::string& statusText = "No Content");
+		JsonValue getJsonRequest() const;
 
-	void redirect(const std::string& url);
-};
+		void setJsonResponse(const JsonValue& value, int statusCode = 200, const std::string& statusText = "OK");
+		void setHtmlResponse(const std::string& html, int statusCode = 200, const std::string& statusText = "OK");
+		void setTextResponse(const std::string& text, const std::string& contentType = "text/plain", int statusCode = 200, const std::string& statusText = "OK");
+		void setBinaryResponse(const void* data, size_t size, const std::string& contentType = "application/octet-stream", int statusCode = 200, const std::string& statusText = "OK");
+		void setBinaryResponse(std::shared_ptr<DataBuffer> data, const std::string& contentType = "application/octet-stream", int statusCode = 200, const std::string& statusText = "OK");
+		void setNoContentResponse(int statusCode = 204, const std::string& statusText = "No Content");
+
+		void redirect(const std::string& url);
+	};
+}

@@ -18,20 +18,23 @@
 #define closesocket close
 #endif
 
-struct HttpErrorException {};
-
-class SocketHandle
+namespace web
 {
-public:
-	SocketHandle();
-	SocketHandle(SOCKET handle);
-	~SocketHandle();
+	struct HttpErrorException {};
 
-	SOCKET handle = INVALID_SOCKET;
+	class SocketHandle
+	{
+	public:
+		SocketHandle();
+		SocketHandle(SOCKET handle);
+		~SocketHandle();
 
-	size_t RecvData(void* data, size_t size, std::atomic<bool>& stopFlag);
-	size_t SendData(const void* data, size_t size, std::atomic<bool>& stopFlag);
+		SOCKET handle = INVALID_SOCKET;
 
-private:
-	SocketHandle(const SocketHandle&) = delete;
-};
+		size_t RecvData(void* data, size_t size, std::atomic<bool>& stopFlag);
+		size_t SendData(const void* data, size_t size, std::atomic<bool>& stopFlag);
+
+	private:
+		SocketHandle(const SocketHandle&) = delete;
+	};
+}

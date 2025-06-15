@@ -2,32 +2,43 @@
 #include "Precomp.h"
 #include "BufferedSocket.h"
 
-BufferedSocket::BufferedSocket(SocketHandle* sock, std::atomic<bool>* stopFlag) : Sock(sock), StopFlag(stopFlag)
+namespace web
 {
-}
-
-char BufferedSocket::ReadChar()
-{
-	if (Pos != Length)
-		return Data[Pos++];
-
-	Pos = 0;
-	Length = Sock->RecvData(Data.data(), Data.size(), *StopFlag);
-	if (Length == 0)
-		throw HttpErrorException();
-	return Data[Pos++];
-}
-
-std::string BufferedSocket::ReadLine()
-{
-	std::string line;
-	while (true)
+	BufferedSocket::BufferedSocket(SocketHandle* sock, std::atomic<bool>* stopFlag) : Sock(sock), StopFlag(stopFlag)
 	{
-		char c = ReadChar();
-		if (c == '\r')
+	}
+
+	char BufferedSocket::ReadChar()
+	{
+		if (Pos != Length)
+			return Data[Pos++];
+
+		Pos = 0;
+		Length = Sock->RecvData(Data.data(), Data.size(), *StopFlag);
+		if (Length == 0)
+			throw HttpErrorException();
+		return Data[Pos++];
+	}
+
+	std::string BufferedSocket::ReadLine()
+	{
+		std::string line;
+		while (true)
 		{
-			c = ReadChar();
-			if (c == '\n')
+			char c = ReadChar();
+			if (c == '\r')
+			{
+				c = ReadChar();
+				if (c == '\n')
+				{
+					break;
+				}
+				else
+				{
+					line.push_back(c);
+				}
+			}
+			else if (c == '\n')
 			{
 				break;
 			}
@@ -36,34 +47,26 @@ std::string BufferedSocket::ReadLine()
 				line.push_back(c);
 			}
 		}
-		else if (c == '\n')
+		return line;
+	}
+
+	size_t BufferedSocket::ReadContent(void* dest, size_t size)
+	{
+		if (Pos != Length)
 		{
-			break;
+			size = std::min(size, Length - Pos);
+			memcpy(dest, Data.data() + Pos, size);
+			Pos += size;
+			return size;
 		}
 		else
 		{
-			line.push_back(c);
+			return Sock->RecvData(dest, size, *StopFlag);
 		}
 	}
-	return line;
-}
 
-size_t BufferedSocket::ReadContent(void* dest, size_t size)
-{
-	if (Pos != Length)
+	size_t BufferedSocket::SendData(const void* data, size_t size)
 	{
-		size = std::min(size, Length - Pos);
-		memcpy(dest, Data.data() + Pos, size);
-		Pos += size;
-		return size;
+		return Sock->SendData(data, size, *StopFlag);
 	}
-	else
-	{
-		return Sock->RecvData(dest, size, *StopFlag);
-	}
-}
-
-size_t BufferedSocket::SendData(const void* data, size_t size)
-{
-	return Sock->SendData(data, size, *StopFlag);
 }

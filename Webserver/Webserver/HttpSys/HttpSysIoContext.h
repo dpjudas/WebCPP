@@ -2,9 +2,12 @@
 
 #include "HttpSysWebserver.h"
 
-class HttpSysIoContext
+namespace web
 {
-public:
-	OVERLAPPED overlapped = {};
-	virtual void ioCompletion(HttpSysWebserver* webserver, ULONG ioResult, ULONG bytesReceived) = 0;
-};
+	class HttpSysIoContext
+	{
+	public:
+		OVERLAPPED overlapped = {};
+		virtual void ioCompletion(HttpSysWebserver* webserver, ULONG ioResult, ULONG bytesReceived) = 0;
+	};
+}

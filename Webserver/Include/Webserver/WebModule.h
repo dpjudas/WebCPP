@@ -2,15 +2,18 @@
 
 #include <string>
 
-class WebContext;
-
-class WebModule
+namespace web
 {
-public:
-	WebModule(std::string baseRoute) : baseRoute(std::move(baseRoute)) {}
+	class WebContext;
 
-	virtual ~WebModule() = default;
-	virtual void process(WebContext* context) = 0;
+	class WebModule
+	{
+	public:
+		WebModule(std::string baseRoute) : baseRoute(std::move(baseRoute)) {}
 
-	std::string baseRoute;
-};
+		virtual ~WebModule() = default;
+		virtual void process(WebContext* context) = 0;
+
+		std::string baseRoute;
+	};
+}

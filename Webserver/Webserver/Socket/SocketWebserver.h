@@ -7,34 +7,37 @@
 #include <mutex>
 #include <condition_variable>
 
-class SocketWebserver : public Webserver
+namespace web
 {
-public:
-	SocketWebserver();
-	~SocketWebserver();
-
-	void start(const std::string& listenUrl) override;
-
-	struct ConnectedClient
+	class SocketWebserver : public Webserver
 	{
-		ConnectedClient(SocketWebserver* webserver, SOCKET handle);
-		~ConnectedClient();
+	public:
+		SocketWebserver();
+		~SocketWebserver();
 
-		void ConnectionThreadMain();
-		bool HandleRequest(BufferedSocket& sock);
+		void start(const std::string& listenUrl) override;
 
-		SocketWebserver* Webserver = nullptr;
-		std::unique_ptr<SocketHandle> Socket;
+		struct ConnectedClient
+		{
+			ConnectedClient(SocketWebserver* webserver, SOCKET handle);
+			~ConnectedClient();
+
+			void ConnectionThreadMain();
+			bool HandleRequest(BufferedSocket& sock);
+
+			SocketWebserver* Webserver = nullptr;
+			std::unique_ptr<SocketHandle> Socket;
+			std::thread Thread;
+			std::atomic<bool> StopFlag;
+		};
+
+		void ListenThreadMain();
+
+		std::unique_ptr<SocketHandle> ListenSocket;
+		std::vector<std::unique_ptr<ConnectedClient>> Clients;
 		std::thread Thread;
-		std::atomic<bool> StopFlag;
+		std::mutex Mutex;
+		std::condition_variable ClientsListEmpty;
+		bool StopFlag = false;
 	};
-
-	void ListenThreadMain();
-
-	std::unique_ptr<SocketHandle> ListenSocket;
-	std::vector<std::unique_ptr<ConnectedClient>> Clients;
-	std::thread Thread;
-	std::mutex Mutex;
-	std::condition_variable ClientsListEmpty;
-	bool StopFlag = false;
-};
+}

@@ -2,8 +2,11 @@
 #include "Precomp.h"
 #include "Webserver/WebRequest.h"
 
-std::string WebRequest::getHeader(const WebHeaderName& str) const
+namespace web
 {
-	auto it = headers.find(str);
-	return it != headers.end() ? it->second : std::string();
+	std::string WebRequest::getHeader(const WebHeaderName& str) const
+	{
+		auto it = headers.find(str);
+		return it != headers.end() ? it->second : std::string();
+	}
 }
