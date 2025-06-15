@@ -4,6 +4,9 @@
 #include "WebRequestUrl.h"
 #include "WebRequestVerb.h"
 #include "WebHeaderName.h"
+#include <memory>
+#include <string>
+#include <map>
 
 namespace web
 {

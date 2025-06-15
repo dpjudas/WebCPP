@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace web
 {
 	class WebRequestUrl

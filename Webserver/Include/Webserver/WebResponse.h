@@ -2,6 +2,9 @@
 
 #include "WebHeaderName.h"
 #include "DataBuffer.h"
+#include <string>
+#include <map>
+#include <memory>
 
 namespace web
 {

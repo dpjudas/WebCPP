@@ -2,6 +2,10 @@
 
 #include "WebModule.h"
 #include "JsonValue.h"
+#include <map>
+#include <string>
+#include <utility>
+#include <functional>
 
 namespace web
 {

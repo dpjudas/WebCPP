@@ -2,6 +2,9 @@
 
 #include "WebContext.h"
 #include "WebModule.h"
+#include <string>
+#include <memory>
+#include <map>
 
 namespace web
 {

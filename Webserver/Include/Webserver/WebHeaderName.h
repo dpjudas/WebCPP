@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <utility>
+
 namespace web
 {
 	class WebHeaderName

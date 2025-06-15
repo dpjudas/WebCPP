@@ -2,6 +2,7 @@
 
 #include "WebRequest.h"
 #include "WebResponse.h"
+#include <string>
 
 namespace web
 {
