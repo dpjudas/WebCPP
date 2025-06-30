@@ -1,6 +1,6 @@
 
 #include "WebCPP/Core/OpenFileDialog.h"
-#include "WebCPP/Core/DocumentBodyView.h"
+#include "WebCPP/Core/HtmlDocument.h"
 #include "WebCPP/Core/JSCallback.h"
 
 namespace web
@@ -54,7 +54,7 @@ namespace web
 	{
 		auto fileDialog = new FileInputView(filter, multiple);
 
-		DocumentBodyView::get()->addView(fileDialog);
+		HtmlDocument::body()->addView(fileDialog);
 
 		fileDialog->element->addEventListener("change", [=](Event* event) { event->stopPropagation(); selectedCallback(fileDialog->fileList()); });
 		fileDialog->click();

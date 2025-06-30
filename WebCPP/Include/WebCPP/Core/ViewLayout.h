@@ -32,6 +32,7 @@ namespace web
 		void setItem(View* view, std::unique_ptr<ViewLayoutItem> item);
 		void resetItem(View* view);
 
+		void attachView(View* view);
 		void appendChild(Element* element);
 		void insertBefore(Element* newElement, Element* insertPoint);
 		void removeChild(Element* element);

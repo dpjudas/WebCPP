@@ -45,12 +45,12 @@ namespace web
 			if (currentPage)
 			{
 				findTab(currentPage)->removeClass("selected");
-				currentPage->setParent(nullptr);
+				currentPage->detach();
 			}
 			currentPage = page;
 			if (currentPage)
 			{
-				currentPage->setParent(widgetStack);
+				currentPage->detach();
 
 				auto layout = widgetStack->createVBoxLayout();
 				layout->addView(currentPage, true, true);

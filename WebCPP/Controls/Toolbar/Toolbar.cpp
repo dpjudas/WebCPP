@@ -66,7 +66,6 @@ namespace web
 
 	void Toolbar::addView(View* view)
 	{
-		view->setParent(this);
 		view->addClass("toolbar-view");
 		getLayout<HBoxLayout>()->addView(view);
 	}

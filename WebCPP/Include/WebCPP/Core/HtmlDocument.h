@@ -23,9 +23,13 @@
 #pragma once
 
 #include <string>
+#include "View.h"
 
 namespace web
 {
+	class HtmlDocumentBody;
+	class ModalLayer;
+
 	class HtmlDocument
 	{
 	public:
@@ -34,5 +38,33 @@ namespace web
 
 		static void setIcon(const std::string& href);
 		static std::string getIcon();
+
+		static HtmlDocumentBody* body();
+	};
+
+	class HtmlDocumentBody : public View
+	{
+	public:
+		HtmlDocumentBody();
+		void addView(View* view);
+
+	private:
+		ModalLayer* beginDialogModal();
+		ModalLayer* beginPopupModal();
+		void endModal();
+
+		std::vector<ModalLayer*> modalLayers;
+		friend class View;
+	};
+
+	class ModalLayer : public View
+	{
+	public:
+		ModalLayer(bool dialog);
+		void addView(View* view);
+
+	private:
+		JSValue oldActiveElement = JSValue::undefined();
+		friend class HtmlDocumentBody;
 	};
 }

@@ -46,4 +46,67 @@ namespace web
 		}
 		return {};
 	}
+
+	HtmlDocumentBody* HtmlDocument::body()
+	{
+		static std::shared_ptr<HtmlDocumentBody> instance = std::make_shared<HtmlDocumentBody>();
+		return instance.get();
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	HtmlDocumentBody::HtmlDocumentBody() : View(std::make_unique<Element>(JSValue::global("document")["body"]))
+	{
+		createFlowLayout();
+	}
+
+	void HtmlDocumentBody::addView(View* view)
+	{
+		getLayout<FlowLayout>()->addView(view);
+	}
+
+	ModalLayer* HtmlDocumentBody::beginDialogModal()
+	{
+		ModalLayer* layer = new ModalLayer(true);
+		getLayout<FlowLayout>()->addView(layer);
+		modalLayers.push_back(layer);
+		return layer;
+	}
+
+	ModalLayer* HtmlDocumentBody::beginPopupModal()
+	{
+		ModalLayer* layer = new ModalLayer(false);
+		getLayout<FlowLayout>()->addView(layer);
+		modalLayers.push_back(layer);
+		return layer;
+	}
+
+	void HtmlDocumentBody::endModal()
+	{
+		if (!modalLayers.empty())
+		{
+			ModalLayer* layer = modalLayers.back();
+			modalLayers.pop_back();
+			JSValue oldActiveElement = std::move(layer->oldActiveElement);
+			delete layer;
+			if (!oldActiveElement.isNull())
+				oldActiveElement.call<void>("focus");
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	ModalLayer::ModalLayer(bool dialog) : View("modallayer-view")
+	{
+		if (dialog)
+			addClass("shaded");
+
+		oldActiveElement = JSValue::global("document")["activeElement"];
+		createFlowLayout();
+	}
+
+	void ModalLayer::addView(View* view)
+	{
+		getLayout<FlowLayout>()->addView(view);
+	}
 }

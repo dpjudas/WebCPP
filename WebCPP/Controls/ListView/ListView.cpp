@@ -262,7 +262,7 @@ namespace web
 			double clientY = event->clientY();
 			auto openMenu = new Menu();
 			onContextMenu(item, openMenu);
-			openMenu->showModal();
+			openMenu->showPopupModal();
 			openMenu->setLeftPosition(clientX, clientY);
 			openMenu->parent()->element->addEventListener("click", [=](Event* event) { event->stopPropagation(); openMenu->closeModal(); });
 			openMenu->closeMenu = [=]() { openMenu->closeModal(); };

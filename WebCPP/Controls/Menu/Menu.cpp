@@ -12,7 +12,7 @@ namespace web
 
 	void Menu::showContextMenu(double clientX, double clientY, MenuOpenCorner openCorner)
 	{
-		showUnshadedModal();
+		showPopupModal();
 		if (openCorner == MenuOpenCorner::topLeft)
 		{
 			element->setStyle("left", std::to_string(clientX) + "px");

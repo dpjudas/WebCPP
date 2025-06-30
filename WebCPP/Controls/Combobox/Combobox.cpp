@@ -3,7 +3,7 @@
 #include "WebCPP/Controls/ImageBox/ImageBox.h"
 #include "WebCPP/Controls/LineEdit/LineEdit.h"
 #include "WebCPP/Controls/TextLabel/TextLabel.h"
-#include "WebCPP/Core/DocumentBodyView.h"
+#include "WebCPP/Core/HtmlDocument.h"
 #include <algorithm>
 
 namespace web
@@ -210,7 +210,7 @@ namespace web
 							changeHandler();
 						});
 				}
-				auto layer = popup->showUnshadedModal(true);
+				auto layer = popup->showPopupModal(true);
 				layer->element->addEventListener("click", [=](Event* event) { event->stopPropagation(); closePopup(); });
 			}
 		}

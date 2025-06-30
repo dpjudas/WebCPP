@@ -1,7 +1,7 @@
 
 @import "Reset.css";
 @import "Core/View.css";
-@import "Core/DocumentBodyView.css";
+@import "Core/HtmlDocument.css";
 @import "Controls/CheckboxLabel/CheckboxLabel.css";
 @import "Controls/ColorPicker/ColorPicker.css";
 @import "Controls/Combobox/Combobox.css";

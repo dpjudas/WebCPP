@@ -1,6 +1,6 @@
 
 #include "WebCPP/Core/View.h"
-#include "WebCPP/Core/DocumentBodyView.h"
+#include "WebCPP/Core/HtmlDocument.h"
 #include "WebCPP/Core/ShadowRoot.h"
 #include <stdexcept>
 
@@ -28,6 +28,11 @@ namespace web
 
 		detachFromParent(true);
 		layout.reset();
+	}
+
+	void View::detach()
+	{
+		detachFromParent(true);
 	}
 
 	void View::setParent(View* newParent)
@@ -153,12 +158,10 @@ namespace web
 		return false;
 	}
 
-	ModalLayer* View::showModal()
+	ModalLayer* View::showDialogModal(bool setFocus)
 	{
-		auto layer = DocumentBodyView::get()->beginModal();
-		setParent(layer);
-		auto layout = layer->createFlowLayout();
-		layout->addView(this);
+		auto layer = HtmlDocument::body()->beginDialogModal();
+		layer->addView(this);
 		onModalAttach();
 		if (forceFocus() == false && focusFirstChild() == false)
 		{
@@ -168,12 +171,10 @@ namespace web
 		return layer;
 	}
 
-	ModalLayer* View::showUnshadedModal(const bool setFocus)
+	ModalLayer* View::showPopupModal(bool setFocus)
 	{
-		auto layer = DocumentBodyView::get()->beginUnshadedModal();
-		setParent(layer);
-		auto layout = layer->createFlowLayout();
-		layout->addView(this);
+		auto layer = HtmlDocument::body()->beginPopupModal();
+		layer->addView(this);
 		onModalAttach();
 		if (setFocus == true && forceFocus() == false && focusFirstChild() == false)
 		{
@@ -185,8 +186,8 @@ namespace web
 
 	void View::closeModal()
 	{
-		setParent(nullptr);
-		DocumentBodyView::get()->endModal();
+		detach();
+		HtmlDocument::body()->endModal();
 		delete this;
 	}
 

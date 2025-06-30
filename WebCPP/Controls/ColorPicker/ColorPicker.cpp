@@ -3,7 +3,7 @@
 #include "WebCPP/Controls/TextLabel/TextLabel.h"
 #include "WebCPP/Controls/LineEdit/LineEdit.h"
 #include "WebCPP/Controls/CheckboxLabel/CheckboxLabel.h"
-#include "WebCPP/Core/DocumentBodyView.h"
+#include "WebCPP/Core/HtmlDocument.h"
 #include <cmath>
 
 namespace web
@@ -58,7 +58,7 @@ namespace web
 			popup = new ColorPickerPopup(this);
 			popup->setChangeHandler([this]() { onColorPickerChanged(); });
 			popup->setColor(red, green, blue, noColor);
-			auto layer = popup->showUnshadedModal(true);
+			auto layer = popup->showPopupModal(true);
 			layer->element->addEventListener("click", [=](Event* event) { event->stopPropagation(); closePopup(); });
 		}
 		else

@@ -37,6 +37,6 @@ namespace web
 	{
 		event->stopPropagation();
 		auto modal = new MenubarModal(menubar, this);
-		modal->showModal();
+		modal->showPopupModal();
 	}
 }

@@ -29,7 +29,6 @@ namespace web
 			delete columns[index];
 			columns[index] = view;
 
-			view->setParent(this);
 			getLayout<GridLayout>()->addViewBefore(view, index + 1 < columns.size() ? columns[index + 1] : nullptr);
 
 			item->listview()->onColumnViewChanged(this, index);

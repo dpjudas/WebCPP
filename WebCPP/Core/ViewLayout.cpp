@@ -79,6 +79,11 @@ namespace web
 			owner->element->removeChild(element);
 	}
 
+	void ViewLayout::attachView(View* view)
+	{
+		view->setParent(owner);
+	}
+
 	//////////////////////////////////////////////////////////////////////////////
 
 	FlowLayout::FlowLayout(View* owner) : ViewLayout(owner)
@@ -91,7 +96,7 @@ namespace web
 
 	void FlowLayout::addView(View* view)
 	{
-		view->setParent(owner);
+		attachView(view);
 		appendChild(view->element.get());
 		setItem(view, std::make_unique<ViewLayoutItem>());
 	}
@@ -175,7 +180,6 @@ namespace web
 	{
 		if (sibling && sibling->parent() != owner)
 			sibling = nullptr;
-		view->setParent(owner);
 
 		if (grow && shrink)
 		{
@@ -215,6 +219,8 @@ namespace web
 		{
 			view->element->setStyle("order", std::to_string(order));
 		}
+
+		attachView(view);
 
 		if (!sibling || !getItem(sibling))
 			appendChild(view->element.get());
@@ -386,7 +392,6 @@ namespace web
 	{
 		if (sibling && sibling->parent() != owner)
 			sibling = nullptr;
-		view->setParent(owner);
 
 		if (column != 0)
 		{
@@ -431,6 +436,8 @@ namespace web
 			}
 			view->element->setStyle("align-self", value);
 		}
+
+		attachView(view);
 
 		if (!sibling || !getItem(sibling))
 			appendChild(view->element.get());

@@ -22,7 +22,7 @@ namespace web
 		View(std::unique_ptr<Element> element);
 		virtual ~View();
 
-		void setParent(View* parent);
+		void detach();
 
 		void addClass(std::string name);
 		void removeClass(std::string name);
@@ -45,8 +45,8 @@ namespace web
 		bool getHidden() const;
 		void setHidden(bool value);
 
-		ModalLayer* showModal();
-		ModalLayer* showUnshadedModal(const bool setFocus = true);
+		ModalLayer* showDialogModal(bool setFocus = true);
+		ModalLayer* showPopupModal(bool setFocus = true);
 		void closeModal();
 
 		void attachShadow(const std::string& mode = "open");
@@ -73,6 +73,7 @@ namespace web
 		bool focusFirstChild();
 		void detachFromParent(bool notifyLayout);
 		void updateClassAttribute();
+		void setParent(View* newParent);
 
 		View* parentObj = nullptr;
 		View* prevSiblingObj = nullptr;
