@@ -28,7 +28,7 @@ namespace web
 		element->handle.call<void>("appendChild", createElement(tag, text, attributes));
 	}
 
-	emscripten::val SvgElementView::createElement(std::string tag, std::map<std::string, std::string> attributes)
+	JSValue SvgElementView::createElement(std::string tag, std::map<std::string, std::string> attributes)
 	{
 		auto svgelement = JSValue::global("document").call<JSValue>("createElementNS", xmlns, tag);
 		for (auto& it : attributes)
@@ -38,7 +38,7 @@ namespace web
 		return svgelement;
 	}
 
-	emscripten::val SvgElementView::createElement(std::string tag, std::string text, std::map<std::string, std::string> attributes)
+	JSValue SvgElementView::createElement(std::string tag, std::string text, std::map<std::string, std::string> attributes)
 	{
 		auto document = JSValue::global("document");
 		auto svgelement = document.call<JSValue>("createElementNS", xmlns, tag);

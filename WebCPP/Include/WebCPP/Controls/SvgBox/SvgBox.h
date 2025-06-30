@@ -14,8 +14,8 @@ namespace web
 		void addElement(std::string tag, std::string text, std::map<std::string, std::string> attributes);
 
 	private:
-		emscripten::val createElement(std::string tag, std::map<std::string, std::string> attributes);
-		emscripten::val createElement(std::string tag, std::string text, std::map<std::string, std::string> attributes);
+		JSValue createElement(std::string tag, std::map<std::string, std::string> attributes);
+		JSValue createElement(std::string tag, std::string text, std::map<std::string, std::string> attributes);
 
 		static const std::string xmlns;
 	};

@@ -2,6 +2,7 @@
 #include "WebCPP/Core/Element.h"
 #include "WebCPP/Core/Event.h"
 #include "WebCPP/Core/JSCallback.h"
+#include <memory>
 
 namespace web
 {

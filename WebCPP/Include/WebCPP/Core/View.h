@@ -6,8 +6,6 @@
 #include <set>
 #include <memory>
 #include <functional>
-#include <emscripten.h>
-#include <emscripten/val.h>
 #include "Element.h"
 #include "ViewLayout.h"
 
