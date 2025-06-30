@@ -18,6 +18,12 @@ namespace web
 		string
 	};
 
+	enum class JsonFormatting
+	{
+		none,
+		indent
+	};
+
 	class JsonValue
 	{
 	public:
@@ -37,7 +43,7 @@ namespace web
 		static JsonValue string(const std::string& value) { JsonValue v; v._type = JsonType::string; v._string = value; return v; }
 
 		static JsonValue parse(const std::string& json);
-		std::string to_json() const;
+		std::string to_json(JsonFormatting formatting = JsonFormatting::indent) const;
 
 		const JsonValue& prop(const std::string& name) const { auto it = _properties.find(name); if (it != _properties.end()) return it->second; static JsonValue undef; return undef; }
 		const JsonValue& prop(const char* name) const { auto it = _properties.find(name); if (it != _properties.end()) return it->second; static JsonValue undef; return undef; }
