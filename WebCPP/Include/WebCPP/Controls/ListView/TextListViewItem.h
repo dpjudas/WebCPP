@@ -32,7 +32,7 @@ namespace web
 		std::string sortCompareString() override;
 
 	private:
-		View* createTextColumn(const std::string& icon, const std::string& text);
+		std::shared_ptr<View> createTextColumn(const std::string& icon, const std::string& text);
 
 		std::vector<std::string> icons;
 		std::vector<std::string> columns;

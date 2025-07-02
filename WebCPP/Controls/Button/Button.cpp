@@ -8,7 +8,7 @@ namespace web
 	Button::Button() : View("button")
 	{
 		addClass("button");
-		label = new TextLabel();
+		label = std::make_shared<TextLabel>();
 
 		auto layout = createHBoxLayout();
 		layout->addView(label);
@@ -21,7 +21,7 @@ namespace web
 	{
 		if (!image)
 		{
-			image = new ImageBox();
+			image = std::make_shared<ImageBox>();
 			getLayout<HBoxLayout>()->addViewBefore(image, label);
 		}
 		image->setSrc(src);

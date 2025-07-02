@@ -13,7 +13,7 @@ namespace web
 	public:
 		VToolbar();
 
-		VToolbarButton* addButton(std::string img, std::string text, std::function<void()> onClick);
+		std::shared_ptr<VToolbarButton> addButton(std::string img, std::string text, std::function<void()> onClick);
 	};
 
 	class VToolbarButton : public View
@@ -21,8 +21,8 @@ namespace web
 	public:
 		VToolbarButton() : View("vtoolbarbutton-view")
 		{
-			icon = new ImageBox();
-			text = new TextLabel();
+			icon = std::make_shared<ImageBox>();
+			text = std::make_shared<TextLabel>();
 
 			icon->addClass("vtoolbarbutton-icon");
 			text->addClass("vtoolbarbutton-text");
@@ -59,8 +59,8 @@ namespace web
 		bool getEnabled() const { return enabled; }
 		bool getSelected() const { return selected; }
 
-		ImageBox* icon = nullptr;
-		TextLabel* text = nullptr;
+		std::shared_ptr<ImageBox> icon;
+		std::shared_ptr<TextLabel> text;
 
 	private:
 		bool enabled = true;

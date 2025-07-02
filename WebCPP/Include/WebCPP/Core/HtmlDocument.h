@@ -46,14 +46,14 @@ namespace web
 	{
 	public:
 		HtmlDocumentBody();
-		void addView(View* view);
+		void addView(std::shared_ptr<View> view);
 
 	private:
-		ModalLayer* beginDialogModal();
-		ModalLayer* beginPopupModal();
+		std::shared_ptr<ModalLayer> beginDialogModal();
+		std::shared_ptr<ModalLayer> beginPopupModal();
 		void endModal();
 
-		std::vector<ModalLayer*> modalLayers;
+		std::vector<std::shared_ptr<ModalLayer>> modalLayers;
 		friend class View;
 	};
 
@@ -61,7 +61,7 @@ namespace web
 	{
 	public:
 		ModalLayer(bool dialog);
-		void addView(View* view);
+		void addView(std::shared_ptr<View> view);
 
 	private:
 		JSValue oldActiveElement = JSValue::undefined();

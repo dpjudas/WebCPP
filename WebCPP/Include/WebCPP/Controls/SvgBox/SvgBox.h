@@ -26,7 +26,7 @@ namespace web
 		SvgBox();
 
 		void setViewbox(double x, double y, double width, double height);
-		void addView(SvgElementView* view);
+		void addView(std::shared_ptr<SvgElementView> view);
 	};
 
 	enum class SvgFillRule

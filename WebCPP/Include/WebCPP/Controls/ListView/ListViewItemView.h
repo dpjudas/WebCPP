@@ -11,13 +11,13 @@ namespace web
 	public:
 		ListViewItemView(ListViewItem* item);
 
-		View* getColumnView(size_t index);
-		void setColumnView(size_t index, View* view);
+		std::shared_ptr<View> getColumnView(size_t index);
+		void setColumnView(size_t index, std::shared_ptr<View> view);
 
 		ListViewItem* getItem() const { return item; }
 
 	private:
 		ListViewItem* item = nullptr;
-		std::vector<View*> columns;
+		std::vector<std::shared_ptr<View>> columns;
 	};
 }

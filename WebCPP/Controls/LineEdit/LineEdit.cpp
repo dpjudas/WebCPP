@@ -6,7 +6,7 @@ namespace web
 {
 	LineEdit::LineEdit() : View("lineedit-view")
 	{
-		input = new View("input");
+		input = std::make_shared<View>("input");
 		input->element->setAttribute("type", "text");
 		input->element->addEventListener("focus", [=](Event* event) { addClass("focus"); });
 		input->element->addEventListener("blur", [=](Event* event) { removeClass("focus"); });
@@ -15,9 +15,9 @@ namespace web
 		layout->addView(input, true, true);
 	}
 
-	ImageBox* LineEdit::addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler)
+	std::shared_ptr<ImageBox> LineEdit::addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler)
 	{
-		ImageBox* result = new ImageBox();
+		auto result = std::make_shared<ImageBox>();
 		result->addClass("lineedit-imagebox");
 		result->setAlt(text);
 		result->setSrc(icon);

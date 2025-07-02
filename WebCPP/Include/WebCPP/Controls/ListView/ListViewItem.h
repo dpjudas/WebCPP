@@ -41,7 +41,7 @@ namespace web
 		ListViewItem* prevOpenItem() const;
 		ListViewItem* nextOpenItem() const;
 
-		ListViewItemView* itemview() const { return view; }
+		std::shared_ptr<ListViewItemView> itemview() const { return view; }
 
 		virtual ListView* listview() const { const ListViewItem* r = root(); return (r != this) ? r->listview() : nullptr; }
 
@@ -61,7 +61,7 @@ namespace web
 		ListViewItem* lastChildObj = nullptr;
 
 		std::string itemId;
-		ListViewItemView* view = nullptr;
+		std::shared_ptr<ListViewItemView> view;
 		bool openFlag = true;
 
 		friend class ListView;

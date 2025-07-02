@@ -38,14 +38,14 @@ namespace web
 		void onColorPickerChanged();
 
 		std::function<void()> changeHandler;
-		TextLabel* label = nullptr;
+		std::shared_ptr<TextLabel> label;
 
 		bool noColor = true;
 		int red = 0;
 		int green = 0;
 		int blue = 0;
 
-		ColorPickerPopup* popup = nullptr;
+		std::shared_ptr<ColorPickerPopup> popup;
 	};
 
 	class ColorPickerPopup : public View
@@ -77,13 +77,13 @@ namespace web
 
 		std::function<void()> changeHandler;
 
-		ColorPickerSatValBox* satvalBox = nullptr;
-		ColorPickerHueBox* hueBox = nullptr;
-		View* colorCircle = nullptr;
-		LineEdit* red = nullptr;
-		LineEdit* green = nullptr;
-		LineEdit* blue = nullptr;
-		CheckboxLabel* noColor = nullptr;
+		std::shared_ptr<ColorPickerSatValBox> satvalBox;
+		std::shared_ptr<ColorPickerHueBox> hueBox;
+		std::shared_ptr<View> colorCircle;
+		std::shared_ptr<LineEdit> red;
+		std::shared_ptr<LineEdit> green;
+		std::shared_ptr<LineEdit> blue;
+		std::shared_ptr<CheckboxLabel> noColor;
 	};
 
 	class ColorPickerSatValBox : public View
@@ -114,9 +114,9 @@ namespace web
 		float saturation = 0.5f;
 		bool pointerCaptureActive = false;
 
-		View* saturationGradient = nullptr;
-		View* valueGradient = nullptr;
-		View* dragger = nullptr;
+		std::shared_ptr<View> saturationGradient;
+		std::shared_ptr<View> valueGradient;
+		std::shared_ptr<View> dragger;
 	};
 
 	class ColorPickerHueBox : public View
@@ -140,7 +140,7 @@ namespace web
 		float hue = 0.5f;
 		bool pointerCaptureActive = false;
 
-		View* dragger = nullptr;
+		std::shared_ptr<View> dragger;
 	};
 
 	struct HSVColorf

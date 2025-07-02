@@ -112,13 +112,13 @@ namespace web
 			return {};
 	}
 
-	View* TextListViewItem::createTextColumn(const std::string& icon, const std::string& text)
+	std::shared_ptr<View> TextListViewItem::createTextColumn(const std::string& icon, const std::string& text)
 	{
 		if (!icon.empty())
 		{
-			auto view = new View();
-			auto image = new ImageBox();
-			auto label = new TextLabel();
+			auto view = std::make_shared<View>();
+			auto image = std::make_shared<ImageBox>();
+			auto label = std::make_shared<TextLabel>();
 			image->setSrc(icon);
 			image->addClass("listviewitemicon");
 			label->setText(text);
@@ -129,7 +129,7 @@ namespace web
 		}
 		else
 		{
-			auto view = new TextLabel();
+			auto view = std::make_shared<TextLabel>();
 			view->setText(text);
 			return view;
 		}

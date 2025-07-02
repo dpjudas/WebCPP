@@ -49,9 +49,9 @@ namespace web
 		element->setStyle("top", std::to_string(y) + "px");
 	}
 
-	MenuItem* Menu::addItem(std::string icon, std::string text, std::function<void()> onClick)
+	std::shared_ptr<MenuItem> Menu::addItem(std::string icon, std::string text, std::function<void()> onClick)
 	{
-		auto item = new MenuItem();
+		auto item = std::make_shared<MenuItem>();
 		getLayout<VBoxLayout>()->addView(item);
 		item->addClass("menu-item");
 		if (!icon.empty())
@@ -68,9 +68,9 @@ namespace web
 		return item;
 	}
 
-	MenuItemSeparator* Menu::addSeparator()
+	std::shared_ptr<MenuItemSeparator> Menu::addSeparator()
 	{
-		auto sep = new MenuItemSeparator();
+		auto sep = std::make_shared<MenuItemSeparator>();
 		sep->addClass("menu-sep");
 		getLayout<VBoxLayout>()->addView(sep);
 		return sep;
@@ -80,8 +80,8 @@ namespace web
 
 	MenuItem::MenuItem() : View("menuitem-view")
 	{
-		icon = new ImageBox();
-		text = new TextLabel();
+		icon = std::make_shared<ImageBox>();
+		text = std::make_shared<TextLabel>();
 
 		icon->addClass("menuitem-icon");
 		text->addClass("menuitem-text");

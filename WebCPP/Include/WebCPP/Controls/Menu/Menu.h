@@ -26,8 +26,8 @@ namespace web
 
 		void setLeftPosition(double x, double y);
 		void setRightPosition(double x, double y);
-		MenuItem* addItem(std::string icon, std::string text, std::function<void()> onClick = {});
-		MenuItemSeparator* addSeparator();
+		std::shared_ptr<MenuItem> addItem(std::string icon, std::string text, std::function<void()> onClick = {});
+		std::shared_ptr<MenuItemSeparator> addSeparator();
 
 		std::function<void()> closeMenu;
 	};
@@ -37,8 +37,8 @@ namespace web
 	public:
 		MenuItem();
 
-		ImageBox* icon = nullptr;
-		TextLabel* text = nullptr;
+		std::shared_ptr<ImageBox> icon;
+		std::shared_ptr<TextLabel> text;
 	};
 
 	class MenuItemSeparator : public View

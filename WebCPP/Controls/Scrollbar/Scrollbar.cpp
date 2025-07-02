@@ -160,10 +160,10 @@ namespace web
 	{
 		addClass(direction == ScrollbarDirection::vertical ? "scrollbar-vert" : "scrollbar-horz");
 
-		buttonDecr = new View();
-		track = new View();
-		thumb = new View();
-		buttonIncr = new View();
+		buttonDecr = std::make_shared<View>();
+		track = std::make_shared<View>();
+		thumb = std::make_shared<View>();
+		buttonIncr = std::make_shared<View>();
 
 		buttonDecr->addClass("scrollbar-button-decr");
 		track->addClass("scrollbar-track");

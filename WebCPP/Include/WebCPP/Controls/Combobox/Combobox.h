@@ -52,7 +52,7 @@ namespace web
 
 		void closePopup();
 
-		LineEdit* lineEdit() const { return lineedit; }
+		std::shared_ptr<LineEdit> lineEdit() const { return lineedit; }
 
 	private:
 		void onClick(Event* event);
@@ -62,9 +62,9 @@ namespace web
 		int selectedIndex = -1;
 		int maxItems = 7;
 		ComboBoxPopup* popup = nullptr;
-		ImageBox* imagebox = nullptr;
-		TextLabel* label = nullptr;
-		LineEdit* lineedit = nullptr;
+		std::shared_ptr<ImageBox> imagebox;
+		std::shared_ptr<TextLabel> label;
+		std::shared_ptr<LineEdit> lineedit;
 		std::vector<ComboboxItemType> items;
 	};
 
@@ -80,7 +80,7 @@ namespace web
 		int getSelectedIndex() const;
 		void setSelectedIndex(const int index);
 		ComboBoxPopupItem* getSelectedItem() const;
-		void setSelectedItem(const ComboBoxPopupItem* item);
+		void setSelectedItem(ComboBoxPopupItem* item);
 
 		int count() const { return items.size(); }
 
@@ -92,7 +92,7 @@ namespace web
 
 	private:
 		ComboBox* combobox = nullptr;
-		std::vector<ComboBoxPopupItem*> items;
+		std::vector<std::shared_ptr<ComboBoxPopupItem>> items;
 		ResizeObserver observer;
 	};
 
@@ -104,8 +104,8 @@ namespace web
 		bool isSelected() const { return selected; }
 		void setSelected(const bool value);
 
-		ImageBox* icon = nullptr;
-		TextLabel* text = nullptr;
+		std::shared_ptr<ImageBox> icon;
+		std::shared_ptr<TextLabel> text;
 
 	private:
 		void onMouseEnter(Event* event);

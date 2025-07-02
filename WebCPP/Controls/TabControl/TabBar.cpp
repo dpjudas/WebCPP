@@ -9,9 +9,9 @@ namespace web
 		createHBoxLayout();
 	}
 
-	TabBarTab* TabBar::addTab(const std::string& icon, const std::string& label, std::function<void()> onClick, std::function<void(double clientX, double clientY)> onContextMenu)
+	std::shared_ptr<TabBarTab> TabBar::addTab(const std::string& icon, const std::string& label, std::function<void()> onClick, std::function<void(double clientX, double clientY)> onContextMenu)
 	{
-		auto tab = new TabBarTab();
+		auto tab = std::make_shared<TabBarTab>();
 		tab->setText(label);
 		tab->setIcon(icon);
 		tab->element->addEventListener("click", [=](Event* event) { event->stopPropagation(); if (onClick) onClick(); });

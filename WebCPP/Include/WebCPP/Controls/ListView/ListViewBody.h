@@ -13,6 +13,6 @@ namespace web
 		ListViewBody();
 
 		void updateColumns(ListViewHeader* header);
-		void addViewBefore(ListViewItemView* view, ListViewItemView* sibling, ListViewHeader* header);
+		void addViewBefore(std::shared_ptr<ListViewItemView> view, std::shared_ptr<ListViewItemView> sibling, ListViewHeader* header);
 	};
 }

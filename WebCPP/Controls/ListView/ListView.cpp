@@ -23,18 +23,18 @@ namespace web
 
 	void ListView::setupUi()
 	{
-		body = new ListViewBody();
+		body = std::make_shared<ListViewBody>();
 		body->element->setTabIndex(0);
-		header = new ListViewHeader();
+		header = std::make_shared<ListViewHeader>();
 		header->addClass("listview-header");
 		header->addClass("listview-body");
-		scrollVert = new Scrollbar(ScrollbarDirection::vertical);
+		scrollVert = std::make_shared<Scrollbar>(ScrollbarDirection::vertical);
 		scrollVert->addClass("listview-scrollvert");
-		scrollHorz = new Scrollbar(ScrollbarDirection::horizontal);
+		scrollHorz = std::make_shared<Scrollbar>(ScrollbarDirection::horizontal);
 		scrollHorz->addClass("listview-scrollhorz");
-		scrollCorner = new ScrollbarCorner();
+		scrollCorner = std::make_shared<ScrollbarCorner>();
 		scrollCorner->addClass("listview-scrollcorner");
-		header->columnsUpdated = [=]() { body->updateColumns(header); updateScrollbars(); };
+		header->columnsUpdated = [=]() { body->updateColumns(header.get()); updateScrollbars(); };
 		body->element->addEventListener("click", [=](Event* e) { onBodyClick(e); });
 		body->element->addEventListener("scroll", [=](Event* e) { onBodyScroll(e); });
 		body->element->addEventListener("focus", [=](Event* e) { onBodyFocus(e); });
@@ -384,7 +384,7 @@ namespace web
 	int ListView::addColumn(std::string name, double width, bool expanding)
 	{
 		header->addColumn(name, width, expanding);
-		body->updateColumns(header);
+		body->updateColumns(header.get());
 		return header->getColumnCount() - 1;
 	}
 
@@ -453,14 +453,15 @@ namespace web
 				}
 			}
 
-			delete item->view;
+			if (item->view)
+				item->view->detach();
 			item->view = nullptr;
 		}
 	}
 
 	void ListView::createItemView(ListViewItem* item)
 	{
-		item->view = new ListViewItemView(item);
+		item->view = std::make_shared<ListViewItemView>(item);
 
 		item->view->element->addEventListener("click", [=](Event* e) { onItemClick(e, item); });
 		item->view->element->addEventListener("contextmenu", [=](Event* e) { onItemContextMenu(e, item); });
@@ -471,16 +472,16 @@ namespace web
 		if (nextItem)
 			nextItem = nextItem->nextSibling();
 
-		body->addViewBefore(item->view, nextItem && nextItem->view ? nextItem->view : nullptr, header);
+		body->addViewBefore(item->view, nextItem && nextItem->view ? nextItem->view : nullptr, header.get());
 
 		for (size_t i = 0, count = header->getColumnCount(); i < count; i++)
 		{
 			item->updateColumn(i);
 
-			View* columnView = item->view->getColumnView(i);
+			std::shared_ptr<View> columnView = item->view->getColumnView(i);
 			if (!columnView)
 			{
-				columnView = new View();
+				columnView = std::make_shared<View>();
 				item->view->setColumnView(i, columnView);
 			}
 		}
@@ -490,7 +491,7 @@ namespace web
 	{
 		double splitterSize = (i + 1 < header->getColumnCount()) ? 10 : 0;
 
-		View* columnView = itemview->getColumnView(i);
+		std::shared_ptr<View> columnView = itemview->getColumnView(i);
 
 		if (i == 0)
 		{

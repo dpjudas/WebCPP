@@ -27,10 +27,10 @@ namespace web
 
 		struct Column
 		{
-			TextLabel* label = nullptr;
+			std::shared_ptr<TextLabel> label;
 			double width = 0.0;
 			bool expanding = false;
-			ListViewHeaderSplitter* splitter = nullptr;
+			std::shared_ptr<ListViewHeaderSplitter> splitter;
 			bool visible = true;
 		};
 
@@ -46,6 +46,6 @@ namespace web
 		ListViewHeaderSplitter();
 
 	private:
-		View* dummy = nullptr;
+		std::shared_ptr<View> dummy;
 	};
 }

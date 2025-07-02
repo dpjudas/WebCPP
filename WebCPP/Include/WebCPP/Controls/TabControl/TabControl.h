@@ -12,21 +12,21 @@ namespace web
 	public:
 		TabControl(bool tabsAtBottom = false);
 
-		void addPage(std::string icon, std::string label, View* page, std::function<void(double clientX, double clientY)> onContextMenu = {});
-		void showPage(View* page);
+		void addPage(std::string icon, std::string label, std::shared_ptr<View> page, std::function<void(double clientX, double clientY)> onContextMenu = {});
+		void showPage(std::shared_ptr<View> page);
 
 		std::function<void(View*)> onPageShow;
 
 	private:
-		TabBarTab* findTab(View* page);
-		void onPageTabClicked(View* page);
+		std::shared_ptr<TabBarTab> findTab(View* page);
+		void onPageTabClicked(std::shared_ptr<View> page);
 		void setupUi();
 
 		bool tabsAtBottom = false;
-		TabBar* tabs = nullptr;
-		std::map<TabBarTab*, std::unique_ptr<View>> pages;
-		View* currentPage = nullptr;
+		std::shared_ptr<TabBar> tabs;
+		std::map<std::shared_ptr<TabBarTab>, std::shared_ptr<View>> pages;
+		std::shared_ptr<View> currentPage;
 
-		View* widgetStack = nullptr;
+		std::shared_ptr<View> widgetStack;
 	};
 }

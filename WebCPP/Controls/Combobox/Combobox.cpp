@@ -10,10 +10,10 @@ namespace web
 {
 	ComboBox::ComboBox() : View("combobox-view")
 	{
-		imagebox = new ImageBox();
+		imagebox = std::make_shared<ImageBox>();
 		imagebox->addClass("combobox-icon");
 		imagebox->hide();
-		label = new TextLabel();
+		label = std::make_shared<TextLabel>();
 		label->addClass("combobox-label");
 
 		auto layout = createHBoxLayout();
@@ -33,7 +33,7 @@ namespace web
 			imagebox->hide();
 			label->hide();
 
-			lineedit = new LineEdit();
+			lineedit = std::make_shared<LineEdit>();
 			lineedit->addClass("combobox-lineedit");
 			lineedit->setFlat();
 			lineedit->setText(label->getText());
@@ -294,7 +294,7 @@ namespace web
 	{
 		for (int idx = 0, size = items.size(); idx < size; idx++)
 		{
-			if (items.at(idx)->isSelected() == true)
+			if (items.at(idx)->isSelected())
 				return idx;
 		}
 		return -1;
@@ -308,23 +308,23 @@ namespace web
 
 	ComboBoxPopupItem* ComboBoxPopup::getSelectedItem() const
 	{
-		for (ComboBoxPopupItem* item : items)
+		for (const auto& item : items)
 		{
-			if (item->isSelected() == true)
-				return item;
+			if (item->isSelected())
+				return item.get();
 		}
 		return nullptr;
 	}
 
-	void ComboBoxPopup::setSelectedItem(const ComboBoxPopupItem* value)
+	void ComboBoxPopup::setSelectedItem(ComboBoxPopupItem* value)
 	{
-		for (ComboBoxPopupItem* item : items)
-			item->setSelected(item == value);
+		for (const auto& item : items)
+			item->setSelected(item.get() == value);
 	}
 
 	ComboBoxPopupItem* ComboBoxPopup::addItem(std::string icon, std::string text, const bool selected, std::function<void()> onClick)
 	{
-		auto item = new ComboBoxPopupItem();
+		auto item = std::make_shared<ComboBoxPopupItem>();
 		item->addClass("comboboxpopupitem");
 		item->setSelected(selected);
 		if (icon.empty() == false)
@@ -340,15 +340,15 @@ namespace web
 			});
 		items.push_back(item);
 		getLayout<VBoxLayout>()->addView(item);
-		return item;
+		return item.get();
 	}
 
 	ComboBoxPopupItemSeparator* ComboBoxPopup::addSeparator()
 	{
-		auto sep = new ComboBoxPopupItemSeparator();
+		auto sep = std::make_shared<ComboBoxPopupItemSeparator>();
 		sep->addClass("menu-sep");
 		getLayout<VBoxLayout>()->addView(sep);
-		return sep;
+		return sep.get();
 	}
 
 	void ComboBoxPopup::onKeyDown(Event* event)
@@ -409,8 +409,8 @@ namespace web
 
 	ComboBoxPopupItem::ComboBoxPopupItem() : View("comboboxpopupitem-view")
 	{
-		icon = new ImageBox();
-		text = new TextLabel();
+		icon = std::make_shared<ImageBox>();
+		text = std::make_shared<TextLabel>();
 
 		icon->addClass("comboboxpopupitem-icon");
 		text->addClass("comboboxpopupitem-text");

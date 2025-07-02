@@ -8,7 +8,7 @@ namespace web
 {
 	CheckboxLabel::CheckboxLabel() : View("checkboxlabel-view")
 	{
-		checkbox = new Checkbox();
+		checkbox = std::make_shared<Checkbox>();
 
 		auto layout = createHBoxLayout();
 		layout->setAlignItems(FlexAlignItems::center);
@@ -53,9 +53,9 @@ namespace web
 
 	void CheckboxLabel::setSrc(const std::string& src)
 	{
-		if (imagebox == nullptr)
+		if (!imagebox)
 		{
-			imagebox = new ImageBox();
+			imagebox = std::make_shared<ImageBox>();
 			imagebox->element->setStyle("padding-right", "2px");
 			imagebox->clicked = [=]() { if (getEnabled() == true) setChecked(!isChecked()); };
 
@@ -69,7 +69,7 @@ namespace web
 	{
 		if (label == nullptr)
 		{
-			label = new TextLabel();
+			label = std::make_shared<TextLabel>();
 			label->clicked = [=]() { if (getEnabled() == true) setChecked(!isChecked()); };
 
 			getLayout<HBoxLayout>()->addView(label);

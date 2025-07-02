@@ -6,8 +6,8 @@ namespace web
 	void SvgElementView::clear()
 	{
 		// Remove attached views
-		while (lastChild())
-			delete lastChild();
+		if (getLayout())
+			getLayout()->clear();
 
 		// Remove elements created without a view
 		while (true)
@@ -65,7 +65,7 @@ namespace web
 		element->setAttribute("viewBox", std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(width) + " " + std::to_string(height));
 	}
 
-	void SvgBox::addView(SvgElementView* view)
+	void SvgBox::addView(std::shared_ptr<SvgElementView> view)
 	{
 		getLayout<FlowLayout>()->addView(view);
 	}

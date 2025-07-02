@@ -52,8 +52,7 @@ namespace web
 
 	void OpenFileDialog::show(const std::string& filter, bool multiple, std::function<void(std::vector<OpenFileEntry> files)> selectedCallback)
 	{
-		auto fileDialog = new FileInputView(filter, multiple);
-
+		auto fileDialog = std::make_shared<FileInputView>(filter, multiple);
 		HtmlDocument::body()->addView(fileDialog);
 
 		fileDialog->element->addEventListener("change", [=](Event* event) { event->stopPropagation(); selectedCallback(fileDialog->fileList()); });

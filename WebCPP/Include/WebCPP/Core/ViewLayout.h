@@ -2,37 +2,38 @@
 
 #include <memory>
 #include <vector>
+#include <list>
 
 namespace web
 {
 	class View;
+	class ViewLayout;
 	class Element;
 
 	class ViewLayoutItem
 	{
 	public:
 		virtual ~ViewLayoutItem() = default;
+
+		ViewLayout* layout = nullptr;
+		std::shared_ptr<View> view;
+		std::list<std::unique_ptr<ViewLayoutItem>>::iterator it;
 	};
 
 	class ViewLayout
 	{
 	public:
 		ViewLayout(View* owner);
-		virtual ~ViewLayout() = default;
+		virtual ~ViewLayout();
 
-		void addStickyView(View* view);
-		void addAbsoluteView(View* view);
-		void addFixedView(View* view);
+		void clear();
+
+		void addStickyView(std::shared_ptr<View> view);
+		void addAbsoluteView(std::shared_ptr<View> view);
+		void addFixedView(std::shared_ptr<View> view);
 
 	protected:
-		virtual void onViewRemoved(View* view);
-
-		ViewLayoutItem* getItem(View* view) { return getItemImpl(view); }
-		template<typename T> T* getItem(View* view) { return static_cast<T*>(getItemImpl(view)); }
-		void setItem(View* view, std::unique_ptr<ViewLayoutItem> item);
-		void resetItem(View* view);
-
-		void attachView(View* view);
+		void attachView(std::shared_ptr<View> view);
 		void appendChild(Element* element);
 		void insertBefore(Element* newElement, Element* insertPoint);
 		void removeChild(Element* element);
@@ -40,7 +41,11 @@ namespace web
 		View* owner = nullptr;
 
 	private:
-		ViewLayoutItem* getItemImpl(View* view);
+		void detachItem(ViewLayoutItem* item);
+		bool forceFocus();
+		bool focusFirstItem();
+
+		std::list<std::unique_ptr<ViewLayoutItem>> items;
 
 		friend class View;
 	};
@@ -53,7 +58,7 @@ namespace web
 		FlowLayout(View* owner);
 		~FlowLayout();
 
-		void addView(View* view);
+		void addView(std::shared_ptr<View> view);
 	};
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -120,8 +125,8 @@ namespace web
 		void setGap(double length);
 		void setGap(double rowLength, double columnLength);
 
-		void addView(View* view, bool grow = false, bool shrink = false, FlexAlignSelf align = FlexAlignSelf::useAlignItems, int order = 0) { addViewBefore(view, nullptr, grow, shrink, align, order); }
-		void addViewBefore(View* view, View* sibling, bool grow = false, bool shrink = false, FlexAlignSelf align = FlexAlignSelf::useAlignItems, int order = 0);
+		void addView(std::shared_ptr<View> view, bool grow = false, bool shrink = false, FlexAlignSelf align = FlexAlignSelf::useAlignItems, int order = 0) { addViewBefore(view, nullptr, grow, shrink, align, order); }
+		void addViewBefore(std::shared_ptr<View> view, std::shared_ptr<View> sibling, bool grow = false, bool shrink = false, FlexAlignSelf align = FlexAlignSelf::useAlignItems, int order = 0);
 		void addSpacer();
 
 	private:
@@ -259,8 +264,8 @@ namespace web
 		void setAlignContent(GridAlignContent align);
 
 		// Note: column and row index from one, not zero. Zero means auto placement. Negative values starts from the end of the grid.
-		void addView(View* view, int column = 0, int row = 0, int colspan = 1, int rowspan = 1, GridJustifySelf justify = GridJustifySelf::useJustifyItems, GridAlignSelf align = GridAlignSelf::useAlignItems) { addViewBefore(view, nullptr, column, row, colspan, rowspan, justify, align); }
-		void addViewBefore(View* view, View* sibling, int column = 0, int row = 0, int colspan = 1, int rowspan = 1, GridJustifySelf justify = GridJustifySelf::useJustifyItems, GridAlignSelf align = GridAlignSelf::useAlignItems);
+		void addView(std::shared_ptr<View> view, int column = 0, int row = 0, int colspan = 1, int rowspan = 1, GridJustifySelf justify = GridJustifySelf::useJustifyItems, GridAlignSelf align = GridAlignSelf::useAlignItems) { addViewBefore(view, nullptr, column, row, colspan, rowspan, justify, align); }
+		void addViewBefore(std::shared_ptr<View> view, std::shared_ptr<View> sibling, int column = 0, int row = 0, int colspan = 1, int rowspan = 1, GridJustifySelf justify = GridJustifySelf::useJustifyItems, GridAlignSelf align = GridAlignSelf::useAlignItems);
 
 	private:
 		static std::string toString(const std::vector<GridTrackSize>& sizes);

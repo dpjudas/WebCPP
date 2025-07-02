@@ -29,7 +29,7 @@ namespace web
 		getLayout<GridLayout>()->setColumns(sizes);
 	}
 
-	void ListViewBody::addViewBefore(ListViewItemView* view, ListViewItemView* sibling, ListViewHeader* header)
+	void ListViewBody::addViewBefore(std::shared_ptr<ListViewItemView> view, std::shared_ptr<ListViewItemView> sibling, ListViewHeader* header)
 	{
 		getLayout<GridLayout>()->addViewBefore(view, sibling, 1, 0, header->getColumnCount());
 	}

@@ -9,9 +9,9 @@ namespace web
 		layout->setGap(5.0);
 	}
 
-	ToolbarButton* Toolbar::addButton(std::string img, std::string text, std::function<void()> onClick)
+	std::shared_ptr<ToolbarButton> Toolbar::addButton(std::string img, std::string text, std::function<void()> onClick)
 	{
-		auto button = new ToolbarButton();
+		auto button = std::make_shared<ToolbarButton>();
 		button->addClass("toolbar-button");
 		button->icon->setSrc(img);
 		if (img.empty())
@@ -26,17 +26,17 @@ namespace web
 		return button;
 	}
 
-	ToolbarSeparator* Toolbar::addSeparator()
+	std::shared_ptr<ToolbarSeparator> Toolbar::addSeparator()
 	{
-		auto sep = new ToolbarSeparator();
+		auto sep = std::make_shared<ToolbarSeparator>();
 		sep->addClass("toolbar-sep");
 		getLayout<HBoxLayout>()->addView(sep);
 		return sep;
 	}
 
-	ToolbarDropdown* Toolbar::addDropdown(std::string label, std::vector<std::string> items)
+	std::shared_ptr<ToolbarDropdown> Toolbar::addDropdown(std::string label, std::vector<std::string> items)
 	{
-		auto dropdown = new ToolbarDropdown();
+		auto dropdown = std::make_shared<ToolbarDropdown>();
 		dropdown->addClass("toolbar-dropdown");
 		dropdown->label->setText(label);
 		for (const std::string& item : items)
@@ -45,9 +45,9 @@ namespace web
 		return dropdown;
 	}
 
-	ToolbarTextInput* Toolbar::addTextInput(std::string label, std::string text)
+	std::shared_ptr<ToolbarTextInput> Toolbar::addTextInput(std::string label, std::string text)
 	{
-		auto input = new ToolbarTextInput();
+		auto input = std::make_shared<ToolbarTextInput>();
 		input->addClass("toolbar-input");
 		input->label->setText(label);
 		input->edit->setText(text);
@@ -55,16 +55,16 @@ namespace web
 		return input;
 	}
 
-	ToolbarButton* Toolbar::addRadioButton(std::string img)
+	std::shared_ptr<ToolbarButton> Toolbar::addRadioButton(std::string img)
 	{
-		auto button = new ToolbarButton();
+		auto button = std::make_shared<ToolbarButton>();
 		button->addClass("toolbar-radiobutton");
 		button->icon->setSrc(img);
 		getLayout<HBoxLayout>()->addView(button);
 		return button;
 	}
 
-	void Toolbar::addView(View* view)
+	void Toolbar::addView(std::shared_ptr<View> view)
 	{
 		view->addClass("toolbar-view");
 		getLayout<HBoxLayout>()->addView(view);

@@ -14,7 +14,7 @@ namespace web
 	class ModalLayer;
 	class ShadowRoot;
 
-	class View
+	class View : public std::enable_shared_from_this<View>
 	{
 	public:
 		View(std::string elementType = "basic-view");
@@ -45,8 +45,8 @@ namespace web
 		bool getHidden() const;
 		void setHidden(bool value);
 
-		ModalLayer* showDialogModal(bool setFocus = true);
-		ModalLayer* showPopupModal(bool setFocus = true);
+		std::shared_ptr<ModalLayer> showDialogModal(bool setFocus = true);
+		std::shared_ptr<ModalLayer> showPopupModal(bool setFocus = true);
 		void closeModal();
 
 		void attachShadow(const std::string& mode = "open");
@@ -58,37 +58,23 @@ namespace web
 		std::unique_ptr<Element> element;
 		std::unique_ptr<ShadowRoot> shadowRoot;
 
-		View* parent() const { return parentObj; }
+		View* parent() const;
 
 		void setCursor(const std::string& cursor) { element->setAttribute("cursor", cursor); }
 		void setPointerEvents(const std::string& value) { element->setAttribute("pointer-events", value); }
 
 	private:
-		View* prevSibling() const { return prevSiblingObj; }
-		View* nextSibling() const { return nextSiblingObj; }
-		View* firstChild() const { return firstChildObj; }
-		View* lastChild() const { return lastChildObj; }
-
 		bool forceFocus();
 		bool focusFirstChild();
-		void detachFromParent(bool notifyLayout);
 		void updateClassAttribute();
-		void setParent(View* newParent);
-
-		View* parentObj = nullptr;
-		View* prevSiblingObj = nullptr;
-		View* nextSiblingObj = nullptr;
-		View* firstChildObj = nullptr;
-		View* lastChildObj = nullptr;
 
 		std::unique_ptr<ViewLayout> layout;
-		std::unique_ptr<ViewLayoutItem> layoutItem;
+		ViewLayoutItem* layoutItem = nullptr;
 
 		std::set<std::string> classes;
 
 		bool defaultFocused = false;
 
 		friend class ViewLayout;
-		friend class SvgElementView;
 	};
 }

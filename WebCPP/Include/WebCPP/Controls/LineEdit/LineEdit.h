@@ -11,7 +11,7 @@ namespace web
 	public:
 		LineEdit();
 
-		ImageBox* addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler);
+		std::shared_ptr<ImageBox> addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler);
 
 		bool getPasswordMode() const;
 		void setPasswordMode(bool value);
@@ -35,6 +35,6 @@ namespace web
 	private:
 		bool enabled = true;
 		bool readonly = false;
-		View* input = nullptr;
+		std::shared_ptr<View> input;
 	};
 }

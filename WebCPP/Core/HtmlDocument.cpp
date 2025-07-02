@@ -60,22 +60,22 @@ namespace web
 		createFlowLayout();
 	}
 
-	void HtmlDocumentBody::addView(View* view)
+	void HtmlDocumentBody::addView(std::shared_ptr<View> view)
 	{
 		getLayout<FlowLayout>()->addView(view);
 	}
 
-	ModalLayer* HtmlDocumentBody::beginDialogModal()
+	std::shared_ptr<ModalLayer> HtmlDocumentBody::beginDialogModal()
 	{
-		ModalLayer* layer = new ModalLayer(true);
+		auto layer = std::make_shared<ModalLayer>(true);
 		getLayout<FlowLayout>()->addView(layer);
 		modalLayers.push_back(layer);
 		return layer;
 	}
 
-	ModalLayer* HtmlDocumentBody::beginPopupModal()
+	std::shared_ptr<ModalLayer> HtmlDocumentBody::beginPopupModal()
 	{
-		ModalLayer* layer = new ModalLayer(false);
+		auto layer = std::make_shared<ModalLayer>(false);
 		getLayout<FlowLayout>()->addView(layer);
 		modalLayers.push_back(layer);
 		return layer;
@@ -85,10 +85,10 @@ namespace web
 	{
 		if (!modalLayers.empty())
 		{
-			ModalLayer* layer = modalLayers.back();
+			auto layer = modalLayers.back();
 			modalLayers.pop_back();
+			layer->detach();
 			JSValue oldActiveElement = std::move(layer->oldActiveElement);
-			delete layer;
 			if (!oldActiveElement.isNull())
 				oldActiveElement.call<void>("focus");
 		}
@@ -105,7 +105,7 @@ namespace web
 		createFlowLayout();
 	}
 
-	void ModalLayer::addView(View* view)
+	void ModalLayer::addView(std::shared_ptr<View> view)
 	{
 		getLayout<FlowLayout>()->addView(view);
 	}

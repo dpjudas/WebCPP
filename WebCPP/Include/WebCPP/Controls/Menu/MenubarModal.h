@@ -24,10 +24,10 @@ namespace web
 
 	private:
 		Menubar* menubar = nullptr;
-		Menu* openMenu = nullptr;
-		MenubarModalItem* firstOpenMenuItem = nullptr;
-		View* spacer = nullptr;
-		std::vector<MenubarModalItem*> items;
+		std::shared_ptr<Menu> openMenu;
+		std::shared_ptr<MenubarModalItem> firstOpenMenuItem;
+		std::shared_ptr<View> spacer;
+		std::vector<std::shared_ptr<MenubarModalItem>> items;
 	};
 
 	class MenubarModalItem : public TextLabel

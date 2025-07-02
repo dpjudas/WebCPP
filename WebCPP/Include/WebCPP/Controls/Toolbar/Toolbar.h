@@ -21,12 +21,12 @@ namespace web
 	public:
 		Toolbar();
 
-		ToolbarButton* addButton(std::string img, std::string text, std::function<void()> onClick);
-		ToolbarSeparator* addSeparator();
-		ToolbarDropdown* addDropdown(std::string label, std::vector<std::string> items);
-		ToolbarTextInput* addTextInput(std::string label, std::string text = std::string());
-		ToolbarButton* addRadioButton(std::string img);
-		void addView(View* view);
+		std::shared_ptr<ToolbarButton> addButton(std::string img, std::string text, std::function<void()> onClick);
+		std::shared_ptr<ToolbarSeparator> addSeparator();
+		std::shared_ptr<ToolbarDropdown> addDropdown(std::string label, std::vector<std::string> items);
+		std::shared_ptr<ToolbarTextInput> addTextInput(std::string label, std::string text = std::string());
+		std::shared_ptr<ToolbarButton> addRadioButton(std::string img);
+		void addView(std::shared_ptr<View> view);
 		void addSpacer();
 	};
 
@@ -35,8 +35,8 @@ namespace web
 	public:
 		ToolbarButton() : View("toolbarbutton-view")
 		{
-			icon = new ImageBox();
-			text = new TextLabel();
+			icon = std::make_shared<ImageBox>();
+			text = std::make_shared<TextLabel>();
 
 			icon->addClass("toolbarbutton-icon");
 			text->addClass("toolbarbutton-text");
@@ -73,8 +73,8 @@ namespace web
 		bool getEnabled() const { return enabled; }
 		bool getSelected() const { return selected; }
 
-		ImageBox* icon = nullptr;
-		TextLabel* text = nullptr;
+		std::shared_ptr<ImageBox> icon;
+		std::shared_ptr<TextLabel> text;
 
 	private:
 		bool enabled = true;
@@ -94,8 +94,8 @@ namespace web
 	public:
 		ToolbarDropdown() : View("toolbardropdown-view")
 		{
-			label = new TextLabel();
-			combobox = new ComboBox();
+			label = std::make_shared<TextLabel>();
+			combobox = std::make_shared<ComboBox>();
 
 			label->addClass("toolbardropdown-label");
 			combobox->addClass("toolbardropdown-combobox");
@@ -105,8 +105,8 @@ namespace web
 			layout->addView(combobox);
 		}
 
-		TextLabel* label = nullptr;
-		ComboBox* combobox = nullptr;
+		std::shared_ptr<TextLabel> label;
+		std::shared_ptr<ComboBox> combobox;
 	};
 
 	class ToolbarTextInput : public View
@@ -114,8 +114,8 @@ namespace web
 	public:
 		ToolbarTextInput() : View("toolbartextinput-view")
 		{
-			label = new TextLabel();
-			edit = new LineEdit();
+			label = std::make_shared<TextLabel>();
+			edit = std::make_shared<LineEdit>();
 
 			label->addClass("toolbartextinput-label");
 			edit->addClass("toolbartextinput-edit");
@@ -130,7 +130,7 @@ namespace web
 			edit->setPlaceholder(text);
 		}
 
-		TextLabel* label = nullptr;
-		LineEdit* edit = nullptr;
+		std::shared_ptr<TextLabel> label;
+		std::shared_ptr<LineEdit> edit;
 	};
 }

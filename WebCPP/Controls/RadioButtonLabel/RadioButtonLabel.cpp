@@ -8,7 +8,7 @@ namespace web
 {
 	RadioButtonLabel::RadioButtonLabel() : View("radiobuttonlabel-view")
 	{
-		radiobutton = new RadioButton();
+		radiobutton = std::make_shared<RadioButton>();
 
 		auto layout = createHBoxLayout();
 		layout->setAlignItems(FlexAlignItems::center);
@@ -71,7 +71,7 @@ namespace web
 	{
 		if (imagebox == nullptr)
 		{
-			imagebox = new ImageBox();
+			imagebox = std::make_shared<ImageBox>();
 			imagebox->element->setStyle("padding-right", "2px");
 			imagebox->clicked = [=]() { if (getEnabled() == true) setChecked(!isChecked()); };
 
@@ -85,7 +85,7 @@ namespace web
 	{
 		if (label == nullptr)
 		{
-			label = new TextLabel();
+			label = std::make_shared<TextLabel>();
 			label->clicked = [=]() { if (getEnabled() == true) setChecked(!isChecked()); };
 
 			getLayout<HBoxLayout>()->addView(label);

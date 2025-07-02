@@ -20,11 +20,11 @@ namespace web
 		Column col;
 		if (!columns.empty())
 		{
-			columns.back().splitter = new ListViewHeaderSplitter();
+			columns.back().splitter = std::make_shared<ListViewHeaderSplitter>();
 			getLayout<HBoxLayout>()->addView(columns.back().splitter);
 		}
 
-		col.label = new TextLabel();
+		col.label = std::make_shared<TextLabel>();
 		col.label->addClass("listview-headerlabel");
 		col.label->setText(name);
 		col.label->element->setStyle("width", std::to_string(width) + "px");
@@ -72,8 +72,9 @@ namespace web
 
 						// Recreate the label
 						std::string name = col.label->getText();
-						delete col.label;
-						col.label = new TextLabel();
+						if (col.label)
+							col.label->detach();
+						col.label = std::make_shared<TextLabel>();
 						col.label->addClass("listview-headerlabel");
 						col.label->setText(name);
 						col.label->element->setStyle("width", std::to_string(col.width) + "px");
@@ -127,7 +128,7 @@ namespace web
 	ListViewHeaderSplitter::ListViewHeaderSplitter() : View("listviewheadersplitter-view")
 	{
 		element->setStyle("width", "10px");
-		dummy = new View();
+		dummy = std::make_shared<View>();
 		auto layout = createHBoxLayout();
 		layout->addView(dummy);
 	}

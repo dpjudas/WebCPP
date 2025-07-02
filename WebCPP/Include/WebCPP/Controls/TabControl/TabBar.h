@@ -11,6 +11,6 @@ namespace web
 	public:
 		TabBar();
 
-		TabBarTab* addTab(const std::string& icon, const std::string& label, std::function<void()> onClick, std::function<void(double clientX, double clientY)> onContextMenu);
+		std::shared_ptr<TabBarTab> addTab(const std::string& icon, const std::string& label, std::function<void()> onClick, std::function<void(double clientX, double clientY)> onContextMenu);
 	};
 }

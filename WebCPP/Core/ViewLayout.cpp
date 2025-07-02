@@ -10,49 +10,83 @@ namespace web
 	{
 	}
 
-	void ViewLayout::setItem(View* view, std::unique_ptr<ViewLayoutItem> item)
+	ViewLayout::~ViewLayout()
 	{
-		view->layoutItem = std::move(item);
+		clear();
 	}
 
-	ViewLayoutItem* ViewLayout::getItemImpl(View* view)
+	void ViewLayout::clear()
 	{
-		return view->layoutItem.get();
+		while (!items.empty())
+			detachItem(items.back().get());
 	}
 
-	void ViewLayout::resetItem(View* view)
+	void ViewLayout::detachItem(ViewLayoutItem* item)
 	{
-		view->layoutItem.reset();
+		item->view->layoutItem = nullptr;
+		removeChild(item->view->element.get());
+		items.erase(item->it);
 	}
 
-	void ViewLayout::onViewRemoved(View* view)
+	bool ViewLayout::forceFocus()
 	{
-		if (getItem(view))
+		for (auto& item : items)
 		{
-			removeChild(view->element.get());
-			resetItem(view);
+			if (item->view->getVisible())
+			{
+				if (item->view->defaultFocused)
+				{
+					item->view->setFocus();
+					return true;
+				}
+				else if (item->view->forceFocus())
+				{
+					return true;
+				}
+			}
 		}
+		return false;
 	}
 
-	void ViewLayout::addStickyView(View* view)
+	bool ViewLayout::focusFirstItem()
 	{
+		for (auto& item : items)
+		{
+			if (item->view->getVisible())
+			{
+				if (item->view->setFocus())
+				{
+					item->view->setFocus();
+					return true;
+				}
+				else if (item->view->focusFirstChild())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	void ViewLayout::addStickyView(std::shared_ptr<View> view)
+	{
+		attachView(view);
 		view->element->setStyle("position", "sticky");
 		appendChild(view->element.get());
-		setItem(view, std::make_unique<ViewLayoutItem>());
 	}
 
-	void ViewLayout::addAbsoluteView(View* view)
+	void ViewLayout::addAbsoluteView(std::shared_ptr<View> view)
 	{
+		attachView(view);
 		view->element->setStyle("position", "absolute");
 		appendChild(view->element.get());
-		setItem(view, std::make_unique<ViewLayoutItem>());
 	}
 
-	void ViewLayout::addFixedView(View* view)
+	void ViewLayout::addFixedView(std::shared_ptr<View> view)
 	{
+		attachView(view);
 		view->element->setStyle("position", "fixed");
 		appendChild(view->element.get());
-		setItem(view, std::make_unique<ViewLayoutItem>());
 	}
 
 	void ViewLayout::appendChild(Element* element)
@@ -79,9 +113,12 @@ namespace web
 			owner->element->removeChild(element);
 	}
 
-	void ViewLayout::attachView(View* view)
+	void ViewLayout::attachView(std::shared_ptr<View> view)
 	{
-		view->setParent(owner);
+		items.push_back(std::make_unique<ViewLayoutItem>());
+		items.back()->it = --items.end();
+		items.back()->layout = this;
+		items.back()->view = std::move(view);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -94,11 +131,10 @@ namespace web
 	{
 	}
 
-	void FlowLayout::addView(View* view)
+	void FlowLayout::addView(std::shared_ptr<View> view)
 	{
 		attachView(view);
 		appendChild(view->element.get());
-		setItem(view, std::make_unique<ViewLayoutItem>());
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -176,7 +212,7 @@ namespace web
 		owner->element->setStyle("gap", std::to_string(rowLength) + " " + std::to_string(columnLength) + "px");
 	}
 
-	void FlexLayout::addViewBefore(View* view, View* sibling, bool grow, bool shrink, FlexAlignSelf align, int order)
+	void FlexLayout::addViewBefore(std::shared_ptr<View> view, std::shared_ptr<View> sibling, bool grow, bool shrink, FlexAlignSelf align, int order)
 	{
 		if (sibling && sibling->parent() != owner)
 			sibling = nullptr;
@@ -222,12 +258,10 @@ namespace web
 
 		attachView(view);
 
-		if (!sibling || !getItem(sibling))
+		if (!sibling)
 			appendChild(view->element.get());
 		else
 			insertBefore(view->element.get(), sibling->element.get());
-
-		setItem(view, std::make_unique<ViewLayoutItem>());
 	}
 
 	void FlexLayout::addSpacer()
@@ -388,7 +422,7 @@ namespace web
 			owner->element->setStyle("grid-template-rows", "subgrid");
 	}
 
-	void GridLayout::addViewBefore(View* view, View* sibling, int column, int row, int colspan, int rowspan, GridJustifySelf justify, GridAlignSelf align)
+	void GridLayout::addViewBefore(std::shared_ptr<View> view, std::shared_ptr<View> sibling, int column, int row, int colspan, int rowspan, GridJustifySelf justify, GridAlignSelf align)
 	{
 		if (sibling && sibling->parent() != owner)
 			sibling = nullptr;
@@ -439,11 +473,9 @@ namespace web
 
 		attachView(view);
 
-		if (!sibling || !getItem(sibling))
+		if (!sibling)
 			appendChild(view->element.get());
 		else
 			insertBefore(view->element.get(), sibling->element.get());
-
-		setItem(view, std::make_unique<ViewLayoutItem>());
 	}
 }

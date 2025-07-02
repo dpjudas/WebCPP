@@ -86,14 +86,14 @@ namespace web
 		void onScrollbarScroll();
 		void onResize(std::vector<ResizeObserverEntry> entries);
 
-		ListViewHeader* header = nullptr;
-		ListViewBody* body = nullptr;
+		std::shared_ptr<ListViewHeader> header;
+		std::shared_ptr<ListViewBody> body;
 		std::unique_ptr<ListViewItem> root;
 		ListViewItem* curSelectedItem = nullptr;
 		ListViewItem* curFocusItem = nullptr;
-		Scrollbar* scrollVert = nullptr;
-		Scrollbar* scrollHorz = nullptr;
-		ScrollbarCorner* scrollCorner = nullptr;
+		std::shared_ptr<Scrollbar> scrollVert;
+		std::shared_ptr<Scrollbar> scrollHorz;
+		std::shared_ptr<ScrollbarCorner> scrollCorner;
 		ResizeObserver resizeObserver;
 
 		friend class ListViewItem;

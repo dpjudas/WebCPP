@@ -55,7 +55,7 @@ namespace web
 	{
 		if (!popup)
 		{
-			popup = new ColorPickerPopup(this);
+			popup = std::make_shared<ColorPickerPopup>(this);
 			popup->setChangeHandler([this]() { onColorPickerChanged(); });
 			popup->setColor(red, green, blue, noColor);
 			auto layer = popup->showPopupModal(true);
@@ -99,7 +99,7 @@ namespace web
 
 	void ColorPicker::setupUi()
 	{
-		label = new TextLabel();
+		label = std::make_shared<TextLabel>();
 		label->addClass("colorpicker-label");
 
 		auto layout = createHBoxLayout();
@@ -260,37 +260,37 @@ namespace web
 
 	void ColorPickerPopup::setupUi()
 	{
-		satvalBox = new ColorPickerSatValBox();
-		hueBox = new ColorPickerHueBox();
+		satvalBox = std::make_shared<ColorPickerSatValBox>();
+		hueBox = std::make_shared<ColorPickerHueBox>();
 
-		auto form = new View();
+		auto form = std::make_shared<View>();
 		form->addClass("colorpickerform");
 
-		colorCircle = new View();
+		colorCircle = std::make_shared<View>();
 		colorCircle->addClass("colorpickercircle");
 
-		auto row = new View();
+		auto row = std::make_shared<View>();
 		auto rowLayout = row->createHBoxLayout();
 		rowLayout->setGap(10.0);
 		rowLayout->setAlignItems(FlexAlignItems::center);
 		rowLayout->addView(colorCircle);
 		rowLayout->addView(hueBox, true, true);
 
-		red = new LineEdit();
-		green = new LineEdit();
-		blue = new LineEdit();
+		red = std::make_shared<LineEdit>();
+		green = std::make_shared<LineEdit>();
+		blue = std::make_shared<LineEdit>();
 
-		auto labelred = new TextLabel();
+		auto labelred = std::make_shared<TextLabel>();
 		labelred->setText("R");
 		labelred->setCenterAlign();
-		auto labelgreen = new TextLabel();
+		auto labelgreen = std::make_shared<TextLabel>();
 		labelgreen->setText("G");
 		labelgreen->setCenterAlign();
-		auto labelblue = new TextLabel();
+		auto labelblue = std::make_shared<TextLabel>();
 		labelblue->setText("B");
 		labelblue->setCenterAlign();
 
-		noColor = new CheckboxLabel();
+		noColor = std::make_shared<CheckboxLabel>();
 		noColor->setText("No Color");
 
 		red->setText(std::to_string(255));
@@ -301,7 +301,7 @@ namespace web
 		green->addClass("colorpickeredit");
 		blue->addClass("colorpickeredit");
 
-		auto row2 = new View();
+		auto row2 = std::make_shared<View>();
 		row2->element->setStyle("margin", "0 -5px");
 		auto row2Layout = row2->createGridLayout();
 		row2Layout->setColumns({ GridLayout::freeSpace, GridLayout::freeSpace, GridLayout::freeSpace });
@@ -328,13 +328,13 @@ namespace web
 
 	ColorPickerSatValBox::ColorPickerSatValBox() : View("colorpickercolors-view")
 	{
-		saturationGradient = new View();
+		saturationGradient = std::make_shared<View>();
 		saturationGradient->addClass("colorpickercolors-sat");
 
-		valueGradient = new View();
+		valueGradient = std::make_shared<View>();
 		valueGradient->addClass("colorpickercolors-val");
 
-		dragger = new View();
+		dragger = std::make_shared<View>();
 		dragger->addClass("colorpickercolors-dragger");
 
 		auto layout = createFlowLayout();
@@ -433,7 +433,7 @@ namespace web
 
 	ColorPickerHueBox::ColorPickerHueBox() : View("colorpickerhue-view")
 	{
-		dragger = new View();
+		dragger = std::make_shared<View>();
 		dragger->addClass("colorpickerhue-dragger");
 
 		auto layout = createFlowLayout();

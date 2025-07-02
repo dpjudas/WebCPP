@@ -13,11 +13,11 @@ namespace web
 	public:
 		Menubar();
 
-		MenubarItem* addItem(std::string text, std::function<void(Menu* menu)> onOpen, bool alignRight = false);
+		std::shared_ptr<MenubarItem> addItem(std::string text, std::function<void(Menu* menu)> onOpen, bool alignRight = false);
 
 	private:
-		View* spacer = nullptr;
-		std::vector<MenubarItem*> menuItems;
+		std::shared_ptr<View> spacer;
+		std::vector<std::shared_ptr<MenubarItem>> menuItems;
 
 		friend class MenubarModal;
 	};

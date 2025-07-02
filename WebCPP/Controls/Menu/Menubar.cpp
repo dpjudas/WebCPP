@@ -6,15 +6,15 @@ namespace web
 {
 	Menubar::Menubar() : View("menubar-view")
 	{
-		spacer = new View("menubarspacer-view");
+		spacer = std::make_shared<View>("menubarspacer-view");
 
 		auto layout = createHBoxLayout();
 		layout->addView(spacer, true, true);
 	}
 
-	MenubarItem* Menubar::addItem(std::string text, std::function<void(Menu* menu)> onOpen, bool alignRight)
+	std::shared_ptr<MenubarItem> Menubar::addItem(std::string text, std::function<void(Menu* menu)> onOpen, bool alignRight)
 	{
-		auto item = new MenubarItem(this, alignRight);
+		auto item = std::make_shared<MenubarItem>(this, alignRight);
 		item->addClass("menubar-item");
 		item->setText(text);
 		item->setOpenCallback(std::move(onOpen));

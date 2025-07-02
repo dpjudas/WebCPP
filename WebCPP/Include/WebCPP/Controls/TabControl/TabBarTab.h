@@ -16,7 +16,7 @@ namespace web
 		void setIcon(const std::string& src);
 
 	private:
-		ImageBox* icon = nullptr;
-		TextLabel* label = nullptr;
+		std::shared_ptr<ImageBox> icon;
+		std::shared_ptr<TextLabel> label;
 	};
 }

@@ -7,18 +7,18 @@ namespace web
 {
 	MenubarModal::MenubarModal(Menubar* menubar, MenubarItem* openitem) : View("menubarmodal-view"), menubar(menubar)
 	{
-		spacer = new View("menubarmodalspacer-view");
+		spacer = std::make_shared<View>("menubarmodalspacer-view");
 
 		auto layout = createHBoxLayout();
 		layout->addView(spacer, true, true);
 
-		for (MenubarItem* src : menubar->menuItems)
+		for (std::shared_ptr<MenubarItem> src : menubar->menuItems)
 		{
-			auto item = new MenubarModalItem(this, src->alignRight);
+			auto item = std::make_shared<MenubarModalItem>(this, src->alignRight);
 			item->addClass("menubarmodal-item");
 			item->setText(src->getText());
 			item->setOpenCallback(src->getOpenCallback());
-			if (src == openitem)
+			if (src.get() == openitem)
 			{
 				firstOpenMenuItem = item;
 			}
@@ -50,12 +50,13 @@ namespace web
 
 	void MenubarModal::showMenu(MenubarModalItem* item)
 	{
-		delete openMenu;
+		if (openMenu)
+			openMenu->detach();
 		openMenu = nullptr;
 
 		for (auto i : items)
 		{
-			if (i == item)
+			if (i.get() == item)
 			{
 				i->open();
 			}
@@ -66,7 +67,7 @@ namespace web
 		}
 
 		Rect box = item->element->getBoundingClientRect();
-		openMenu = new Menu();
+		openMenu = std::make_shared<Menu>();
 		openMenu->closeMenu = [=]() { closeModal(); };
 		openMenu->addClass("menubarmodal-openmenu");
 		if (item->alignRight)
@@ -75,7 +76,7 @@ namespace web
 			openMenu->setLeftPosition(box.x, box.y + box.height - 1);
 		if (item->getOpenCallback())
 		{
-			item->getOpenCallback()(openMenu);
+			item->getOpenCallback()(openMenu.get());
 		}
 
 		getLayout<HBoxLayout>()->addView(openMenu);
@@ -93,7 +94,7 @@ namespace web
 		parent()->element->addEventListener("click", [=](Event* event) { onClose(event); });
 		if (firstOpenMenuItem)
 		{
-			showMenu(firstOpenMenuItem);
+			showMenu(firstOpenMenuItem.get());
 			firstOpenMenuItem = nullptr;
 		}
 	}

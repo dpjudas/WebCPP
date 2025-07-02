@@ -23,58 +23,12 @@ namespace web
 
 	View::~View()
 	{
-		while (lastChildObj)
-			delete lastChildObj;
-
-		detachFromParent(true);
-		layout.reset();
 	}
 
 	void View::detach()
 	{
-		detachFromParent(true);
-	}
-
-	void View::setParent(View* newParent)
-	{
-		if (parentObj != newParent)
-		{
-			if (parentObj)
-				detachFromParent(true);
-
-			if (newParent)
-			{
-				prevSiblingObj = newParent->lastChildObj;
-				if (prevSiblingObj) prevSiblingObj->nextSiblingObj = this;
-				newParent->lastChildObj = this;
-				if (!newParent->firstChildObj) newParent->firstChildObj = this;
-				parentObj = newParent;
-			}
-		}
-	}
-
-	void View::detachFromParent(bool notifyLayout)
-	{
-		if (parentObj)
-		{
-			if (notifyLayout && parentObj->layout)
-				parentObj->layout->onViewRemoved(this);
-		}
-
-		if (prevSiblingObj)
-			prevSiblingObj->nextSiblingObj = nextSiblingObj;
-		if (nextSiblingObj)
-			nextSiblingObj->prevSiblingObj = prevSiblingObj;
-		if (parentObj)
-		{
-			if (parentObj->firstChildObj == this)
-				parentObj->firstChildObj = nextSiblingObj;
-			if (parentObj->lastChildObj == this)
-				parentObj->lastChildObj = prevSiblingObj;
-		}
-		prevSiblingObj = nullptr;
-		nextSiblingObj = nullptr;
-		parentObj = nullptr;
+		if (layoutItem)
+			layoutItem->layout->detachItem(layoutItem);
 	}
 
 	void View::addClass(std::string name)
@@ -120,50 +74,20 @@ namespace web
 
 	bool View::forceFocus()
 	{
-		for (View* cur = firstChild(); cur != nullptr; cur = cur->nextSibling())
-		{
-			if (cur->getHidden() == false)
-			{
-				if (cur->defaultFocused == true)
-				{
-					cur->setFocus();
-					return true;
-				}
-				else if (cur->forceFocus() == true)
-				{
-					return true;
-				}
-			}
-		}
-		return false;
+		return layout ? layout->forceFocus() : false;
 	}
 
 	bool View::focusFirstChild()
 	{
-		for (View* cur = firstChild(); cur != nullptr; cur = cur->nextSibling())
-		{
-			if (cur->getHidden() == false)
-			{
-				if (cur->setFocus() == true)
-				{
-					cur->setFocus();
-					return true;
-				}
-				else if (cur->focusFirstChild() == true)
-				{
-					return true;
-				}
-			}
-		}
-		return false;
+		return layout ? layout->focusFirstItem() : false;
 	}
 
-	ModalLayer* View::showDialogModal(bool setFocus)
+	std::shared_ptr<ModalLayer> View::showDialogModal(bool setFocus)
 	{
 		auto layer = HtmlDocument::body()->beginDialogModal();
-		layer->addView(this);
+		layer->addView(shared_from_this());
 		onModalAttach();
-		if (forceFocus() == false && focusFirstChild() == false)
+		if (!forceFocus() && !focusFirstChild())
 		{
 			element->setTabIndex(0);
 			element->focus();
@@ -171,12 +95,12 @@ namespace web
 		return layer;
 	}
 
-	ModalLayer* View::showPopupModal(bool setFocus)
+	std::shared_ptr<ModalLayer> View::showPopupModal(bool setFocus)
 	{
 		auto layer = HtmlDocument::body()->beginPopupModal();
-		layer->addView(this);
+		layer->addView(shared_from_this());
 		onModalAttach();
-		if (setFocus == true && forceFocus() == false && focusFirstChild() == false)
+		if (setFocus && !forceFocus() && !focusFirstChild())
 		{
 			element->setTabIndex(0);
 			element->focus();
@@ -210,6 +134,11 @@ namespace web
 			options.set("mode", mode);
 			shadowRoot = std::make_unique<ShadowRoot>(element->handle.call<JSValue>("attachShadow", options));
 		}
+	}
+
+	View* View::parent() const
+	{
+		return layoutItem ? layoutItem->layout->owner : nullptr;
 	}
 }
 

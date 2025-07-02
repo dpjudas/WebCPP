@@ -7,8 +7,8 @@ namespace web
 {
 	TabBarTab::TabBarTab() : View("tabbartab-view")
 	{
-		icon = new ImageBox();
-		label = new TextLabel();
+		icon = std::make_shared<ImageBox>();
+		label = std::make_shared<TextLabel>();
 
 		icon->addClass("tabbartab-icon");
 		label->addClass("tabbartab-label");

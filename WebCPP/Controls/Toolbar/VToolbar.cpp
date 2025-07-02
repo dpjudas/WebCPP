@@ -9,9 +9,9 @@ namespace web
 		layout->setGap(5.0);
 	}
 
-	VToolbarButton* VToolbar::addButton(std::string img, std::string text, std::function<void()> onClick)
+	std::shared_ptr<VToolbarButton> VToolbar::addButton(std::string img, std::string text, std::function<void()> onClick)
 	{
-		auto button = new VToolbarButton();
+		auto button = std::make_shared<VToolbarButton>();
 		button->addClass("vtoolbar-button");
 		button->icon->setSrc(img);
 		button->text->setText(text);

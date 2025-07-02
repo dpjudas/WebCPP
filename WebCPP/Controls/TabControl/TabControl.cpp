@@ -15,9 +15,9 @@ namespace web
 		if (tabsAtBottom)
 			addClass("tabsAtBottom");
 
-		tabs = new TabBar();
+		tabs = std::make_shared<TabBar>();
 
-		widgetStack = new View();
+		widgetStack = std::make_shared<View>();
 		widgetStack->addClass("tabcontrol-widgetstack");
 		widgetStack->createVBoxLayout();
 
@@ -29,22 +29,22 @@ namespace web
 			layout->addView(tabs);
 	}
 
-	void TabControl::addPage(std::string icon, std::string label, View* page, std::function<void(double clientX, double clientY)> onContextMenu)
+	void TabControl::addPage(std::string icon, std::string label, std::shared_ptr<View> page, std::function<void(double clientX, double clientY)> onContextMenu)
 	{
-		TabBarTab* tab = tabs->addTab(icon, label, [=]() { onPageTabClicked(page); }, onContextMenu);
+		std::shared_ptr<TabBarTab> tab = tabs->addTab(icon, label, [=]() { onPageTabClicked(page); }, onContextMenu);
 
-		pages[tab] = std::unique_ptr<View>(page);
+		pages[tab] = page;
 		if (!currentPage)
 			showPage(page);
 	}
 
-	void TabControl::showPage(View* page)
+	void TabControl::showPage(std::shared_ptr<View> page)
 	{
 		if (page != currentPage)
 		{
 			if (currentPage)
 			{
-				findTab(currentPage)->removeClass("selected");
+				findTab(currentPage.get())->removeClass("selected");
 				currentPage->detach();
 			}
 			currentPage = page;
@@ -55,19 +55,19 @@ namespace web
 				auto layout = widgetStack->createVBoxLayout();
 				layout->addView(currentPage, true, true);
 
-				findTab(currentPage)->addClass("selected");
+				findTab(currentPage.get())->addClass("selected");
 			}
 		}
 	}
 
-	void TabControl::onPageTabClicked(View* page)
+	void TabControl::onPageTabClicked(std::shared_ptr<View> page)
 	{
 		showPage(page);
 		if (onPageShow)
-			onPageShow(page);
+			onPageShow(page.get());
 	}
 
-	TabBarTab* TabControl::findTab(View* page)
+	std::shared_ptr<TabBarTab> TabControl::findTab(View* page)
 	{
 		for (auto& it : pages)
 		{

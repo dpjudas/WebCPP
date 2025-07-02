@@ -36,10 +36,10 @@ namespace web
 
 		ScrollbarDirection direction = ScrollbarDirection::vertical;
 
-		View* buttonDecr = nullptr;
-		View* track = nullptr;
-		View* thumb = nullptr;
-		View* buttonIncr = nullptr;
+		std::shared_ptr<View> buttonDecr;
+		std::shared_ptr<View> track;
+		std::shared_ptr<View> thumb;
+		std::shared_ptr<View> buttonIncr;
 
 		double thumbStart = 0.0;
 		double thumbEnd = 1.0;
