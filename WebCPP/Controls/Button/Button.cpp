@@ -11,7 +11,7 @@ namespace web
 		label = std::make_shared<TextLabel>();
 
 		auto layout = createHBoxLayout();
-		layout->addView(label);
+		layout->addView(label, true, false);
 
 		element->addEventListener("click", [=](Event* e) { onClicked(e); });
 		element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
