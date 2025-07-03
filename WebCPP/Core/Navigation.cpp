@@ -16,16 +16,19 @@ namespace web
 		std::string authError;
 		JSValue jwt = JSValue::undefined();
 		std::string accessToken;
+		std::unique_ptr<NavigationRouter> router;
 	}
 
-	void Navigation::init(std::function<void()> onPopState)
+	void Navigation::init(std::unique_ptr<NavigationRouter> initRouter)
 	{
+		router = std::move(initRouter);
+
 		onPopStateCallback = std::make_unique<JSCallback>([=](JSValue args)
 			{
 				Event event(args[0]);
 				locationPathParts = vecFromJSArray<std::string>(event.handle["state"]["pathparts"]);
-				if (onPopState)
-					onPopState();
+				if (router)
+					router->onNavigate();
 				return JSValue::undefined();
 			});
 
@@ -37,7 +40,6 @@ namespace web
 		{
 			authStatus = OAuthStatus::loginError;
 			authError = navInfo["error"].as<std::string>();
-			printf("auth error! %s\n", authError.c_str());
 		}
 		else if (!navInfo["access_token"].isUndefined())
 		{
@@ -50,6 +52,13 @@ namespace web
 			authStatus = OAuthStatus::unauthenticated;
 		}
 		replaceState(JSValue::global("document")["title"].as<std::string>(), locationPathParts);
+
+		router->onNavigate();
+	}
+
+	NavigationRouter* Navigation::getRouter()
+	{
+		return router.get();
 	}
 
 	void Navigation::login(std::string oauthUrl)

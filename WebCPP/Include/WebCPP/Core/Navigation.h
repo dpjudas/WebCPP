@@ -17,9 +17,19 @@ namespace web
 		loginError
 	};
 
+	class NavigationRouter
+	{
+	public:
+		virtual ~NavigationRouter() = default;
+		virtual void onNavigate() = 0;
+	};
+
 	class Navigation
 	{
 	public:
+		static void init(std::unique_ptr<NavigationRouter> router);
+		static NavigationRouter* getRouter();
+
 		static OAuthStatus getOAuthStatus();
 		static std::string getLoginError();
 		static JSValue getJwt();
@@ -34,10 +44,5 @@ namespace web
 		static void replaceState(std::string pageTitle, std::vector<std::string> pathParts);
 
 		static std::string pagePathToURI(const std::vector<std::string>& pathparts);
-
-	private:
-		static void init(std::function<void()> onPopState);
-
-		friend class DocumentBodyView;
 	};
 }
