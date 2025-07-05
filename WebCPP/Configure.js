@@ -62,7 +62,6 @@ var files = [
 	"Core/HtmlDocument.cpp",
 	"Core/HtmlDocument.css",
 	"Core/JSCallback.cpp",
-	"Core/JSCallback.js",
 	"Core/JsonValue.cpp",
 	"Core/Native.cpp",
 	"Core/Navigation.cpp",

@@ -3,6 +3,7 @@
 #include "WebCPP/Core/JSValue.h"
 #include "WebCPP/Core/JSCallback.h"
 #include "WebCPP/Core/Event.h"
+#include "WebCPP/Core/Storage.h"
 #include <regex>
 #include <emscripten/emscripten.h>
 
@@ -14,9 +15,24 @@ namespace web
 		std::vector<std::string> locationPathParts;
 		OAuthStatus authStatus = OAuthStatus::unauthenticated;
 		std::string authError;
-		JSValue jwt = JSValue::undefined();
+		JsonValue jwt = JsonValue::undefined();
 		std::string accessToken;
 		std::unique_ptr<NavigationRouter> router;
+	}
+
+	static std::vector<std::string> pathPartsFromPathname(const std::string& pathname)
+	{
+		std::vector<std::string> parts;
+		size_t pos = 1;
+		while (pos < pathname.size())
+		{
+			size_t nextpos = pathname.find(pos, '/');
+			if (nextpos == std::string::npos)
+				nextpos = pathname.size();
+			parts.push_back(Navigation::decodeURIComponent(pathname.substr(pos, nextpos - pos)));
+			pos = nextpos + 1;
+		}
+		return parts;
 	}
 
 	void Navigation::init(std::unique_ptr<NavigationRouter> initRouter)
@@ -31,27 +47,10 @@ namespace web
 					router->onNavigate();
 				return JSValue::undefined();
 			});
-
 		JSValue::global("window").call<void>("addEventListener", std::string("popstate"), onPopStateCallback->getHandler());
 
-		JSValue navInfo = JSValue::global("OAuth").call<JSValue>("checkAccessToken");
-		locationPathParts = vecFromJSArray<std::string>(navInfo["pathparts"]);
-		if (!navInfo["error"].isUndefined())
-		{
-			authStatus = OAuthStatus::loginError;
-			authError = navInfo["error"].as<std::string>();
-		}
-		else if (!navInfo["access_token"].isUndefined())
-		{
-			authStatus = OAuthStatus::authenticated;
-			accessToken = navInfo["access_token"].as<std::string>();
-			jwt = navInfo["jwt"];
-		}
-		else
-		{
-			authStatus = OAuthStatus::unauthenticated;
-		}
-		replaceState(JSValue::global("document")["title"].as<std::string>(), locationPathParts);
+		locationPathParts = pathPartsFromPathname(JSValue::global("document")["location"]["pathname"].as<std::string>());
+		// replaceState(JSValue::global("document")["title"].as<std::string>(), locationPathParts);
 
 		router->onNavigate();
 	}
@@ -61,9 +60,24 @@ namespace web
 		return router.get();
 	}
 
-	void Navigation::login(std::string oauthUrl)
+	void Navigation::beginLogin(std::string url)
 	{
-		JSValue::global("OAuth").call<JSValue>("login", oauthUrl);
+		SessionStorage::setString("webcpp.loginFromUrl", JSValue::global("document")["location"]["href"].as<std::string>());
+		navigateTo(url, true);
+	}
+
+	void Navigation::endLogin(OAuthStatus newStatus, const std::string& newAccessToken, const std::string& newLoginError)
+	{
+		authStatus = newStatus;
+		accessToken = newAccessToken;
+		authError = newLoginError;
+
+		std::string url = SessionStorage::getString("webcpp.loginFromUrl");
+		if (!url.empty())
+		{
+			SessionStorage::removeItem("webcpp.loginFromUrl");
+			navigateTo(url, true);
+		}
 	}
 
 	OAuthStatus Navigation::getOAuthStatus()
@@ -76,7 +90,7 @@ namespace web
 		return authError;
 	}
 
-	JSValue Navigation::getJwt()
+	JsonValue Navigation::getJwt()
 	{
 		return jwt;
 	}
@@ -107,9 +121,32 @@ namespace web
 		locationPathParts = std::move(pathParts);
 	}
 
-	void Navigation::navigateTo(std::string url)
+	void Navigation::navigateTo(std::string url, bool replace)
 	{
-		JSValue::global("window").set("location", url);
+		std::string pageOrigin = JSValue::global("window")["location"]["origin"].as<std::string>();
+		std::string urlOrigin;
+
+		JSValue parsedUrl = JSValue::global("URL").call<JSValue>("parse", url, JSValue::global("window")["location"]["href"]);
+		if (!parsedUrl.isNull())
+			urlOrigin = parsedUrl["origin"].as<std::string>();
+
+		if (urlOrigin != pageOrigin || !router) // Navigating to external page
+		{
+			if (!replace)
+				JSValue::global("window").set("location", url);
+			else
+				JSValue::global("window")["location"].call<void>("replace", url);
+		}
+		else
+		{
+			std::string title = JSValue::global("document")["title"].as<std::string>();
+			auto pathParts = pathPartsFromPathname(parsedUrl["pathname"].as<std::string>());
+			if (!replace)
+				pushState(title, pathParts);
+			else
+				replaceState(title, pathParts);
+			router->onNavigate();
+		}
 	}
 
 	std::string Navigation::pagePathToURI(const std::vector<std::string>& pathparts)
@@ -119,9 +156,19 @@ namespace web
 		{
 			if (!uri.empty() && uri.back() != '/')
 				uri.push_back('/');
-			uri += JSValue::global("encodeURIComponent")(pathparts[i]).as<std::string>();
+			uri += encodeURIComponent(pathparts[i]);
 		}
 		return uri;
+	}
+
+	std::string Navigation::encodeURIComponent(const std::string& component)
+	{
+		return JSValue::global("encodeURIComponent")(component).as<std::string>();
+	}
+
+	std::string Navigation::decodeURIComponent(const std::string& component)
+	{
+		return JSValue::global("decodeURIComponent")(component).as<std::string>();
 	}
 
 	bool Navigation::matchesPath(const std::vector<std::string>& parts)
@@ -161,6 +208,7 @@ namespace web
 	}
 }
 
+#if 0
 static struct JSCode { JSCode() { emscripten_run_script(R"jscode(
 
 	OAuth = function () {
@@ -230,3 +278,4 @@ static struct JSCode { JSCode() { emscripten_run_script(R"jscode(
 	}();
 
 )jscode"); } } initJSCode;
+#endif

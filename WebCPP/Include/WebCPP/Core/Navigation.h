@@ -4,7 +4,7 @@
 #include <vector>
 #include <map>
 #include <functional>
-#include "JSValue.h"
+#include "JsonValue.h"
 
 namespace web
 {
@@ -32,17 +32,23 @@ namespace web
 
 		static OAuthStatus getOAuthStatus();
 		static std::string getLoginError();
-		static JSValue getJwt();
+		static JsonValue getJwt();
 		static std::string getAccessToken();
+
 		static std::vector<std::string> getPathParts();
 		static bool matchesPath(const std::vector<std::string>& parts);
 
-		static void login(std::string oauthUrl);
-		static void navigateTo(std::string url);
+		static void navigateTo(std::string url, bool replace = false);
+
+		static void beginLogin(std::string loginUrl);
+		static void endLogin(OAuthStatus status, const std::string& accessToken = {}, const std::string& loginError = {});
 
 		static void pushState(std::string pageTitle, std::vector<std::string> pathParts);
 		static void replaceState(std::string pageTitle, std::vector<std::string> pathParts);
 
 		static std::string pagePathToURI(const std::vector<std::string>& pathparts);
+
+		static std::string encodeURIComponent(const std::string& component);
+		static std::string decodeURIComponent(const std::string& component);
 	};
 }
