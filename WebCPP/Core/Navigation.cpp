@@ -4,6 +4,8 @@
 #include "WebCPP/Core/JSCallback.h"
 #include "WebCPP/Core/Event.h"
 #include "WebCPP/Core/Storage.h"
+#include "WebCPP/Core/HtmlDocument.h"
+#include "WebCPP/Core/View.h"
 #include <regex>
 #include <emscripten/emscripten.h>
 
@@ -206,6 +208,74 @@ namespace web
 
 		return false;
 	}
+
+	////////////////////////////////////////////////////////////////////////////
+
+	void NavigationRouter::addRoute(const std::vector<std::string>& pathparts, std::function<std::shared_ptr<View>()> createPage, bool authRequired)
+	{
+		Route route;
+		route.pathparts = pathparts;
+		route.createPage = createPage;
+		route.authRequired = authRequired;
+		routes.push_back(std::move(route));
+	}
+
+	void NavigationRouter::setLoginUrl(const std::string& url)
+	{
+		loginUrl = url;
+	}
+
+	void NavigationRouter::setLoginErrorPage(std::function<std::shared_ptr<View>()> createPage)
+	{
+		createLoginErrorPage = std::move(createPage);
+	}
+
+	void NavigationRouter::setNotFoundPage(std::function<std::shared_ptr<View>()> createPage)
+	{
+		createNotFoundPage = std::move(createPage);
+	}
+
+	void NavigationRouter::onNavigate()
+	{
+		if (currentPage)
+		{
+			currentPage->detach();
+			currentPage.reset();
+		}
+
+		if (Navigation::getOAuthStatus() == OAuthStatus::loginError)
+		{
+			if (createLoginErrorPage)
+				currentPage = createLoginErrorPage();
+		}
+		else
+		{
+			for (const Route& route : routes)
+			{
+				if (Navigation::matchesPath(route.pathparts))
+				{
+					if (route.authRequired && Navigation::getOAuthStatus() == OAuthStatus::unauthenticated)
+					{
+						Navigation::beginLogin("/sign-in");
+						return;
+					}
+					else if (route.createPage)
+					{
+						currentPage = route.createPage();
+						if (currentPage)
+							break;
+					}
+				}
+			}
+		}
+
+		if (!currentPage && createNotFoundPage)
+			currentPage = createNotFoundPage();
+
+		if (currentPage)
+			HtmlDocument::body()->addView(currentPage);
+	}
+
 }
 
 #if 0

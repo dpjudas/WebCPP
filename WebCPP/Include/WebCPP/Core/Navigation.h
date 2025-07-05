@@ -9,6 +9,7 @@
 namespace web
 {
 	class JSCallback;
+	class View;
 
 	enum class OAuthStatus
 	{
@@ -21,7 +22,34 @@ namespace web
 	{
 	public:
 		virtual ~NavigationRouter() = default;
-		virtual void onNavigate() = 0;
+		virtual void onNavigate();
+
+		template<typename T>
+		void addRoute(const std::vector<std::string>& pathparts, bool authRequired = false) { addRoute(pathparts, []() { return std::make_shared<T>(); }, authRequired); }
+		void addRoute(const std::vector<std::string>& pathparts, std::function<std::shared_ptr<View>()> createPage, bool authRequired = false);
+
+		void setLoginUrl(const std::string& url);
+
+		template<typename T>
+		void setLoginErrorPage() { setLoginErrorPage([]() { return std::make_shared<T>(); }); }
+		void setLoginErrorPage(std::function<std::shared_ptr<View>()> createPage);
+
+		template<typename T>
+		void setNotFoundPage() { setNotFoundPage([]() { return std::make_shared<T>(); }); }
+		void setNotFoundPage(std::function<std::shared_ptr<View>()> createPage);
+
+	private:
+		struct Route
+		{
+			std::vector<std::string> pathparts;
+			std::function<std::shared_ptr<View>()> createPage;
+			bool authRequired = false;
+		};
+		std::vector<Route> routes;
+		std::string loginUrl;
+		std::function<std::shared_ptr<View>()> createLoginErrorPage;
+		std::function<std::shared_ptr<View>()> createNotFoundPage;
+		std::shared_ptr<View> currentPage;
 	};
 
 	class Navigation
