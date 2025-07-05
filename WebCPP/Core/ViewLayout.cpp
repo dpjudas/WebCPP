@@ -115,10 +115,13 @@ namespace web
 
 	void ViewLayout::attachView(std::shared_ptr<View> view)
 	{
+		view->detach();
+
 		items.push_back(std::make_unique<ViewLayoutItem>());
 		items.back()->it = --items.end();
 		items.back()->layout = this;
 		items.back()->view = std::move(view);
+		items.back()->view->layoutItem = items.back().get();
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
