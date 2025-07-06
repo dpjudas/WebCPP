@@ -14,10 +14,12 @@ namespace web
 	{
 	public:
 		virtual ~ViewLayoutItem() = default;
+		virtual std::string getStyles() = 0;
 
 		ViewLayout* layout = nullptr;
 		std::shared_ptr<View> view;
 		std::list<std::unique_ptr<ViewLayoutItem>>::iterator it;
+		int classNameIndex = -1;
 	};
 
 	class ViewLayout
@@ -32,8 +34,10 @@ namespace web
 		void addAbsoluteView(std::shared_ptr<View> view);
 		void addFixedView(std::shared_ptr<View> view);
 
+		virtual std::string getStyles() = 0;
+
 	protected:
-		void attachView(std::shared_ptr<View> view);
+		void attachView(std::shared_ptr<View> view, std::unique_ptr<ViewLayoutItem> item);
 		void appendChild(Element* element);
 		void insertBefore(Element* newElement, Element* insertPoint);
 		void removeChild(Element* element);
@@ -52,6 +56,23 @@ namespace web
 
 	//////////////////////////////////////////////////////////////////////////////
 
+	enum class FlowPosition
+	{
+		unspecified,
+		sticky,
+		absolute,
+		fixed
+	};
+
+	class FlowLayoutItem : public ViewLayoutItem
+	{
+	public:
+		FlowLayoutItem(FlowPosition position) : position(position) {}
+		std::string getStyles() override;
+
+		FlowPosition position = {};
+	};
+
 	class FlowLayout : public ViewLayout
 	{
 	public:
@@ -59,12 +80,15 @@ namespace web
 		~FlowLayout();
 
 		void addView(std::shared_ptr<View> view);
+
+		std::string getStyles() override;
 	};
 
 	//////////////////////////////////////////////////////////////////////////////
 
 	enum class FlexDirection
 	{
+		unspecified,
 		row,
 		rowReverse,
 		column,
@@ -73,6 +97,7 @@ namespace web
 
 	enum class FlexWrap
 	{
+		unspecified,
 		nowrap,
 		wrap,
 		wrapReverse
@@ -80,6 +105,7 @@ namespace web
 
 	enum class FlexJustifyContent
 	{
+		unspecified,
 		flexStart,
 		flexEnd,
 		center,
@@ -90,6 +116,7 @@ namespace web
 
 	enum class FlexAlignItems
 	{
+		unspecified,
 		flexStart,
 		flexEnd,
 		center,
@@ -110,6 +137,12 @@ namespace web
 	class FlexLayoutItem : public ViewLayoutItem
 	{
 	public:
+		FlexLayoutItem(bool grow, bool shrink, FlexAlignSelf alignSelf, int order) : grow(grow), shrink(shrink), alignSelf(alignSelf), order(order) {}
+		std::string getStyles() override;
+		bool grow = false;
+		bool shrink = false;
+		FlexAlignSelf alignSelf = {};
+		int order = 0;
 	};
 
 	class FlexLayout : public ViewLayout
@@ -129,8 +162,19 @@ namespace web
 		void addViewBefore(std::shared_ptr<View> view, std::shared_ptr<View> sibling, bool grow = false, bool shrink = false, FlexAlignSelf align = FlexAlignSelf::useAlignItems, int order = 0);
 		void addSpacer();
 
+		std::string getStyles() override;
+
 	private:
+		FlexDirection direction = {};
+		FlexWrap wrap = {};
+		FlexJustifyContent justifyContent = {};
+		FlexAlignItems alignItems = {};
 		std::vector<std::unique_ptr<Element>> spacers;
+		struct
+		{
+			double rowLength = 0.0;
+			double columnLength = 0.0;
+		} gap;
 	};
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -160,6 +204,7 @@ namespace web
 	class GridLayoutItem : public ViewLayoutItem
 	{
 	public:
+		std::string getStyles() override;
 	};
 
 	enum class GridJustifyItems
@@ -266,6 +311,8 @@ namespace web
 		// Note: column and row index from one, not zero. Zero means auto placement. Negative values starts from the end of the grid.
 		void addView(std::shared_ptr<View> view, int column = 0, int row = 0, int colspan = 1, int rowspan = 1, GridJustifySelf justify = GridJustifySelf::useJustifyItems, GridAlignSelf align = GridAlignSelf::useAlignItems) { addViewBefore(view, nullptr, column, row, colspan, rowspan, justify, align); }
 		void addViewBefore(std::shared_ptr<View> view, std::shared_ptr<View> sibling, int column = 0, int row = 0, int colspan = 1, int rowspan = 1, GridJustifySelf justify = GridJustifySelf::useJustifyItems, GridAlignSelf align = GridAlignSelf::useAlignItems);
+
+		std::string getStyles() override;
 
 	private:
 		static std::string toString(const std::vector<GridTrackSize>& sizes);

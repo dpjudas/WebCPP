@@ -3,9 +3,66 @@
 #include "WebCPP/Core/View.h"
 #include "WebCPP/Core/Element.h"
 #include "WebCPP/Core/ShadowRoot.h"
+#include "WebCPP/Core/StyleSheet.h"
+#include <unordered_map>
 
 namespace web
 {
+	class LayoutStyles
+	{
+	public:
+		static LayoutStyles* get()
+		{
+			static LayoutStyles styles;
+			return &styles;
+		}
+
+		void addStyles(ViewLayoutItem* item)
+		{
+			std::string styles;
+			if (auto layout = item->view->getLayout())
+				styles += layout->getStyles();
+			if (!styles.empty() && styles.back() != ' ')
+				styles.push_back(' ');
+			styles += item->getStyles();
+			if (!styles.empty() && styles.back() != ' ')
+				styles.push_back(' ');
+
+			if (styles.empty())
+				return;
+
+			auto it = stylesToNameIndex.find(styles);
+			if (it != stylesToNameIndex.end())
+			{
+				item->classNameIndex = it->second;
+			}
+			else
+			{
+				int index = (int)classNames.size();
+				std::string className = "layout-" + std::to_string(index);
+
+				StyleSheet::insertRule("." + className + "{ " + styles + " }");
+
+				classNames.push_back(className);
+				stylesToNameIndex.emplace(styles, index);
+
+				item->classNameIndex = index;
+			}
+
+			item->view->addClass(classNames[item->classNameIndex]);
+		}
+
+		void removeStyles(ViewLayoutItem* item)
+		{
+			if (item->classNameIndex != -1)
+				item->view->removeClass(classNames[item->classNameIndex]);
+			item->classNameIndex = -1;
+		}
+
+		std::unordered_map<std::string, int> stylesToNameIndex;
+		std::vector<std::string> classNames;
+	};
+
 	ViewLayout::ViewLayout(View* owner) : owner(owner)
 	{
 	}
@@ -25,6 +82,7 @@ namespace web
 	{
 		item->view->layoutItem = nullptr;
 		removeChild(item->view->element.get());
+		LayoutStyles::get()->removeStyles(item);
 		items.erase(item->it);
 	}
 
@@ -70,22 +128,19 @@ namespace web
 
 	void ViewLayout::addStickyView(std::shared_ptr<View> view)
 	{
-		attachView(view);
-		view->element->setStyle("position", "sticky");
+		attachView(view, std::make_unique<FlowLayoutItem>(FlowPosition::sticky));
 		appendChild(view->element.get());
 	}
 
 	void ViewLayout::addAbsoluteView(std::shared_ptr<View> view)
 	{
-		attachView(view);
-		view->element->setStyle("position", "absolute");
+		attachView(view, std::make_unique<FlowLayoutItem>(FlowPosition::absolute));
 		appendChild(view->element.get());
 	}
 
 	void ViewLayout::addFixedView(std::shared_ptr<View> view)
 	{
-		attachView(view);
-		view->element->setStyle("position", "fixed");
+		attachView(view, std::make_unique<FlowLayoutItem>(FlowPosition::fixed));
 		appendChild(view->element.get());
 	}
 
@@ -113,15 +168,35 @@ namespace web
 			owner->element->removeChild(element);
 	}
 
-	void ViewLayout::attachView(std::shared_ptr<View> view)
+	void ViewLayout::attachView(std::shared_ptr<View> view, std::unique_ptr<ViewLayoutItem> item)
 	{
 		view->detach();
 
-		items.push_back(std::make_unique<ViewLayoutItem>());
+		items.push_back(std::move(item));
 		items.back()->it = --items.end();
 		items.back()->layout = this;
 		items.back()->view = std::move(view);
 		items.back()->view->layoutItem = items.back().get();
+
+		LayoutStyles::get()->addStyles(items.back().get());
+	}
+
+	//////////////////////////////////////////////////////////////////////////////
+
+	std::string FlowLayoutItem::getStyles()
+	{
+		switch (position)
+		{
+		default:
+		case FlowPosition::unspecified:
+			return {};
+		case FlowPosition::sticky:
+			return "position: sticky;";
+		case FlowPosition::absolute:
+			return "position: absolute;";
+		case FlowPosition::fixed:
+			return "position: fixed;";
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -136,113 +211,39 @@ namespace web
 
 	void FlowLayout::addView(std::shared_ptr<View> view)
 	{
-		attachView(view);
+		attachView(view, std::make_unique<FlowLayoutItem>(FlowPosition::unspecified));
 		appendChild(view->element.get());
+	}
+
+	std::string FlowLayout::getStyles()
+	{
+		return {};
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
 
-	FlexLayout::FlexLayout(View* owner) : ViewLayout(owner)
+	std::string FlexLayoutItem::getStyles()
 	{
-		owner->element->setStyle("display", "flex");
-	}
-
-	FlexLayout::~FlexLayout()
-	{
-	}
-
-	void FlexLayout::setDirection(FlexDirection direction)
-	{
-		std::string value;
-		switch (direction)
-		{
-		case FlexDirection::row: value = "row"; break;
-		case FlexDirection::rowReverse: value = "rowReverse"; break;
-		case FlexDirection::column: value = "column"; break;
-		case FlexDirection::columnReverse: value = "columnReverse"; break;
-		}
-		owner->element->setStyle("flex-direction", value);
-	}
-
-	void FlexLayout::setWrap(FlexWrap wrap)
-	{
-		std::string value;
-		switch (wrap)
-		{
-		case FlexWrap::nowrap: value = "nowrap"; break;
-		case FlexWrap::wrap: value = "wrap"; break;
-		case FlexWrap::wrapReverse: value = "wrap-reverse"; break;
-		}
-		owner->element->setStyle("flex-wrap", value);
-	}
-
-	void FlexLayout::setJustifyContent(FlexJustifyContent justify)
-	{
-		std::string value;
-		switch (justify)
-		{
-		case FlexJustifyContent::flexStart: value = "flex-start"; break;
-		case FlexJustifyContent::flexEnd: value = "flex-end"; break;
-		case FlexJustifyContent::center: value = "center"; break;
-		case FlexJustifyContent::spaceBetween: value = "space-between"; break;
-		case FlexJustifyContent::spaceAround: value = "space-around"; break;
-		case FlexJustifyContent::spaceEvenly: value = "space-evenly"; break;
-		}
-		owner->element->setStyle("justify-content", value);
-	}
-
-	void FlexLayout::setAlignItems(FlexAlignItems align)
-	{
-		std::string value;
-		switch (align)
-		{
-		case FlexAlignItems::flexStart: value = "flex-start"; break;
-		case FlexAlignItems::flexEnd: value = "flex-end"; break;
-		case FlexAlignItems::center: value = "center"; break;
-		case FlexAlignItems::stretch: value = "stretch"; break;
-		case FlexAlignItems::baseline: value = "baseline"; break;
-		}
-		owner->element->setStyle("align-items", value);
-	}
-
-	void FlexLayout::setGap(double length)
-	{
-		owner->element->setStyle("gap", std::to_string(length) + "px");
-	}
-
-	void FlexLayout::setGap(double rowLength, double columnLength)
-	{
-		owner->element->setStyle("gap", std::to_string(rowLength) + " " + std::to_string(columnLength) + "px");
-	}
-
-	void FlexLayout::addViewBefore(std::shared_ptr<View> view, std::shared_ptr<View> sibling, bool grow, bool shrink, FlexAlignSelf align, int order)
-	{
-		if (sibling && sibling->parent() != owner)
-			sibling = nullptr;
-
+		std::string styles;
 		if (grow && shrink)
 		{
-			view->element->setStyle("flex", "1 1 auto");
-			view->element->setStyle("min-width", "0");
-			view->element->setStyle("min-height", "0");
+			styles += "flex: 1 1 auto; min-width: 0; min-height: 0;";
 		}
 		else if (grow)
 		{
-			view->element->setStyle("flex", "1 0 auto");
+			styles += "flex: 1 0 auto;";
 		}
 		else if (shrink)
 		{
-			view->element->setStyle("flex", "0 1 auto");
-			view->element->setStyle("min-width", "0");
-			view->element->setStyle("min-height", "0");
+			styles += "flex: 0 1 auto; min-width: 0; min-height: 0;";
 		}
 		else
 		{
-			view->element->setStyle("flex", "0 0 auto");
+			styles += "flex: 0 0 auto;";
 		}
 
 		std::string value;
-		switch (align)
+		switch (alignSelf)
 		{
 		case FlexAlignSelf::useAlignItems: /* value = "auto"; */ break;
 		case FlexAlignSelf::flexStart: value = "flex-start"; break;
@@ -252,14 +253,61 @@ namespace web
 		case FlexAlignSelf::baseline: value = "baseline"; break;
 		}
 		if (!value.empty())
-			view->element->setStyle("align-self", value);
+			styles += "align-self: " + value + ";";
 
 		if (order != 0)
-		{
-			view->element->setStyle("order", std::to_string(order));
-		}
+			styles += "order: " + std::to_string(order) + ";";
 
-		attachView(view);
+		return styles;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////
+
+	FlexLayout::FlexLayout(View* owner) : ViewLayout(owner)
+	{
+	}
+
+	FlexLayout::~FlexLayout()
+	{
+	}
+
+	void FlexLayout::setDirection(FlexDirection value)
+	{
+		direction = value;
+	}
+
+	void FlexLayout::setWrap(FlexWrap value)
+	{
+		wrap = value;
+	}
+
+	void FlexLayout::setJustifyContent(FlexJustifyContent value)
+	{
+		justifyContent = value;
+	}
+
+	void FlexLayout::setAlignItems(FlexAlignItems align)
+	{
+		alignItems = align;
+	}
+
+	void FlexLayout::setGap(double length)
+	{
+		setGap(length, length);
+	}
+
+	void FlexLayout::setGap(double rowLength, double columnLength)
+	{
+		gap.rowLength = rowLength;
+		gap.columnLength = columnLength;
+	}
+
+	void FlexLayout::addViewBefore(std::shared_ptr<View> view, std::shared_ptr<View> sibling, bool grow, bool shrink, FlexAlignSelf align, int order)
+	{
+		if (sibling && sibling->parent() != owner)
+			sibling = nullptr;
+
+		attachView(view, std::make_unique<FlexLayoutItem>(grow, shrink, align, order));
 
 		if (!sibling)
 			appendChild(view->element.get());
@@ -273,6 +321,78 @@ namespace web
 		element->setStyle("flex", "1 1 0");
 		appendChild(element.get());
 		spacers.push_back(std::move(element));
+	}
+
+	std::string FlexLayout::getStyles()
+	{
+		std::string styles = "display: flex;";
+
+		std::string value;
+		switch (direction)
+		{
+		case FlexDirection::unspecified: break;
+		case FlexDirection::row: value = "row"; break;
+		case FlexDirection::rowReverse: value = "rowReverse"; break;
+		case FlexDirection::column: value = "column"; break;
+		case FlexDirection::columnReverse: value = "columnReverse"; break;
+		}
+		if (!value.empty())
+			styles += "flex-direction: " + value + ";";
+
+		value.clear();
+		switch (wrap)
+		{
+		case FlexWrap::unspecified: break;
+		case FlexWrap::nowrap: value = "nowrap"; break;
+		case FlexWrap::wrap: value = "wrap"; break;
+		case FlexWrap::wrapReverse: value = "wrap-reverse"; break;
+		}
+		if (!value.empty())
+			styles += "flex-wrap: " + value + ";";
+
+		value.clear();
+		switch (justifyContent)
+		{
+		case FlexJustifyContent::unspecified: break;
+		case FlexJustifyContent::flexStart: value = "flex-start"; break;
+		case FlexJustifyContent::flexEnd: value = "flex-end"; break;
+		case FlexJustifyContent::center: value = "center"; break;
+		case FlexJustifyContent::spaceBetween: value = "space-between"; break;
+		case FlexJustifyContent::spaceAround: value = "space-around"; break;
+		case FlexJustifyContent::spaceEvenly: value = "space-evenly"; break;
+		}
+		if (!value.empty())
+			styles += "justify-content: " + value + ";";
+
+		value.clear();
+		switch (alignItems)
+		{
+		case FlexAlignItems::unspecified: break;
+		case FlexAlignItems::flexStart: value = "flex-start"; break;
+		case FlexAlignItems::flexEnd: value = "flex-end"; break;
+		case FlexAlignItems::center: value = "center"; break;
+		case FlexAlignItems::stretch: value = "stretch"; break;
+		case FlexAlignItems::baseline: value = "baseline"; break;
+		}
+		if (!value.empty())
+			styles += "align-items: " + value + ";";
+
+		if (gap.columnLength != 0.0 || gap.rowLength != 0.0)
+		{
+			if (gap.columnLength == gap.rowLength)
+				styles += "gap: " + std::to_string(gap.columnLength) + "px;";
+			else
+				styles += "gap: " + std::to_string(gap.rowLength) + " " + std::to_string(gap.columnLength) + "px;";
+		}
+
+		return styles;
+	}
+
+	//////////////////////////////////////////////////////////////////////////////
+
+	std::string GridLayoutItem::getStyles()
+	{
+		return {};
 	}
 
 	//////////////////////////////////////////////////////////////////////////////
@@ -292,7 +412,6 @@ namespace web
 
 	GridLayout::GridLayout(View* owner) : ViewLayout(owner)
 	{
-		owner->element->setStyle("display", "grid");
 	}
 
 	std::string GridLayout::toString(const std::vector<GridTrackSize>& sizes)
@@ -474,11 +593,16 @@ namespace web
 			view->element->setStyle("align-self", value);
 		}
 
-		attachView(view);
+		attachView(view, std::make_unique<GridLayoutItem>());
 
 		if (!sibling)
 			appendChild(view->element.get());
 		else
 			insertBefore(view->element.get(), sibling->element.get());
+	}
+
+	std::string GridLayout::getStyles()
+	{
+		return "display: grid;";
 	}
 }
