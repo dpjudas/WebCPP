@@ -44,7 +44,7 @@ comboboxpopupitem-view {
     .comboboxpopup-itemselected {
     }
 
-    .comboboxpopupitem-icon.imagebox {
+    imagebox-view.comboboxpopupitem-icon {
     }
 
     textlabel-view.comboboxpopupitem-text {

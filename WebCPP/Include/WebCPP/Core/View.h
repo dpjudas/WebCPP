@@ -51,9 +51,11 @@ namespace web
 
 		void attachShadow(const std::string& mode = "open");
 
-		virtual void setDefaultFocus();
+		virtual void setDefaultFocused();
 		virtual bool setFocus();
 		virtual void onModalAttach() {}
+
+		bool applyDefaultFocus();
 
 		std::unique_ptr<Element> element;
 		std::unique_ptr<ShadowRoot> shadowRoot;
@@ -64,9 +66,8 @@ namespace web
 		void setPointerEvents(const std::string& value) { element->setAttribute("pointer-events", value); }
 
 	private:
-		bool forceFocus();
-		bool focusFirstChild();
 		void updateClassAttribute();
+		bool focusFirstChild();
 
 		std::unique_ptr<ViewLayout> layout;
 		ViewLayoutItem* layoutItem = nullptr;

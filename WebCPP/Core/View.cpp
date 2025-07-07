@@ -72,9 +72,9 @@ namespace web
 		return hasClass("hidden");
 	}
 
-	bool View::forceFocus()
+	bool View::applyDefaultFocus()
 	{
-		return layout ? layout->forceFocus() : false;
+		return layout ? layout->applyDefaultFocus() : false;
 	}
 
 	bool View::focusFirstChild()
@@ -87,7 +87,7 @@ namespace web
 		auto layer = HtmlDocument::body()->beginDialogModal();
 		layer->addView(shared_from_this());
 		onModalAttach();
-		if (!forceFocus() && !focusFirstChild())
+		if (!applyDefaultFocus() && !focusFirstChild())
 		{
 			element->setTabIndex(0);
 			element->focus();
@@ -100,7 +100,7 @@ namespace web
 		auto layer = HtmlDocument::body()->beginPopupModal();
 		layer->addView(shared_from_this());
 		onModalAttach();
-		if (setFocus && !forceFocus() && !focusFirstChild())
+		if (setFocus && !applyDefaultFocus() && !focusFirstChild())
 		{
 			element->setTabIndex(0);
 			element->focus();
@@ -115,7 +115,7 @@ namespace web
 		delete this;
 	}
 
-	void View::setDefaultFocus()
+	void View::setDefaultFocused()
 	{
 		defaultFocused = true;
 	}

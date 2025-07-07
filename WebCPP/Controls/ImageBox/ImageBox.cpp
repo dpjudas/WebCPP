@@ -3,10 +3,14 @@
 
 namespace web
 {
-	ImageBox::ImageBox() : View("img")
+	ImageBox::ImageBox() : View("imagebox-view")
 	{
-		addClass("imagebox");
-		element->setStyle("visibility", "hidden");
+		img = std::make_shared<View>("img");
+		img->element->setStyle("visibility", "hidden");
+
+		auto layout = createHBoxLayout();
+		layout->addView(img);
+
 		element->addEventListener("click", [=](Event* e) { if (getEnabled() == true) onClicked(e); });
 	}
 
@@ -29,25 +33,25 @@ namespace web
 				src = resourceUrlBase + src.substr(2);
 			}
 
-			element->setAttribute("src", src);
-			element->setStyle("visibility", "inherit");
+			img->element->setAttribute("src", src);
+			img->element->setStyle("visibility", "inherit");
 		}
 		else
 		{
-			element->removeAttribute("src");
-			element->setStyle("visibility", "hidden");
+			img->element->removeAttribute("src");
+			img->element->setStyle("visibility", "hidden");
 		}
 	}
 
 	void ImageBox::setSize(const int width, const int height)
 	{
-		element->setStyle("width", std::to_string(width) + "px");
-		element->setStyle("height", std::to_string(height) + "px");
+		img->element->setStyle("width", std::to_string(width) + "px");
+		img->element->setStyle("height", std::to_string(height) + "px");
 	}
 
 	void ImageBox::setAlt(const std::string& alternateText)
 	{
-		element->setAttribute("alt", alternateText);
+		img->element->setAttribute("alt", alternateText);
 	}
 
 	void ImageBox::onClicked(Event* event)

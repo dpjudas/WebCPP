@@ -23,6 +23,8 @@ namespace web
 	private:
 		void onClicked(Event* event);
 
+		std::shared_ptr<View> img;
+
 		bool enabled = true;
 		static std::string resourceUrlBase;
 	};

@@ -123,7 +123,7 @@ namespace web
 		element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
 		element->setTabIndex(0);
 
-		setDefaultFocus();
+		setDefaultFocused();
 
 		// initial size and position
 		const Rect& rect = combo->element->getBoundingClientRect();

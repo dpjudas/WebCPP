@@ -86,7 +86,7 @@ namespace web
 		items.erase(item->it);
 	}
 
-	bool ViewLayout::forceFocus()
+	bool ViewLayout::applyDefaultFocus()
 	{
 		for (auto& item : items)
 		{
@@ -97,7 +97,7 @@ namespace web
 					item->view->setFocus();
 					return true;
 				}
-				else if (item->view->forceFocus())
+				else if (item->view->applyDefaultFocus())
 				{
 					return true;
 				}

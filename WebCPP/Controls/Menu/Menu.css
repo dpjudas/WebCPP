@@ -8,12 +8,12 @@ menu-view {
 
 menuitem-view {
 
-    .menuitem-icon.imagebox {
+    .menuitem-icon {
         width: 16px;
         height: 16px;
     }
 
-    textlabel-view.menuitem-text {
+    .menuitem-text {
         white-space: pre;
     }
 

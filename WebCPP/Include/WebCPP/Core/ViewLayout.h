@@ -46,7 +46,7 @@ namespace web
 
 	private:
 		void detachItem(ViewLayoutItem* item);
-		bool forceFocus();
+		bool applyDefaultFocus();
 		bool focusFirstItem();
 
 		std::list<std::unique_ptr<ViewLayoutItem>> items;

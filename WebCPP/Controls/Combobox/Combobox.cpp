@@ -237,7 +237,7 @@ namespace web
 	{
 		createVBoxLayout();
 		element->setTabIndex(0);
-		setDefaultFocus();
+		setDefaultFocused();
 
 		element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
 

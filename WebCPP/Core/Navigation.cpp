@@ -273,9 +273,11 @@ namespace web
 			currentPage = createNotFoundPage();
 
 		if (currentPage)
+		{
 			HtmlDocument::body()->addView(currentPage);
+			currentPage->applyDefaultFocus();
+		}
 	}
-
 }
 
 #if 0
