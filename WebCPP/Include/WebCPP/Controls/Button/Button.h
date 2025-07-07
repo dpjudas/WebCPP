@@ -30,6 +30,7 @@ namespace web
 		void onClicked(Event* event);
 		void onKeyDown(Event* event);
 
+		std::shared_ptr<View> button;
 		std::shared_ptr<ImageBox> image;
 		std::shared_ptr<TextLabel> label;
 	};

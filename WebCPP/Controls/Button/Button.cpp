@@ -5,16 +5,19 @@
 
 namespace web
 {
-	Button::Button() : View("button")
+	Button::Button() : View("button-view")
 	{
-		addClass("button");
+		button = std::make_shared<View>("button");
 		label = std::make_shared<TextLabel>();
 
-		auto layout = createHBoxLayout();
-		layout->addView(label, true, false);
+		auto buttonLayout = button->createHBoxLayout();
+		buttonLayout->addView(label, true, false);
 
-		element->addEventListener("click", [=](Event* e) { onClicked(e); });
-		element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
+		button->element->addEventListener("click", [=](Event* e) { onClicked(e); });
+		button->element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
+
+		auto layout = createHBoxLayout();
+		layout->addView(button, true, false);
 	}
 
 	void Button::setIcon(std::string src)
@@ -22,7 +25,7 @@ namespace web
 		if (!image)
 		{
 			image = std::make_shared<ImageBox>();
-			getLayout<HBoxLayout>()->addViewBefore(image, label);
+			button->getLayout<HBoxLayout>()->addViewBefore(image, label);
 		}
 		image->setSrc(src);
 	}
@@ -42,9 +45,9 @@ namespace web
 		if (enabled != value)
 		{
 			if (value)
-				element->removeAttribute("disabled");
+				button->element->removeAttribute("disabled");
 			else
-				element->setAttribute("disabled", "");
+				button->element->setAttribute("disabled", "");
 			enabled = value;
 		}
 	}
@@ -56,7 +59,7 @@ namespace web
 
 	bool Button::setFocus()
 	{
-		element->focus();
+		button->element->focus();
 		return true;
 	}
 
