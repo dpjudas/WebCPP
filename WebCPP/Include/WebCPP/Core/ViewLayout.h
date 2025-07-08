@@ -169,7 +169,6 @@ namespace web
 		FlexWrap wrap = {};
 		FlexJustifyContent justifyContent = {};
 		FlexAlignItems alignItems = {};
-		std::vector<std::unique_ptr<Element>> spacers;
 		struct
 		{
 			double rowLength = 0.0;

@@ -317,10 +317,7 @@ namespace web
 
 	void FlexLayout::addSpacer()
 	{
-		auto element = std::make_unique<Element>("spacer-view");
-		element->setStyle("flex", "1 1 0");
-		appendChild(element.get());
-		spacers.push_back(std::move(element));
+		addView(std::make_shared<web::View>("spacer-view"), true, true);
 	}
 
 	std::string FlexLayout::getStyles()
