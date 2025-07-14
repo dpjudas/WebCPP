@@ -28,7 +28,7 @@ namespace web
 		size_t pos = 1;
 		while (pos < pathname.size())
 		{
-			size_t nextpos = pathname.find(pos, '/');
+			size_t nextpos = pathname.find('/', pos);
 			if (nextpos == std::string::npos)
 				nextpos = pathname.size();
 			parts.push_back(Navigation::decodeURIComponent(pathname.substr(pos, nextpos - pos)));
