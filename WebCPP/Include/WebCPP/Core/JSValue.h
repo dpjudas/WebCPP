@@ -21,7 +21,7 @@ namespace web
 		template<typename T> static JSValue array(const std::vector<T>& items);
 		template<typename... Args> JSValue new_(Args... args) const;
 		JSValue operator[](const std::string& name) const;
-		JSValue operator()(const std::string& name) const;
+		template<typename... Args>JSValue operator()(Args... args) const;
 		template<typename T> void set(const std::string& name, T value);
 		template<typename RetVal, typename... Args> RetVal call(const std::string& name, Args... args) const;
 		template<typename RetVal> RetVal as() const;

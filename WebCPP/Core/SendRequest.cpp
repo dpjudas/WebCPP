@@ -11,6 +11,21 @@ namespace web
 		std::function<void(int statusCode, std::string contentType, std::string body)> defaultErrorHandler;
 	}
 
+	task<JsonValue> sendRequest(std::string url, const JsonValue& jsonRequest)
+	{
+		auto requestHeaders = JSValue::object();
+		requestHeaders.set("Content-Type", std::string("application/json"));
+
+		auto request = JSValue::object();
+		request.set("method", std::string("POST"));
+		request.set("body", jsonRequest.to_json());
+		request.set("headers", requestHeaders);
+
+		auto response = co_await JSValue::global("fetch")(url, request);
+		auto responseText = co_await response.call<JSValue>("text");
+		co_return JsonValue::parse(responseText.as<std::string>());
+	}
+
 	void sendRequest(std::string url, const JsonValue& request, std::function<void(JsonValue response)> responseHandler, std::function<void(int statusCode, std::string contentType, std::string body)> errorHandler)
 	{
 		JSValue httpRequest = JSValue::global("XMLHttpRequest").new_();

@@ -26,6 +26,7 @@ var files = [
 	"Include/WebCPP/Core/UTF8Reader.h",
 	"Include/WebCPP/Core/View.h",
 	"Include/WebCPP/Core/ViewLayout.h",
+	"Include/WebCPP/Core/Task.h",
 	"Include/WebCPP/Controls/Button/Button.h",
 	"Include/WebCPP/Controls/Checkbox/Checkbox.h",
 	"Include/WebCPP/Controls/CheckboxLabel/CheckboxLabel.h",
