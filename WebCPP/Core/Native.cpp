@@ -4,10 +4,14 @@
 
 namespace web
 {
-	Native* Native::get()
+	namespace
 	{
-		static Native native;
-		return &native;
+		std::vector<std::unique_ptr<JSCallback>> pendingRequests;
+	}
+
+	bool Native::isApp()
+	{
+		return !JSValue::global("window")["cefQuery"].isUndefined();
 	}
 
 	void Native::query(JSValue request, std::function<void(JSValue response)> onSuccess, std::function<void(int code, JSValue message)> onFailure)
