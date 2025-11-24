@@ -1,7 +1,7 @@
 import { Targets } from "cppbuild";
 
 var files = [
-	"Configure.js",
+	"WebCPP.js",
 	"Reset.css",
 	"WebCPP.css",
 	"Include/WebCPP/Core/Clipboard.h",

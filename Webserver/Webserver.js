@@ -1,7 +1,7 @@
 import { Targets } from "cppbuild";
 
 var files = [
-	"Configure.js",
+	"Webserver.js",
 	"Include/Webserver/ActionModule.h",
 	"Include/Webserver/FileModule.h",
 	"Include/Webserver/WebContext.h",
