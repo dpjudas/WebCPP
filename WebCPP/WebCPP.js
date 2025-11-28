@@ -56,6 +56,7 @@ var files = [
 	"Include/WebCPP/Controls/TextLabel/TextLabel.h",
 	"Include/WebCPP/Controls/Toolbar/Toolbar.h",
 	"Include/WebCPP/Controls/Toolbar/VToolbar.h",
+	"Include/WebCPP/Controls/ImageCanvas/ImageCanvas.h",
 	"Core/Clipboard.cpp",
 	"Core/DateTime.cpp",
 	"Core/Element.cpp",
@@ -123,7 +124,9 @@ var files = [
 	"Controls/Toolbar/Toolbar.cpp",
 	"Controls/Toolbar/Toolbar.css",
 	"Controls/Toolbar/VToolbar.cpp",
-	"Controls/Toolbar/VToolbar.css"
+	"Controls/Toolbar/VToolbar.css",
+	"Controls/ImageCanvas/ImageCanvas.cpp",
+	"Controls/ImageCanvas/ImageCanvas.css",
 ];
 
 var website = Targets.addWebLibrary("WebCPP");
