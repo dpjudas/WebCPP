@@ -1,0 +1,45 @@
+
+@import "Fonts.css";
+
+body {
+    background: white;
+    color: black;
+    font: 14px/20px 'Nunito Sans';
+}
+
+.fullscreenpage {
+    box-sizing: border-box;
+    padding: 30px;
+    width: 100vw;
+    height: 100vh;
+}
+
+notfound-view {
+    background: lightyellow;
+}
+
+homepage-view {
+    background: lightgreen;
+}
+
+aboutpage-view {
+    background: lightblue;
+}
+
+/* Styling for web::TextLabel */
+textlabel-view {
+    &.headline {
+        font: bold 26px/40px 'Nunito Sans';
+    }
+}
+
+/* Styling for web::Button */
+button-view {
+    & button {
+        background: rgb(240,240,240);
+        border: 1px solid black;
+        border-radius: 3px;
+        margin: 0;
+        padding: 5px 20px;
+    }
+}

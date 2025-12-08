@@ -1,0 +1,16 @@
+
+@font-face {
+	font-family: 'Nunito Sans';
+	font-style: normal;
+	font-stretch: 100%;
+	font-display: swap;
+	src: url('/assets/fonts/Nunito_Sans/NunitoSans-VariableFont.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Nunito Sans';
+	font-style: italic;
+	font-stretch: 100%;
+	font-display: swap;
+	src: url('/assets/fonts/Nunito_Sans/NunitoSans-Italic-VariableFont.woff2') format('woff2');
+}
