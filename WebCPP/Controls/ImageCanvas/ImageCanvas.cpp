@@ -1,5 +1,6 @@
 
 #include "WebCPP/Controls/ImageCanvas/ImageCanvas.h"
+#include <cmath>
 
 namespace web
 {

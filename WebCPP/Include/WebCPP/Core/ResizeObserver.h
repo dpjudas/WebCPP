@@ -42,7 +42,7 @@ namespace web
 		ResizeObserver(const ResizeObserver&) = delete;
 		ResizeObserver& operator=(const ResizeObserver&) = delete;
 
-		JSValue handle;
+		JSValue handle = JSValue::undefined();
 		std::unique_ptr<JSCallback> callback;
 		std::vector<Element*> observers;
 	};

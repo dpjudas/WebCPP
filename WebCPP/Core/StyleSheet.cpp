@@ -35,7 +35,7 @@ namespace web
 		}
 
 	private:
-		JSValue stylesheet;
+		JSValue stylesheet = JSValue::undefined();
 	};
 
 	int StyleSheet::insertRule(const std::string& rule)
