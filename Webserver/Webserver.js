@@ -74,6 +74,7 @@ var win32Files = [
 var webserver = Targets.addStaticLibrary("Webserver");
 webserver.addFiles(files);
 webserver.addIncludePaths([".", "..", "Include"]);
+webserver.addDefines(["MINIZ_NO_STDIO"]);
 
 if (Environment.isWindows()) {
 	webserver.addDefines(["WIN32", "_WIN32", "UNICODE", "_UNICODE"]);
