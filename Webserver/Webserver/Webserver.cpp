@@ -3,10 +3,13 @@
 #include "Webserver/Webserver.h"
 #include "Webserver/WebContext.h"
 #include "Webserver/WebModule.h"
+#ifdef WIN32
 #include "HttpSys/HttpSysWebserver.h"
+#endif
 #include "Socket/SocketWebserver.h"
 #include <iostream>
 #include <mutex>
+#include <stdexcept>
 
 namespace web
 {
@@ -16,7 +19,12 @@ namespace web
 		{
 		default:
 		case WebserverType::tcpSocket: return std::make_unique<SocketWebserver>();
-		case WebserverType::httpSys: return std::make_unique<HttpSysWebserver>();
+		case WebserverType::httpSys:
+#ifdef WIN32
+			return std::make_unique<HttpSysWebserver>();
+#else
+			throw std::runtime_error("http.sys not available on this platform");
+#endif
 		}
 	}
 

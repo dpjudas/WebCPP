@@ -1,6 +1,7 @@
 
 #include "Precomp.h"
 #include "Webserver/DataBuffer.h"
+#include <cstring>
 
 namespace web
 {

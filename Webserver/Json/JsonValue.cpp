@@ -2,6 +2,7 @@
 #include "Precomp.h"
 #include "Webserver/JsonValue.h"
 #include "Text/UTF8Reader.h"
+#include <cstring>
 
 namespace web
 {
@@ -495,7 +496,11 @@ namespace web
 			throw std::runtime_error("Unexpected character in JSON data");
 
 		double result = 0.0;
+#ifdef WIN32
 		sscanf_s(number_string.c_str(), "%lf", &result);
+#else
+		sscanf(number_string.c_str(), "%lf", &result);
+#endif
 		return JsonValue::number(result);
 	}
 

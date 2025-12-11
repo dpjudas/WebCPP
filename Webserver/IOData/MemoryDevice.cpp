@@ -4,6 +4,7 @@
 #include "Webserver/DataBuffer.h"
 #include <stdexcept>
 #include <algorithm>
+#include <cstring>
 
 namespace web
 {
@@ -16,11 +17,11 @@ namespace web
 		const std::shared_ptr<DataBuffer>& buffer() const override { return _buffer; }
 		void setBuffer(const std::shared_ptr<DataBuffer>& buffer) override { _buffer = buffer; _pos = 0; }
 
-		long long size() const override { return _buffer->size(); }
+		int64_t size() const override { return _buffer->size(); }
 
-		long long seek(long long pos) override { if (pos >= 0 && pos < size()) _pos = pos; return _pos; }
-		long long seek_from_current(long long offset) override { return seek(_pos + offset); }
-		long long seek_from_end(long long offset) override { return seek(size() + offset); }
+		int64_t seek(int64_t pos) override { if (pos >= 0 && pos < size()) _pos = pos; return _pos; }
+		int64_t seek_from_current(int64_t offset) override { return seek(_pos + offset); }
+		int64_t seek_from_end(int64_t offset) override { return seek(size() + offset); }
 
 		size_t try_read(void* data, size_t size) override
 		{

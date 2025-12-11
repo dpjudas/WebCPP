@@ -20,6 +20,7 @@ var linkLibraries = [
 
 var exampleWebsite = Targets.addWebsite("ExampleWebsite");
 exampleWebsite.setCSSRootFile("Main.css");
+exampleWebsite.setHtmlShellFile("Shell.html");
 exampleWebsite.addFiles(files);
 exampleWebsite.addIncludePaths(includePaths);
 exampleWebsite.addLinkLibraries(linkLibraries);

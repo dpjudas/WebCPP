@@ -220,7 +220,7 @@ namespace web
 			return seek(offset, SeekPoint::end);
 		}
 
-		void seek(int64_t offset, SeekPoint origin) override
+		int64_t seek(int64_t offset, SeekPoint origin)
 		{
 			if (origin == SeekPoint::current)
 			{
@@ -297,51 +297,29 @@ namespace web
 
 	std::string File::readAllText(const std::string& filename)
 	{
-		FILE* f = nullptr;
-		errno_t result = fopen_s(&f, filename.c_str(), "rb");
-		if (!f)
-			throw std::runtime_error("Could not open file: " + filename);
-
-		fseek(f, 0, SEEK_END);
-		std::string buffer(ftell(f), ' ');
-		fseek(f, 0, SEEK_SET);
-		fread(buffer.data(), buffer.size(), 1, f);
-		fclose(f);
+		auto file = openExisting(filename);
+		std::string buffer(file->size(), ' ');
+		file->read(buffer.data(), buffer.size());
 		return buffer;
 	}
 
 	void File::writeAllText(const std::string& filename, const std::string& text)
 	{
-		FILE* f = nullptr;
-		errno_t result = fopen_s(&f, filename.c_str(), "wb");
-		if (!f)
-			throw std::runtime_error("Could not create file: " + filename);
-		fwrite(text.data(), text.size(), 1, f);
-		fclose(f);
+		auto file = createAlways(filename);
+		file->write(text.data(), text.size());
 	}
 
 	std::shared_ptr<DataBuffer> File::readAllBytes(const std::string& filename)
 	{
-		FILE* f = nullptr;
-		errno_t result = fopen_s(&f, filename.c_str(), "rb");
-		if (!f)
-			throw std::runtime_error("Could not open file: " + filename);
-
-		fseek(f, 0, SEEK_END);
-		auto buffer = DataBuffer::create(ftell(f));
-		fseek(f, 0, SEEK_SET);
-		fread(buffer->data(), buffer->size(), 1, f);
-		fclose(f);
+		auto file = openExisting(filename);
+		auto buffer = DataBuffer::create(file->size());
+		file->read(buffer->data(), buffer->size());
 		return buffer;
 	}
 
 	void File::writeAllBytes(const std::string& filename, const void* data, const uint64_t size)
 	{
-		FILE* f = nullptr;
-		errno_t result = fopen_s(&f, filename.c_str(), "wb");
-		if (!f)
-			throw std::runtime_error("Could not create file: " + filename);
-		fwrite(data, size, 1, f);
-		fclose(f);
+		auto file = createAlways(filename);
+		file->write(data, size);
 	}
 }

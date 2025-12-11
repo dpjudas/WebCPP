@@ -1,6 +1,7 @@
 
 #include "Precomp.h"
 #include "BufferedSocket.h"
+#include <cstring>
 
 namespace web
 {

@@ -1,4 +1,4 @@
-import { Targets } from "cppbuild";
+import { Targets, Environment } from "cppbuild";
 
 var files = [
 	"Webserver.js",
@@ -21,8 +21,6 @@ var files = [
 	"Text/StringFormat.h",
 	"Text/Text.cpp",
 	"Text/Text.h",
-	"Text/UTF16.cpp",
-	"Text/UTF16.h",
 	"Text/UTF8Reader.cpp",
 	"Text/UTF8Reader.h",
 	"Json/JsonValue.cpp",
@@ -59,6 +57,11 @@ var files = [
 	"Webserver/Socket/SocketHandle.h",
 	"Webserver/Socket/SocketWebserver.cpp",
 	"Webserver/Socket/SocketWebserver.h",
+];
+
+var win32Files = [
+	"Text/UTF16.cpp",
+	"Text/UTF16.h",
 	"Webserver/HttpSys/HttpSysIoContext.h",
 	"Webserver/HttpSys/HttpSysReceiveRequest.cpp",
 	"Webserver/HttpSys/HttpSysReceiveRequest.h",
@@ -71,4 +74,8 @@ var files = [
 var webserver = Targets.addStaticLibrary("Webserver");
 webserver.addFiles(files);
 webserver.addIncludePaths([".", "..", "Include"]);
-webserver.addDefines(["WIN32", "_WIN32", "UNICODE", "_UNICODE"]);
+
+if (Environment.isWindows()) {
+	webserver.addDefines(["WIN32", "_WIN32", "UNICODE", "_UNICODE"]);
+	webserver.addFiles(win32Files);
+}
