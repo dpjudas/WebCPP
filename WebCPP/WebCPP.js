@@ -1,4 +1,4 @@
-import { Targets } from "cppbuild";
+import { Targets, Installers } from "cppbuild";
 
 var files = [
 	"WebCPP.js",
@@ -129,7 +129,13 @@ var files = [
 	"Controls/ImageCanvas/ImageCanvas.css",
 ];
 
-var website = Targets.addWebLibrary("WebCPP");
-website.setCSSRootFile("WebCPP.css");
-website.addIncludePaths([".", "..", "Include"]);
-website.addFiles(files);
+var webcpp = Targets.addWebLibrary("WebCPP");
+webcpp.setCSSRootFile("WebCPP.css");
+webcpp.addIncludePaths([".", "..", "Include"]);
+webcpp.addFiles(files);
+
+var pkg = Installers.addPackage("WebCPP");
+pkg.addIncludePaths(["Include"]);
+pkg.addLinkLibraries(["WebCPP"]);
+pkg.addLibraryPaths(["Debug"], { configuration: "Debug" });
+pkg.addLibraryPaths(["Release"], { configuration: "Release" });

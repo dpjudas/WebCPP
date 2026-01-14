@@ -1,4 +1,4 @@
-import { Targets, Environment } from "cppbuild";
+import { Targets, Environment, Installers } from "cppbuild";
 
 var files = [
 	"Webserver.js",
@@ -80,3 +80,9 @@ if (Environment.isWindows()) {
 	webserver.addDefines(["WIN32", "_WIN32", "UNICODE", "_UNICODE"]);
 	webserver.addFiles(win32Files);
 }
+
+var pkg = Installers.addPackage("Webserver");
+pkg.addIncludePaths(["Include"]);
+pkg.addLinkLibraries(["Webserver"]);
+pkg.addLibraryPaths(["Debug"], { configuration: "Debug" });
+pkg.addLibraryPaths(["Release"], { configuration: "Release" });
