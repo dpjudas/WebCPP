@@ -1,9 +1,6 @@
-import { Targets, Installers } from "cppbuild";
+import { Targets, Installers, Directory } from "cppbuild";
 
-var files = [
-	"WebCPP.js",
-	"Reset.css",
-	"WebCPP.css",
+var includeFiles = [
 	"Include/WebCPP/Core/Clipboard.h",
 	"Include/WebCPP/Core/DateTime.h",
 	"Include/WebCPP/Core/Element.h",
@@ -57,6 +54,12 @@ var files = [
 	"Include/WebCPP/Controls/Toolbar/Toolbar.h",
 	"Include/WebCPP/Controls/Toolbar/VToolbar.h",
 	"Include/WebCPP/Controls/ImageCanvas/ImageCanvas.h",
+];
+
+var files = [
+	"WebCPP.js",
+	"Reset.css",
+	"WebCPP.css",
 	"Core/Clipboard.cpp",
 	"Core/DateTime.cpp",
 	"Core/Element.cpp",
@@ -133,9 +136,20 @@ var webcpp = Targets.addWebLibrary("WebCPP");
 webcpp.setCSSRootFile("WebCPP.css");
 webcpp.addIncludePaths([".", "..", "Include"]);
 webcpp.addFiles(files);
+webcpp.addFiles(includeFiles);
+webcpp.addCompileOptions(["-Wno-deprecated-this-capture"]);
+
+var artifacts = [
+	{ src: Directory.buildPath("Release/bin/libWebCPP.a"), dest: "Release/libWebCPP.a" },
+	{ src: Directory.buildPath("Release/bin/libWebCPP.css"), dest: "Release/libWebCPP.css" },
+	{ src: Directory.buildPath("Debug/bin/libWebCPP.a"), dest: "Debug/libWebCPP.a" },
+	{ src: Directory.buildPath("Debug/bin/libWebCPP.css"), dest: "Debug/libWebCPP.css" },
+];
 
 var pkg = Installers.addPackage("WebCPP");
 pkg.addIncludePaths(["Include"]);
 pkg.addLinkLibraries(["WebCPP"]);
 pkg.addLibraryPaths(["Debug"], { configuration: "Debug" });
 pkg.addLibraryPaths(["Release"], { configuration: "Release" });
+pkg.addFiles(artifacts);
+pkg.addFiles(includeFiles);

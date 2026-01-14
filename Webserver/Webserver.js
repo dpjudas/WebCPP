@@ -1,7 +1,6 @@
-import { Targets, Environment, Installers } from "cppbuild";
+import { Targets, Environment, Installers, Directory } from "cppbuild";
 
-var files = [
-	"Webserver.js",
+var includeFiles = [
 	"Include/Webserver/ActionModule.h",
 	"Include/Webserver/FileModule.h",
 	"Include/Webserver/WebContext.h",
@@ -15,6 +14,10 @@ var files = [
 	"Include/Webserver/Webserver.h",
 	"Include/Webserver/JsonValue.h",
 	"Include/Webserver/DataBuffer.h",
+];
+
+var files = [
+	"Webserver.js",
 	"Precomp.cpp",
 	"Precomp.h",
 	"Text/StringFormat.cpp",
@@ -73,6 +76,7 @@ var win32Files = [
 
 var webserver = Targets.addStaticLibrary("Webserver");
 webserver.addFiles(files);
+webserver.addFiles(includeFiles);
 webserver.addIncludePaths([".", "..", "Include"]);
 webserver.addDefines(["MINIZ_NO_STDIO"]);
 
@@ -81,8 +85,15 @@ if (Environment.isWindows()) {
 	webserver.addFiles(win32Files);
 }
 
+var artifacts = [
+	{ src: Directory.buildPath("Release/bin/Webserver.lib"), dest: "Release/Webserver.lib" },
+	{ src: Directory.buildPath("Debug/bin/Webserver.lib"), dest: "Debug/Webserver.lib" },
+];
+
 var pkg = Installers.addPackage("Webserver");
 pkg.addIncludePaths(["Include"]);
 pkg.addLinkLibraries(["Webserver"]);
 pkg.addLibraryPaths(["Debug"], { configuration: "Debug" });
 pkg.addLibraryPaths(["Release"], { configuration: "Release" });
+pkg.addFiles(artifacts);
+pkg.addFiles(includeFiles);
