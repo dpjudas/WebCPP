@@ -1,4 +1,4 @@
-import { Targets, Environment, Installers, Directory } from "cppbuild";
+import { Target, Environment, PackageInstaller, Directory } from "cppbuild";
 
 var includeFiles = [
 	"Include/Webserver/ActionModule.h",
@@ -74,7 +74,7 @@ var win32Files = [
 	"Webserver/HttpSys/HttpSysWebserver.h",
 ];
 
-var webserver = Targets.addStaticLibrary("Webserver");
+var webserver = Target.addStaticLibrary("Webserver");
 webserver.addFiles(files);
 webserver.addFiles(includeFiles);
 webserver.addIncludePaths([".", "..", "Include"]);
@@ -90,7 +90,7 @@ var artifacts = [
 	{ src: Directory.buildPath("Debug/bin/Webserver.lib"), dest: "Debug/Webserver.lib" },
 ];
 
-var pkg = Installers.addPackage("Webserver");
+var pkg = PackageInstaller.add("Webserver");
 pkg.addIncludePaths(["Include"]);
 pkg.addLinkLibraries(["Webserver"]);
 pkg.addLibraryPaths(["Debug"], { configuration: "Debug" });

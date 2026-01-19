@@ -1,4 +1,4 @@
-import { Targets, Environment } from "cppbuild";
+import { Target, Environment } from "cppbuild";
 
 var files = [
 	"ExampleWebserver.js",
@@ -14,7 +14,7 @@ var linkLibraries = [
 	"Webserver",
 ];
 
-var exampleWebserver = Targets.addConsole("ExampleWebserver");
+var exampleWebserver = Target.addConsole("ExampleWebserver");
 exampleWebserver.addFiles(files);
 exampleWebserver.addIncludePaths(includePaths);
 exampleWebserver.addLinkLibraries(linkLibraries);

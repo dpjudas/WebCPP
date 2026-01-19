@@ -1,4 +1,4 @@
-import { Targets, Installers, Directory } from "cppbuild";
+import { Target, PackageInstaller, Directory } from "cppbuild";
 
 var includeFiles = [
 	"Include/WebCPP/Core/Clipboard.h",
@@ -132,7 +132,7 @@ var files = [
 	"Controls/ImageCanvas/ImageCanvas.css",
 ];
 
-var webcpp = Targets.addWebLibrary("WebCPP");
+var webcpp = Target.addWebLibrary("WebCPP");
 webcpp.setCSSRootFile("WebCPP.css");
 webcpp.addIncludePaths([".", "..", "Include"]);
 webcpp.addFiles(files);
@@ -146,7 +146,7 @@ var artifacts = [
 	{ src: Directory.buildPath("Debug/bin/libWebCPP.css"), dest: "Debug/libWebCPP.css" },
 ];
 
-var pkg = Installers.addPackage("WebCPP");
+var pkg = PackageInstaller.add("WebCPP");
 pkg.addIncludePaths(["Include"]);
 pkg.addLinkLibraries(["WebCPP"]);
 pkg.addLibraryPaths(["Debug"], { configuration: "Debug" });

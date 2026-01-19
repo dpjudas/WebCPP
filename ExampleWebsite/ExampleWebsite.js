@@ -1,4 +1,4 @@
-import { Targets } from "cppbuild";
+import { Target } from "cppbuild";
 
 var files = [
 	"ExampleWebsite.js",
@@ -18,7 +18,7 @@ var linkLibraries = [
 	"WebCPP",
 ];
 
-var exampleWebsite = Targets.addWebsite("ExampleWebsite");
+var exampleWebsite = Target.addWebsite("ExampleWebsite");
 exampleWebsite.setCSSRootFile("Main.css");
 exampleWebsite.setHtmlShellFile("Shell.html");
 exampleWebsite.addFiles(files);
