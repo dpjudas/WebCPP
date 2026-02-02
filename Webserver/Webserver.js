@@ -85,9 +85,14 @@ if (Environment.isWindows()) {
 	webserver.addFiles(win32Files);
 }
 
-var artifacts = [
+var win32Artifacts = [
 	{ src: Directory.buildPath("Release/bin/Webserver.lib"), dest: "Release/Webserver.lib" },
 	{ src: Directory.buildPath("Debug/bin/Webserver.lib"), dest: "Debug/Webserver.lib" },
+];
+
+var linuxArtifacts = [
+	{ src: Directory.buildPath("Release/bin/libWebserver.a"), dest: "Release/libWebserver.a" },
+	{ src: Directory.buildPath("Debug/bin/libWebserver.a"), dest: "Debug/libWebserver.a" },
 ];
 
 var pkg = PackageInstaller.add("Webserver");
@@ -95,5 +100,10 @@ pkg.addIncludePaths(["Include"]);
 pkg.addLinkLibraries(["Webserver"]);
 pkg.addLibraryPaths(["Debug"], { configuration: "Debug" });
 pkg.addLibraryPaths(["Release"], { configuration: "Release" });
-pkg.addFiles(artifacts);
+if (Environment.isWindows()) {
+	pkg.addFiles(win32Artifacts);
+}
+else {
+	pkg.addFiles(linuxArtifacts);
+}
 pkg.addFiles(includeFiles);
