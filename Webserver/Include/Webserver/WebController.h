@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WebModule.h"
+#include "WebContext.h"
 #include "JsonValue.h"
 #include <map>
 #include <string>
@@ -9,6 +10,12 @@
 
 namespace web
 {
+	template<typename T>
+	struct WebControllerArgTrait
+	{
+		static T fromContext(WebContext* ctx) { return T(ctx); }
+	};
+
 	class WebController : public WebModule
 	{
 	public:
@@ -20,9 +27,15 @@ namespace web
 		template<typename T>
 		void bind(const std::string& path, JsonValue(T::* func)(JsonValue))
 		{
-			bindings[path] = [=,this](JsonValue request) -> JsonValue { return (*static_cast<T*>(this).*func)(std::move(request)); };
+			bindings[path] = [=,this](WebContext* context) -> JsonValue { return (*static_cast<T*>(this).*func)(context->getJsonRequest()); };
 		}
 
-		std::map<std::string, std::function<JsonValue(JsonValue)>> bindings;
+		template<typename T, typename P>
+		void bind(const std::string& path, JsonValue(T::* func)(JsonValue, P))
+		{
+			bindings[path] = [=, this](WebContext* context) -> JsonValue { return (*static_cast<T*>(this).*func)(context->getJsonRequest(), web::WebControllerArgTrait<P>::fromContext(context)); };
+		}
+
+		std::map<std::string, std::function<JsonValue(WebContext*)>> bindings;
 	};
 }

@@ -19,7 +19,7 @@ namespace web
 			auto it = bindings.find(context->requestedPath);
 			if (it != bindings.end())
 			{
-				context->setJsonResponse(it->second(context->getJsonRequest()));
+				context->setJsonResponse(it->second(context));
 			}
 			else
 			{

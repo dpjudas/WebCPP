@@ -15,6 +15,9 @@ namespace web
 	{
 		auto requestHeaders = JSValue::object();
 		requestHeaders.set("Content-Type", std::string("application/json"));
+		std::string accessToken = Navigation::getAccessToken();
+		if (!accessToken.empty())
+			requestHeaders.set("Authorization", std::string("Bearer " + accessToken));
 
 		auto request = JSValue::object();
 		request.set("method", std::string("POST"));
