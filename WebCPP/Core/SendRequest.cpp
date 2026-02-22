@@ -25,6 +25,7 @@ namespace web
 		request.set("headers", requestHeaders);
 
 		auto response = co_await JSValue::global("fetch")(url, request);
+		//int statusCode = response["status"].as<int>();
 		auto responseText = co_await response.call<JSValue>("text");
 		co_return JsonValue::parse(responseText.as<std::string>());
 	}
