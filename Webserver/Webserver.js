@@ -87,7 +87,9 @@ if (Environment.isWindows()) {
 
 var win32Artifacts = [
 	{ src: Directory.buildPath("Release/bin/Webserver.lib"), dest: "Release/Webserver.lib" },
+	{ src: Directory.buildPath("Release/bin/Webserver.pdb"), dest: "Release/Webserver.pdb" },
 	{ src: Directory.buildPath("Debug/bin/Webserver.lib"), dest: "Debug/Webserver.lib" },
+	{ src: Directory.buildPath("Debug/bin/Webserver.pdb"), dest: "Debug/Webserver.pdb" },
 ];
 
 var linuxArtifacts = [
