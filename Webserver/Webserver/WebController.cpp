@@ -26,6 +26,12 @@ namespace web
 				context->setTextResponse("Endpoint not found", "text/plain", 404, "Not Found");
 			}
 		}
+		catch (const WebControllerException& e)
+		{
+			auto response = JsonValue::object();
+			response["Error"] = JsonValue::string(e.getMessage());
+			context->setJsonResponse(response, e.getStatusCode(), e.getStatusText());
+		}
 		catch (const std::exception& e)
 		{
 			auto response = JsonValue::object();

@@ -38,4 +38,21 @@ namespace web
 
 		std::map<std::string, std::function<JsonValue(WebContext*)>> bindings;
 	};
+
+	class WebControllerException : public std::exception
+	{
+	public:
+		WebControllerException(int statusCode, std::string statusText, std::string message) : statusCode(statusCode), statusText(std::move(statusText)), message(std::move(message)) {}
+
+		char const* what() const override { return message.c_str(); }
+
+		int getStatusCode() const { return statusCode; }
+		const std::string& getStatusText() const { return statusText; }
+		const std::string& getMessage() const { return message; }
+
+	private:
+		int statusCode = 0;
+		std::string statusText;
+		std::string message;
+	};
 }
