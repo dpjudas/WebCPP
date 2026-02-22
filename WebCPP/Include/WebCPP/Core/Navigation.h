@@ -31,6 +31,9 @@ namespace web
 		const std::string& getLoginUrl() const { return loginUrl; }
 		void setLoginUrl(const std::string& url);
 
+		const std::string& getDefaultUrl() const { return defaultUrl; }
+		void setDefaultUrl(const std::string& url);
+
 		template<typename T>
 		void setLoginErrorPage() { setLoginErrorPage([]() { return std::make_shared<T>(); }); }
 		void setLoginErrorPage(std::function<std::shared_ptr<View>()> createPage);
@@ -48,6 +51,7 @@ namespace web
 		};
 		std::vector<Route> routes;
 		std::string loginUrl;
+		std::string defaultUrl = "/";
 		std::function<std::shared_ptr<View>()> createLoginErrorPage;
 		std::function<std::shared_ptr<View>()> createNotFoundPage;
 		std::shared_ptr<View> currentPage;
