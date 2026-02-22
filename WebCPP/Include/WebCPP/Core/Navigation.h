@@ -28,6 +28,7 @@ namespace web
 		void addRoute(const std::vector<std::string>& pathparts, bool authRequired = false) { addRoute(pathparts, []() { return std::make_shared<T>(); }, authRequired); }
 		void addRoute(const std::vector<std::string>& pathparts, std::function<std::shared_ptr<View>()> createPage, bool authRequired = false);
 
+		const std::string& getLoginUrl() const { return loginUrl; }
 		void setLoginUrl(const std::string& url);
 
 		template<typename T>
@@ -70,6 +71,7 @@ namespace web
 
 		static void beginLogin(std::string loginUrl);
 		static void endLogin(OAuthStatus status, const std::string& accessToken = {}, const std::string& loginError = {});
+		static void logout();
 
 		static void pushState(std::string pageTitle, std::vector<std::string> pathParts);
 		static void replaceState(std::string pageTitle, std::vector<std::string> pathParts);
