@@ -8,6 +8,6 @@ modallayer-view {
     z-index: 1000000;
 
     &.shaded {
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.2);
     }
 }

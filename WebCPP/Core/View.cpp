@@ -112,7 +112,6 @@ namespace web
 	{
 		detach();
 		HtmlDocument::body()->endModal();
-		delete this;
 	}
 
 	void View::setDefaultFocused()

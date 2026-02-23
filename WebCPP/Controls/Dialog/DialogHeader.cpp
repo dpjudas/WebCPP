@@ -1,0 +1,65 @@
+
+#include "WebCPP/Controls/Dialog/DialogHeader.h"
+#include "WebCPP/Controls/Dialog/DialogHeaderButton.h"
+#include "WebCPP/Controls/Dialog/Dialog.h"
+
+namespace web
+{
+	DialogHeader::DialogHeader() : View("dialogheader-view")
+	{
+		caption = std::make_shared<TextLabel>();
+		caption->addClass("dialogheader-caption");
+		closeButton = std::make_shared<DialogHeaderButton>(CloseIconSvg);
+		closeButton->addClass("dialogheader-closebutton");
+		closeButton->element->addEventListener("click", [this](Event* event) { static_cast<Dialog*>(parent())->onClose(event); });
+
+		auto layout = createHBoxLayout();
+		layout->addView(caption, true);
+		layout->addView(closeButton);
+	}
+
+	const std::string DialogHeader::CloseIconSvg =
+		"77u/PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjxzdmcgeD0iMHB4IiB5"
+		"PSIwcHgiIHZpZXdCb3g9IjAgMCAxMCAxMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3"
+		"dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs"
+		"aW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0YWc9IkVsZW1lbnQyIj4NCiAgPGcgaWQ9Ikluc2lk"
+		"ZV9Cb3JkZXIiIHRhZz0iRWxlbWVudCI+DQogICAgPHBhdGggZD0iTTYsIDVMOC44LCAyLjJDOS4x"
+		"LCAxLjkgOS4xLCAxLjUgOC44LCAxLjJDOC41LCAwLjkgOC4xLCAwLjkgNy44LCAxLjJMNSwgNEwy"
+		"LjIsIDEuMkMxLjksIDAuOSAxLjUsIDAuOSAxLjIsIDEuMkMwLjksIDEuNSAwLjksIDEuOSAxLjIs"
+		"IDIuMkw0LCA1TDEuMiwgNy44QzAuOSwgOC4xIDAuOSwgOC41IDEuMiwgOC44QzEuNSwgOS4xIDEu"
+		"OSwgOS4xIDIuMiwgOC44TDUsIDZMNy44LCA4LjhDOC4xLCA5LjEgOC41LCA5LjEgOC44LCA4LjhD"
+		"OS4xLCA4LjUgOS4xLCA4LjEgOC44LCA3LjhMNiwgNXoiIGZpbGw9IiNGRkZGRkYiIGNsYXNzPSJN"
+		"YXNrIiB0YWc9Ik1hc2siIC8+DQogIDwvZz4NCiAgPGcgaWQ9IkxheWVyXzIiIHRhZz0iRWxlbWVu"
+		"dDEiIC8+DQo8L3N2Zz4=";
+
+	const std::string DialogHeader::MaximizedIconSvg =
+		"77u/PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjxzdmcgeD0iMHB4IiB5"
+		"PSIwcHgiIHZpZXdCb3g9IjAgMCAxMCAxMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3"
+		"dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs"
+		"aW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0YWc9IkVsZW1lbnQyIj4NCiAgPGcgaWQ9Ikluc2lk"
+		"ZV9Cb3JkZXIiIHRhZz0iRWxlbWVudCI+DQogICAgPHBhdGggZD0iTTksIDFMMywgMUwzLCAzTDEs"
+		"IDNMMSwgOUw3LCA5TDcsIDdMOSwgN0w5LCAxek02LCA4TDIsIDhMMiwgNEw2LCA0TDYsIDh6TTgs"
+		"IDZMNywgNkw3LCAzTDQsIDNMNCwgMkw4LCAyTDgsIDZ6IiBmaWxsPSIjRkZGRkZGIiBjbGFzcz0i"
+		"TWFzayIgdGFnPSJNYXNrIiAvPg0KICA8L2c+DQogIDxnIGlkPSJMYXllcl8yIiB0YWc9IkVsZW1l"
+		"bnQxIiAvPg0KPC9zdmc+";
+
+	const std::string DialogHeader::MaximizeIconSvg =
+		"77u/PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjxzdmcgeD0iMHB4IiB5"
+		"PSIwcHgiIHZpZXdCb3g9IjAgMCAxMCAxMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3"
+		"dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs"
+		"aW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0YWc9IkVsZW1lbnQyIj4NCiAgPGcgaWQ9Ikluc2lk"
+		"ZV9Cb3JkZXIiIHRhZz0iRWxlbWVudCI+DQogICAgPHBhdGggZD0iTTEsIDFMMSwgOUw5LCA5TDks"
+		"IDFMMSwgMXpNOCwgOEwyLCA4TDIsIDJMOCwgMkw4LCA4eiIgZmlsbD0iI0ZGRkZGRiIgY2xhc3M9"
+		"Ik1hc2siIHRhZz0iTWFzayIgLz4NCiAgPC9nPg0KICA8ZyBpZD0iTGF5ZXJfMiIgdGFnPSJFbGVt"
+		"ZW50MSIgLz4NCjwvc3ZnPg==";
+
+	const std::string DialogHeader::MinimizeIconSvg =
+		"77u/PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4NCjxzdmcgeD0iMHB4IiB5"
+		"PSIwcHgiIHZpZXdCb3g9IjAgMCAxMCAxMCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3"
+		"dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs"
+		"aW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiB0YWc9IkVsZW1lbnQyIj4NCiAgPGcgaWQ9Ikluc2lk"
+		"ZV9Cb3JkZXIiIHRhZz0iRWxlbWVudCI+DQogICAgPHJlY3QgeD0iMSIgeT0iNSIgd2lkdGg9Ijgi"
+		"IGhlaWdodD0iMSIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjRkZGRkZGIiBjbGFzcz0iTWFzayIgdGFn"
+		"PSJNYXNrIiAvPg0KICA8L2c+DQogIDxnIGlkPSJMYXllcl8yIiB0YWc9IkVsZW1lbnQxIiAvPg0K"
+		"PC9zdmc+";
+}
