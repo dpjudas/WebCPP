@@ -212,7 +212,8 @@ namespace web
 		if (!savedjwt.is_undefined() && savedjwt.properties().find("exp") != savedjwt.properties().end())
 		{
 			int64_t expireTime = (int64_t)savedjwt["exp"].to_number();
-			if (DateTime::now().getTime() + 30 > expireTime)
+			int64_t currentTime = DateTime::now().getTime() / 1000 + 30;
+			if (currentTime < expireTime)
 			{
 				// Yes we are. Mark us as authenticated.
 				// Note that this doesn't guarantee the server will still accept the access token, but normally it would.
