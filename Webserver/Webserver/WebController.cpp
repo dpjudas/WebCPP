@@ -18,13 +18,7 @@ namespace web
 		{
 			auto it = bindings.find(context->requestedPath);
 			if (it != bindings.end())
-			{
-				context->setJsonResponse(it->second(context));
-			}
-			else
-			{
-				context->setTextResponse("Endpoint not found", "text/plain", 404, "Not Found");
-			}
+				it->second(context);
 		}
 		catch (const WebControllerException& e)
 		{

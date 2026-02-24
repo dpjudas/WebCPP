@@ -27,16 +27,28 @@ namespace web
 		template<typename T>
 		void bind(const std::string& path, JsonValue(T::* func)(JsonValue))
 		{
-			bindings[path] = [=,this](WebContext* context) -> JsonValue { return (*static_cast<T*>(this).*func)(context->getJsonRequest()); };
+			bindings[path] = [=,this](WebContext* context) { context->setJsonResponse((*static_cast<T*>(this).*func)(context->getJsonRequest())); };
 		}
 
 		template<typename T, typename P>
 		void bind(const std::string& path, JsonValue(T::* func)(JsonValue, P))
 		{
-			bindings[path] = [=, this](WebContext* context) -> JsonValue { return (*static_cast<T*>(this).*func)(context->getJsonRequest(), web::WebControllerArgTrait<P>::fromContext(context)); };
+			bindings[path] = [=, this](WebContext* context) { context->setJsonResponse((*static_cast<T*>(this).*func)(context->getJsonRequest(), web::WebControllerArgTrait<P>::fromContext(context))); };
 		}
 
-		std::map<std::string, std::function<JsonValue(WebContext*)>> bindings;
+		template<typename T>
+		void bind(const std::string& path, void(T::* func)(WebRequest* context))
+		{
+			bindings[path] = [=, this](WebContext* context) { (*static_cast<T*>(this).*func)(context); };
+		}
+
+		template<typename T, typename P>
+		void bind(const std::string& path, void(T::* func)(WebRequest*, P))
+		{
+			bindings[path] = [=, this](WebContext* context) { (*static_cast<T*>(this).*func)(context, web::WebControllerArgTrait<P>::fromContext(context)); };
+		}
+
+		std::map<std::string, std::function<void(WebContext*)>> bindings;
 	};
 
 	class WebControllerException : public std::exception
