@@ -37,13 +37,13 @@ namespace web
 		}
 
 		template<typename T>
-		void bind(const std::string& path, void(T::* func)(WebRequest* context))
+		void bind(const std::string& path, void(T::* func)(WebContext* context))
 		{
 			bindings[path] = [=, this](WebContext* context) { (*static_cast<T*>(this).*func)(context); };
 		}
 
 		template<typename T, typename P>
-		void bind(const std::string& path, void(T::* func)(WebRequest*, P))
+		void bind(const std::string& path, void(T::* func)(WebContext*, P))
 		{
 			bindings[path] = [=, this](WebContext* context) { (*static_cast<T*>(this).*func)(context, web::WebControllerArgTrait<P>::fromContext(context)); };
 		}
