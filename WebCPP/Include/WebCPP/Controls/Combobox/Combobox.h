@@ -61,7 +61,7 @@ namespace web
 		bool enabled = true;
 		int selectedIndex = -1;
 		int maxItems = 7;
-		ComboBoxPopup* popup = nullptr;
+		std::shared_ptr<ComboBoxPopup> popup;
 		std::shared_ptr<ImageBox> imagebox;
 		std::shared_ptr<TextLabel> label;
 		std::shared_ptr<LineEdit> lineedit;

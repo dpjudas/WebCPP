@@ -197,7 +197,7 @@ namespace web
 		{
 			if (items.empty() == false && (lineedit == nullptr || event->target() == element->handle))
 			{
-				popup = new ComboBoxPopup(this);
+				popup = std::make_shared<ComboBoxPopup>(this);
 				popup->setMaxItems(getMaxItems());
 				for (int idx = 0, size = items.size(); idx < size; idx++)
 				{
