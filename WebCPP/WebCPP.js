@@ -148,6 +148,8 @@ webcpp.addIncludePaths([".", "..", "Include"]);
 webcpp.addFiles(files);
 webcpp.addFiles(includeFiles);
 webcpp.addCompileOptions(["-Wno-deprecated-this-capture"]);
+webcpp.addCompileOptions(["-sNO_DISABLE_EXCEPTION_CATCHING"]);
+webcpp.addLinkOptions(["-sNO_DISABLE_EXCEPTION_CATCHING"]);
 
 var artifacts = [
 	{ src: Directory.buildPath("Release/bin/libWebCPP.a"), dest: "Release/libWebCPP.a" },

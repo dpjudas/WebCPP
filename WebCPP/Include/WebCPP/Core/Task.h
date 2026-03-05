@@ -568,4 +568,15 @@ namespace web
 			resumer = std::make_shared<task_resumer_immediately>();
 		return resumer;
 	}
+
+	class jsval_error : public std::runtime_error
+	{
+	public:
+		jsval_error(JSValue error) : std::runtime_error(error["message"].as<std::string>()), error(error) {}
+
+		JSValue error;
+	};
+
+	// Converts javascript errors to exceptions
+	task<JSValue> createTaskPromise(JSValue jsPromise);
 }

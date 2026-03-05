@@ -3,12 +3,36 @@
 #include "WebCPP/Core/JSCallback.h"
 #include "WebCPP/Core/Navigation.h"
 #include "WebCPP/Core/Timer.h"
+#include <emscripten/emscripten.h>
+
+static struct JSCode { JSCode() { emscripten_run_script(R"jscode(
+
+	JSTaskPromise = function() {
+		function createWrapper(promise) {
+			return new Promise((resolve) => {
+				promise.then(
+					(value) => { resolve({ result: value, isError: false }); },
+					(error) => { resolve({ result: error, isError: true }); });
+			});
+		}
+		return { create: createWrapper };
+	}();
+
+)jscode"); } } initJSCode;
 
 namespace web
 {
 	namespace
 	{
 		std::function<void(int statusCode, std::string contentType, std::string body)> defaultErrorHandler;
+	}
+
+	task<JSValue> createTaskPromise(JSValue jsPromise)
+	{
+		JSValue result = co_await JSValue::global("JSTaskPromise").call<JSValue>("create", jsPromise);
+		if (result["isError"].as<bool>())
+			throw result["result"];
+		co_return result["result"];
 	}
 
 	task<JsonValue> sendRequest(std::string url, const JsonValue& jsonRequest)
@@ -24,7 +48,7 @@ namespace web
 		request.set("body", jsonRequest.to_json());
 		request.set("headers", requestHeaders);
 
-		auto response = co_await JSValue::global("fetch")(url, request);
+		auto response = co_await createTaskPromise(JSValue::global("fetch")(url, request));
 		//int statusCode = response["status"].as<int>();
 		auto responseText = co_await response.call<JSValue>("text");
 		co_return JsonValue::parse(responseText.as<std::string>());
