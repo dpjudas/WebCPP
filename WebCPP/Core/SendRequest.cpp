@@ -31,7 +31,7 @@ namespace web
 	{
 		JSValue result = co_await JSValue::global("JSTaskPromise").call<JSValue>("create", jsPromise);
 		if (result["isError"].as<bool>())
-			throw result["result"];
+			throw jsval_error(result["result"]);
 		co_return result["result"];
 	}
 
