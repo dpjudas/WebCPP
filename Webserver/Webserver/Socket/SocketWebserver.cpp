@@ -36,6 +36,24 @@ namespace web
 
 	void SocketWebserver::start(const std::string& listenUrl)
 	{
+		WebRequestUrl url(listenUrl);
+		if (url.getScheme() != "http")
+			throw std::runtime_error("Only http scheme supported");
+		std::string hostname;
+		int port = 0;
+		std::string host = url.getHost();
+		size_t pos = host.find(':');
+		if (pos != std::string::npos)
+		{
+			hostname = host.substr(0, pos);
+			port = std::atoi(host.substr(pos + 1).c_str());
+		}
+		else
+		{
+			hostname = host;
+			port = 80;
+		}
+
 		ListenSocket = std::make_unique<SocketHandle>();
 
 		int flag = 1;
@@ -43,8 +61,16 @@ namespace web
 
 		sockaddr_in name = {};
 		name.sin_family = AF_INET;
-		name.sin_addr.s_addr = INADDR_ANY;
-		name.sin_port = htons(8080);
+		if (hostname == "+")
+		{
+			name.sin_addr.s_addr = INADDR_ANY;
+		}
+		else
+		{
+			if (inet_pton(AF_INET, hostname.c_str(), &name.sin_addr) != 1)
+				throw std::runtime_error("Hostname must be an IP address");
+		}
+		name.sin_port = htons(port);
 		int result = bind(ListenSocket->handle, (const sockaddr*)&name, sizeof(sockaddr_in));
 		if (result != 0)
 			throw std::runtime_error("Socket bind failed");
