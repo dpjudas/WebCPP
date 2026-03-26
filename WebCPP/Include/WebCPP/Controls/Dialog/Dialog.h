@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../Core/View.h"
+#include "../../Core/Task.h"
 #include "DialogHeader.h"
 #include "DialogButtonbar.h"
 
@@ -24,6 +25,11 @@ namespace web
 
 		virtual void onClose(Event* event);
 
+		task<int> exec();
+		void accept() { done(1); }
+		void reject() { done(0); }
+		void done(int resultCode);
+
 		void setAcceptButton(std::shared_ptr<Button> button) { acceptButton = button; }
 		void setCancelButton(std::shared_ptr<Button> button) { cancelButton = button; }
 
@@ -34,9 +40,9 @@ namespace web
 		std::shared_ptr<DialogHeader> header;
 		std::shared_ptr<View> centerView;
 		std::shared_ptr<DialogButtonbar> buttonbar;
-
-	private:
 		std::shared_ptr<Button> acceptButton;
 		std::shared_ptr<Button> cancelButton;
+
+		std::unique_ptr<task_promise<int>> execTaskPromise;
 	};
 }

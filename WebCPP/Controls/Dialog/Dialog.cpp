@@ -65,7 +65,9 @@ namespace web
 
 	void Dialog::onClose(Event* event)
 	{
+		auto pin = shared_from_this();
 		closeModal();
+		reject();
 	}
 
 	void Dialog::onKeyDown(Event* event)
@@ -80,6 +82,22 @@ namespace web
 		{
 			if (cancelButton)
 				cancelButton->click(event);
+		}
+	}
+
+	task<int> Dialog::exec()
+	{
+		showDialogModal();
+		execTaskPromise = std::make_unique<task_promise<int>>();
+		return execTaskPromise->get_future();
+	}
+
+	void Dialog::done(int resultCode)
+	{
+		if (execTaskPromise)
+		{
+			execTaskPromise->set_value(resultCode);
+			execTaskPromise.reset();
 		}
 	}
 }
