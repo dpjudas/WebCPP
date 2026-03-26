@@ -65,8 +65,6 @@ namespace web
 
 	void Dialog::onClose(Event* event)
 	{
-		auto pin = shared_from_this();
-		closeModal();
 		reject();
 	}
 
@@ -94,6 +92,8 @@ namespace web
 
 	void Dialog::done(int resultCode)
 	{
+		auto pin = shared_from_this();
+		closeModal();
 		if (execTaskPromise)
 		{
 			execTaskPromise->set_value(resultCode);
