@@ -37,6 +37,7 @@ namespace web
 			lineedit->addClass("combobox-lineedit");
 			lineedit->setFlat();
 			lineedit->setText(label->getText());
+			lineedit->setInputHandler([=](const std::string& text) { setSelectedIndex(-1); label->setText(lineedit->getText()); });
 			lineedit->setChangeHandler([=](const std::string& text) { setSelectedIndex(-1); lineedit->setText(text); label->setText(text); if (changeHandler) changeHandler(); });
 
 			getLayout<HBoxLayout>()->addView(lineedit, true, true);
