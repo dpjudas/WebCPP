@@ -69,6 +69,7 @@ namespace web
 		void onLineEditChange(const std::string& text);
 		void onPopupModalLayerClick(Event* event);
 		void onPopupItemClick(int index);
+		void updateSelectedIndexFromEdit();
 
 		std::function<void()> changeHandler;
 		bool enabled = true;

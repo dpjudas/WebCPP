@@ -49,15 +49,15 @@ namespace web
 
 	void ComboBox::onLineEditInput(const std::string& text)
 	{
-		setSelectedIndex(-1);
 		label->setText(lineedit->getText());
+		updateSelectedIndexFromEdit();
 	}
 
 	void ComboBox::onLineEditChange(const std::string& text)
 	{
-		setSelectedIndex(-1);
 		lineedit->setText(text);
 		label->setText(text);
+		updateSelectedIndexFromEdit();
 		if (changeHandler)
 			changeHandler();
 	}
@@ -146,6 +146,30 @@ namespace web
 			return label->getText();
 	}
 
+	void ComboBox::updateSelectedIndexFromEdit()
+	{
+		// This cannot use setSelectedIndex below because it alters lineedit
+		if (selectedIndex != -1)
+		{
+			imagebox->hide();
+			label->removeClass("combobox-label-hasicon");
+			selectedIndex = -1;
+		}
+
+		std::string text = lineedit->getText();
+		int index = 0;
+		for (auto& item : items)
+		{
+			if (item.text == text)
+			{
+				setSelectedIndex(index);
+				return;
+			}
+			index++;
+		}
+
+		// To do: this could check lineedit->text() to see if the user typed a known item
+	}
 
 	void ComboBox::setSelectedIndex(int index)
 	{
