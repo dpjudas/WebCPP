@@ -68,7 +68,7 @@ namespace web
 
 		Rect box = item->element->getBoundingClientRect();
 		openMenu = std::make_shared<Menu>();
-		openMenu->closeMenu = [=]() { closeModal(); };
+		openMenu->closeMenu = std::bind_front(&MenubarModal::closeModal, this);
 		openMenu->addClass("menubarmodal-openmenu");
 		if (item->alignRight)
 			openMenu->setRightPosition(element->getBoundingClientRect().width - box.x - box.width, box.y + box.height - 1);
@@ -91,7 +91,7 @@ namespace web
 	void MenubarModal::onModalAttach()
 	{
 		View::onModalAttach();
-		parent()->element->addEventListener("click", [=](Event* event) { onClose(event); });
+		parent()->element->addEventListener("click", std::bind_front(&MenubarModal::onClose, this));
 		if (firstOpenMenuItem)
 		{
 			showMenu(firstOpenMenuItem.get());
@@ -104,8 +104,8 @@ namespace web
 	MenubarModalItem::MenubarModalItem(MenubarModal* menubar, bool alignRight) : menubar(menubar), alignRight(alignRight)
 	{
 		addClass("menubarmodalitem");
-		element->addEventListener("click", [=](Event* event) { onClick(event); });
-		element->addEventListener("mouseenter", [=](Event* event) { onMouseEnter(event); });
+		element->addEventListener("click", std::bind_front(&MenubarModalItem::onClick, this));
+		element->addEventListener("mouseenter", std::bind_front(&MenubarModalItem::onMouseEnter, this));
 	}
 
 	void MenubarModalItem::open()

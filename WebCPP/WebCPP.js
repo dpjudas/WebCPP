@@ -147,7 +147,6 @@ webcpp.setCSSRootFile("WebCPP.css");
 webcpp.addIncludePaths([".", "..", "Include"]);
 webcpp.addFiles(files);
 webcpp.addFiles(includeFiles);
-webcpp.addCompileOptions(["-Wno-deprecated-this-capture"]);
 webcpp.addCompileOptions(["-sNO_DISABLE_EXCEPTION_CATCHING"]);
 webcpp.addLinkOptions(["-sNO_DISABLE_EXCEPTION_CATCHING"]);
 

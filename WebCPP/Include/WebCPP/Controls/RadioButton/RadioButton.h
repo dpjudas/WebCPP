@@ -21,5 +21,7 @@ namespace web
 		void setEnabled(bool value);
 		bool getEnabled() const;
 
+	private:
+		void onChange(std::function<void(bool checked)> handler, Event* e);
 	};
 }

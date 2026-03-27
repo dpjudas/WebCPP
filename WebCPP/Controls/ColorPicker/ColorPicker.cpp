@@ -13,8 +13,8 @@ namespace web
 		setupUi();
 
 		element->setTabIndex(0);
-		element->addEventListener("click", [=](Event* e) { onClick(e); });
-		element->addEventListener("focusin", [=](Event* e) { onFocusIn(e); });
+		element->addEventListener("click", std::bind_front(&ColorPicker::onClick, this));
+		element->addEventListener("focusin", std::bind_front(&ColorPicker::onFocusIn, this));
 
 		label->element->setStyle("background-color", "transparent");
 		label->setText("No Color");
@@ -59,12 +59,18 @@ namespace web
 			popup->setChangeHandler([this]() { onColorPickerChanged(); });
 			popup->setColor(red, green, blue, noColor);
 			auto layer = popup->showPopupModal(true);
-			layer->element->addEventListener("click", [=](Event* event) { event->stopPropagation(); closePopup(); });
+			layer->element->addEventListener("click", std::bind_front(&ColorPicker::onPopupLayerClick, this));
 		}
 		else
 		{
 			closePopup();
 		}
+	}
+
+	void ColorPicker::onPopupLayerClick(Event* e)
+	{
+		e->stopPropagation();
+		closePopup();
 	}
 
 	void ColorPicker::onFocusIn(Event* e)
@@ -112,15 +118,15 @@ namespace web
 	{
 		setupUi();
 
-		satvalBox->setChangeHandler([this]() { onSatValChanged(); });
-		hueBox->setChangeHandler([this]() { onHueChanged(); });
-		red->setChangeHandler([this](const std::string& text) { onRgbChanged(); });
-		green->setChangeHandler([this](const std::string& text) { onRgbChanged(); });
-		blue->setChangeHandler([this](const std::string& text) { onRgbChanged(); });
-		noColor->setChangeHandler([this](bool checked) { onNoColorChanged(); });
+		satvalBox->setChangeHandler(std::bind_front(&ColorPickerPopup::onSatValChanged, this));
+		hueBox->setChangeHandler(std::bind_front(&ColorPickerPopup::onHueChanged, this));
+		red->setChangeHandler(std::bind_front(&ColorPickerPopup::onRgbChanged, this));
+		green->setChangeHandler(std::bind_front(&ColorPickerPopup::onRgbChanged, this));
+		blue->setChangeHandler(std::bind_front(&ColorPickerPopup::onRgbChanged, this));
+		noColor->setChangeHandler(std::bind_front(&ColorPickerPopup::onNoColorChanged, this));
 
-		element->addEventListener("click", [=](Event* event) { event->stopPropagation(); });
-		element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
+		element->addEventListener("click", std::bind_front(&ColorPickerPopup::onClick, this));
+		element->addEventListener("keydown", std::bind_front(&ColorPickerPopup::onKeyDown, this));
 		element->setTabIndex(0);
 
 		setDefaultFocused();
@@ -131,15 +137,18 @@ namespace web
 		element->setStyle("top", std::to_string(rect.y + rect.height - 1) + "px");
 		element->setStyle("width", std::to_string(rect.width - 2) + "px");
 
-		observer.onResize = [=](std::vector<ResizeObserverEntry>) {
-			const Rect& rect = combo->element->getBoundingClientRect();
-			element->setStyle("left", std::to_string(rect.x) + "px");
-			element->setStyle("top", std::to_string(rect.y + rect.height - 1) + "px");
-			};
+		observer.onResize = std::bind_front(&ColorPickerPopup::onResize, this);
 		observer.observe(combo->element.get());
 
 		updateRGBFromHSV();
 		updateColorCircle();
+	}
+
+	void ColorPickerPopup::onResize(std::vector<ResizeObserverEntry> entries)
+	{
+		const Rect& rect = combo->element->getBoundingClientRect();
+		element->setStyle("left", std::to_string(rect.x) + "px");
+		element->setStyle("top", std::to_string(rect.y + rect.height - 1) + "px");
 	}
 
 	void ColorPickerPopup::setChangeHandler(const std::function<void()>& handler)
@@ -222,7 +231,7 @@ namespace web
 			changeHandler();
 	}
 
-	void ColorPickerPopup::onRgbChanged()
+	void ColorPickerPopup::onRgbChanged(const std::string&)
 	{
 		noColor->setChecked(false);
 		updateHSVFromRGB();
@@ -231,10 +240,15 @@ namespace web
 			changeHandler();
 	}
 
-	void ColorPickerPopup::onNoColorChanged()
+	void ColorPickerPopup::onNoColorChanged(bool)
 	{
 		if (changeHandler)
 			changeHandler();
+	}
+
+	void ColorPickerPopup::onClick(Event* event)
+	{
+		event->stopPropagation();
 	}
 
 	void ColorPickerPopup::onKeyDown(Event* event)
@@ -346,9 +360,9 @@ namespace web
 		auto valLayout = valueGradient->createFlowLayout();
 		valLayout->addView(dragger);
 
-		element->addEventListener("pointerdown", [=](Event* e) { onPointerDown(e); });
-		dragger->element->addEventListener("pointermove", [=](Event* e) { onPointerMove(e); });
-		dragger->element->addEventListener("pointerup", [=](Event* e) { onPointerUp(e); });
+		element->addEventListener("pointerdown", std::bind_front(&ColorPickerSatValBox::onPointerDown, this));
+		dragger->element->addEventListener("pointermove", std::bind_front(&ColorPickerSatValBox::onPointerMove, this));
+		dragger->element->addEventListener("pointerup", std::bind_front(&ColorPickerSatValBox::onPointerUp, this));
 
 		updateUi();
 	}
@@ -439,9 +453,9 @@ namespace web
 		auto layout = createFlowLayout();
 		layout->addView(dragger);
 
-		element->addEventListener("pointerdown", [=](Event* e) { onPointerDown(e); });
-		dragger->element->addEventListener("pointermove", [=](Event* e) { onPointerMove(e); });
-		dragger->element->addEventListener("pointerup", [=](Event* e) { onPointerUp(e); });
+		element->addEventListener("pointerdown", std::bind_front(&ColorPickerHueBox::onPointerDown, this));
+		dragger->element->addEventListener("pointermove", std::bind_front(&ColorPickerHueBox::onPointerMove, this));
+		dragger->element->addEventListener("pointerup", std::bind_front(&ColorPickerHueBox::onPointerUp, this));
 
 		updateUi();
 	}

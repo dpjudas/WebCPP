@@ -31,7 +31,7 @@ namespace web
 
 	void TabControl::addPage(std::string icon, std::string label, std::shared_ptr<View> page, std::function<void(double clientX, double clientY)> onContextMenu)
 	{
-		std::shared_ptr<TabBarTab> tab = tabs->addTab(icon, label, [=]() { onPageTabClicked(page); }, onContextMenu);
+		std::shared_ptr<TabBarTab> tab = tabs->addTab(icon, label, std::bind_front(&TabControl::onPageTabClicked, this, page), onContextMenu);
 
 		pages[tab] = page;
 		if (!currentPage)

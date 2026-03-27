@@ -9,9 +9,6 @@ namespace web
 	public:
 		ImageBox();
 
-		void setEnabled(const bool value);
-		bool getEnabled() const;
-
 		void setSrc(std::string src);
 		void setSize(const int width, const int height);
 		void setAlt(const std::string& alternateText);
@@ -25,7 +22,6 @@ namespace web
 
 		std::shared_ptr<View> img;
 
-		bool enabled = true;
 		static std::string resourceUrlBase;
 	};
 }

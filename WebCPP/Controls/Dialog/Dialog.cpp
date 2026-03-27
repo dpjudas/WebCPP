@@ -10,7 +10,7 @@ namespace web
 		setupUi();
 		setTitle(title);
 
-		element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
+		element->addEventListener("keydown", std::bind_front(&Dialog::onKeyDown, this));
 	}
 
 	void Dialog::setupUi()
@@ -21,7 +21,7 @@ namespace web
 		centerView->addClass("dialog-centerview");
 		buttonbar = std::make_shared<DialogButtonbar>();
 		buttonbar->addClass("dialog-buttonbar");
-		element->addEventListener("click", [](Event* event) { event->stopPropagation(); });
+		element->addEventListener("click", std::bind_front(&Dialog::onClick, this));
 
 		auto layout = createVBoxLayout();
 		layout->addView(header);
@@ -29,6 +29,11 @@ namespace web
 		layout->addView(buttonbar);
 
 		setSize(500, 250);
+	}
+
+	void Dialog::onClick(Event* event)
+	{
+		event->stopPropagation();
 	}
 
 	void Dialog::setCenterView(std::shared_ptr<View> view)

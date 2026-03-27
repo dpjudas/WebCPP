@@ -30,7 +30,7 @@ namespace web
 	MenubarItem::MenubarItem(Menubar* menubar, bool alignRight) : menubar(menubar), alignRight(alignRight)
 	{
 		addClass("menubaritem");
-		element->addEventListener("click", [=](Event* event) { onClick(event); });
+		element->addEventListener("click", std::bind_front(&MenubarItem::onClick, this));
 	}
 
 	void MenubarItem::onClick(Event* event)

@@ -8,11 +8,21 @@ namespace web
 	{
 		input = std::make_shared<View>("input");
 		input->element->setAttribute("type", "text");
-		input->element->addEventListener("focus", [=](Event* event) { addClass("focus"); });
-		input->element->addEventListener("blur", [=](Event* event) { removeClass("focus"); });
+		input->element->addEventListener("focus", std::bind_front(&LineEdit::onFocus, this));
+		input->element->addEventListener("blur", std::bind_front(&LineEdit::onBlur, this));
 
 		auto layout = createHBoxLayout();
 		layout->addView(input, true, true);
+	}
+
+	void LineEdit::onFocus(Event* event)
+	{
+		addClass("focus");
+	}
+
+	void LineEdit::onBlur(Event* event)
+	{
+		removeClass("focus");
 	}
 
 	std::shared_ptr<ImageBox> LineEdit::addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler)
@@ -22,7 +32,6 @@ namespace web
 		result->setAlt(text);
 		result->setSrc(icon);
 		result->clicked = clickHandler;
-		result->setEnabled(clickHandler != nullptr);
 		getLayout<HBoxLayout>()->addView(result);
 		return result;
 	}
@@ -75,11 +84,11 @@ namespace web
 		return enabled;
 	}
 
-	void LineEdit::setReadOnly(const bool value)
+	void LineEdit::setReadOnly(bool value)
 	{
 		if (readonly != value)
 		{
-			if (value == false)
+			if (!value)
 			{
 				input->element->removeAttribute("readonly");
 				removeClass("readonly");
@@ -98,7 +107,7 @@ namespace web
 		return readonly;
 	}
 
-	void LineEdit::setMaxLength(const int value)
+	void LineEdit::setMaxLength(int value)
 	{
 		input->element->setAttribute("maxlength", std::to_string(value));
 	}
@@ -110,10 +119,10 @@ namespace web
 
 	bool LineEdit::setFocus()
 	{
-		if (getEnabled() == true)
+		if (getEnabled())
 		{
 			input->element->focus();
-			if (getReadOnly() == false)
+			if (!getReadOnly())
 				input->element->handle.call<void>("select");
 			return true;
 		}
@@ -122,7 +131,7 @@ namespace web
 
 	bool LineEdit::setFocusWithoutSelect()
 	{
-		if (getEnabled() == true)
+		if (getEnabled())
 		{
 			input->element->focus();
 			return true;
@@ -132,11 +141,23 @@ namespace web
 
 	void LineEdit::setInputHandler(const std::function<void(const std::string& text)>& handler)
 	{
-		input->element->addEventListener("input", [=](Event* e) { e->stopPropagation(); handler(getText()); });
+		input->element->addEventListener("input", std::bind_front(&LineEdit::onInput, this, handler));
 	}
 
 	void LineEdit::setChangeHandler(const std::function<void(const std::string& text)>& handler)
 	{
-		input->element->addEventListener("change", [=](Event* e) { e->stopPropagation(); handler(getText()); });
+		input->element->addEventListener("change", std::bind_front(&LineEdit::onChange, this, handler));
+	}
+
+	void LineEdit::onInput(std::function<void(const std::string& text)> handler, Event* event)
+	{
+		event->stopPropagation();
+		handler(getText());
+	}
+
+	void LineEdit::onChange(std::function<void(const std::string& text)> handler, Event* event)
+	{
+		event->stopPropagation();
+		handler(getText());
 	}
 }

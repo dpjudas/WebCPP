@@ -11,7 +11,7 @@ namespace web
 
 		context = canvas->handle.call<JSValue>("getContext", std::string("2d"));
 
-		resizeObserver.onResize = [=](std::vector<web::ResizeObserverEntry> entries) { onResize(std::move(entries)); };
+		resizeObserver.onResize = std::bind_front(&ImageCanvas::onResize, this);
 		resizeObserver.observe(canvas.get());
 	}
 

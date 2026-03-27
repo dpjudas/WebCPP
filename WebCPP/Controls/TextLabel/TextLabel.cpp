@@ -5,7 +5,7 @@ namespace web
 {
 	TextLabel::TextLabel() : View("textlabel-view")
 	{
-		element->addEventListener("click", [=](Event* e) { if (getEnabled() == true) onClicked(e); });
+		element->addEventListener("click", std::bind_front(&TextLabel::onClicked, this));
 	}
 
 	TextLabel::TextLabel(const std::string& text) : TextLabel()
@@ -13,7 +13,7 @@ namespace web
 		setText(text);
 	}
 
-	void TextLabel::setEnabled(const bool value)
+	void TextLabel::setEnabled(bool value)
 	{
 		enabled = value;
 
@@ -32,8 +32,8 @@ namespace web
 
 	void TextLabel::setCenterVerticalAlign()
 	{
-		const std::string& fixedHeight = element->getStyle("height");
-		if (fixedHeight.empty() == false)
+		std::string fixedHeight = element->getStyle("height");
+		if (!fixedHeight.empty())
 			element->setStyle("line-height", fixedHeight);
 	}
 
@@ -57,12 +57,12 @@ namespace web
 		return element->handle["innerHTML"].as<std::string>();
 	}
 
-	void TextLabel::setFixedWidth(const int width)
+	void TextLabel::setFixedWidth(int width)
 	{
 		element->setStyle("width", std::to_string(width) + "px");
 	}
 
-	void TextLabel::setFixedHeight(const int height)
+	void TextLabel::setFixedHeight(int height)
 	{
 		element->setStyle("height", std::to_string(height) + "px");
 		if (element->getStyle("line-height").empty() == false) // if centered vertically, apply same height
@@ -79,7 +79,7 @@ namespace web
 		element->setStyle("background-color", backgroundColor);
 	}
 
-	void TextLabel::setBold(const bool bold)
+	void TextLabel::setBold(bool bold)
 	{
 		/*
 		100 – Thin
@@ -97,7 +97,10 @@ namespace web
 
 	void TextLabel::onClicked(Event* event)
 	{
-		if (clicked != nullptr)
+		if (!getEnabled())
+			return;
+
+		if (clicked)
 		{
 			event->stopPropagation();
 			event->preventDefault();

@@ -35,6 +35,7 @@ namespace web
 
 	private:
 		void setupUi();
+		void onClick(Event* event);
 		void onKeyDown(Event* event);
 
 		std::shared_ptr<DialogHeader> header;

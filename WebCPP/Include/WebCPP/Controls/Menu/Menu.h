@@ -30,6 +30,10 @@ namespace web
 		std::shared_ptr<MenuItemSeparator> addSeparator();
 
 		std::function<void()> closeMenu;
+
+	private:
+		void onParentClick(Event* event);
+		void onItemClick(std::function<void()> onClick, Event* event);
 	};
 
 	class MenuItem : public View
@@ -44,8 +48,6 @@ namespace web
 	class MenuItemSeparator : public View
 	{
 	public:
-		MenuItemSeparator() : View("menuitemseparator-view")
-		{
-		}
+		MenuItemSeparator() : View("menuitemseparator-view") {}
 	};
 }

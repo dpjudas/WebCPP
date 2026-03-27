@@ -13,8 +13,8 @@ namespace web
 		auto buttonLayout = button->createHBoxLayout();
 		buttonLayout->addView(label, true, false);
 
-		button->element->addEventListener("click", [=](Event* e) { onClicked(e); });
-		button->element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
+		button->element->addEventListener("click", std::bind_front(&Button::onClicked, this));
+		button->element->addEventListener("keydown", std::bind_front(&Button::onKeyDown, this));
 
 		auto layout = createHBoxLayout();
 		layout->addView(button, true, false);

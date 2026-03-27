@@ -33,8 +33,14 @@ namespace web
 			element->setStyle("right", std::to_string(clientX) + "px");
 			element->setStyle("bottom", "calc(100vh - " + std::to_string(clientY) + "px)");
 		}
-		parent()->element->addEventListener("click", [=](Event* event) { event->stopPropagation(); closeModal(); });
-		closeMenu = [this]() { closeModal(); };
+		parent()->element->addEventListener("click", std::bind_front(&Menu::onParentClick, this));
+		closeMenu = std::bind_front(&Menu::closeModal, this);
+	}
+
+	void Menu::onParentClick(Event* event)
+	{
+		event->stopPropagation();
+		closeModal();
 	}
 
 	void Menu::setLeftPosition(double x, double y)
@@ -57,15 +63,17 @@ namespace web
 		if (!icon.empty())
 			item->icon->setSrc(icon);
 		item->text->setText(text);
-		item->element->addEventListener("click", [=](Event* event)
-			{
-				event->stopPropagation();
-				if (closeMenu)
-					closeMenu();
-				if (onClick)
-					onClick();
-			});
+		item->element->addEventListener("click", std::bind_front(&Menu::onItemClick, this, onClick));
 		return item;
+	}
+
+	void Menu::onItemClick(std::function<void()> onClick, Event* event)
+	{
+		event->stopPropagation();
+		if (closeMenu)
+			closeMenu();
+		if (onClick)
+			onClick();
 	}
 
 	std::shared_ptr<MenuItemSeparator> Menu::addSeparator()

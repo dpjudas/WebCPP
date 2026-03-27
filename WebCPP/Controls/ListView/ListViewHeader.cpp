@@ -9,10 +9,10 @@ namespace web
 	{
 		createHBoxLayout();
 
-		element->addEventListener("pointerdown", [=](Event* e) { onPointerDown(e); });
-		element->addEventListener("pointerup", [=](Event* e) { onPointerUp(e); });
-		element->addEventListener("pointercancel", [=](Event* e) { onPointerCancel(e); });
-		element->addEventListener("pointermove", [=](Event* e) { onPointerMove(e); });
+		element->addEventListener("pointerdown", std::bind_front(&ListViewHeader::onPointerDown, this));
+		element->addEventListener("pointerup", std::bind_front(&ListViewHeader::onPointerUp, this));
+		element->addEventListener("pointercancel", std::bind_front(&ListViewHeader::onPointerCancel, this));
+		element->addEventListener("pointermove", std::bind_front(&ListViewHeader::onPointerMove, this));
 	}
 
 	void ListViewHeader::addColumn(std::string name, double width, bool expanding)

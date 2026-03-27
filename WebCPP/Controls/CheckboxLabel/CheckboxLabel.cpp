@@ -42,7 +42,6 @@ namespace web
 	void CheckboxLabel::setEnabled(const bool value)
 	{
 		checkbox->setEnabled(value);
-		imagebox->setEnabled(value);
 		label->setEnabled(value);
 	}
 
@@ -57,7 +56,7 @@ namespace web
 		{
 			imagebox = std::make_shared<ImageBox>();
 			imagebox->element->setStyle("padding-right", "2px");
-			imagebox->clicked = [=]() { if (getEnabled() == true) setChecked(!isChecked()); };
+			imagebox->clicked = std::bind_front(&CheckboxLabel::onClicked, this);
 
 			getLayout<HBoxLayout>()->addView(imagebox);
 		}
@@ -70,10 +69,16 @@ namespace web
 		if (label == nullptr)
 		{
 			label = std::make_shared<TextLabel>();
-			label->clicked = [=]() { if (getEnabled() == true) setChecked(!isChecked()); };
+			label->clicked = std::bind_front(&CheckboxLabel::onClicked, this);
 
 			getLayout<HBoxLayout>()->addView(label);
 		}
 		label->setText(text);
+	}
+
+	void CheckboxLabel::onClicked()
+	{
+		if (getEnabled())
+			setChecked(!isChecked());
 	}
 }

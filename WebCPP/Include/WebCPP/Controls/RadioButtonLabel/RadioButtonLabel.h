@@ -34,9 +34,10 @@ namespace web
 		void setText(const std::string& text);
 
 	private:
+		void onClick();
+
 		std::shared_ptr<RadioButton> radiobutton;
 		std::shared_ptr<ImageBox> imagebox;
 		std::shared_ptr<TextLabel> label;
-
 	};
 }

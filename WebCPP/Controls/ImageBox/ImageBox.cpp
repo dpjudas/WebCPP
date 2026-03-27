@@ -10,18 +10,6 @@ namespace web
 
 		auto layout = createHBoxLayout();
 		layout->addView(img);
-
-		element->addEventListener("click", [=](Event* e) { if (getEnabled() == true) onClicked(e); });
-	}
-
-	void ImageBox::setEnabled(const bool value)
-	{
-		enabled = value;
-	}
-
-	bool ImageBox::getEnabled() const
-	{
-		return enabled;
 	}
 
 	void ImageBox::setSrc(std::string src)
@@ -56,7 +44,7 @@ namespace web
 
 	void ImageBox::onClicked(Event* event)
 	{
-		if (clicked != nullptr)
+		if (clicked)
 		{
 			event->stopPropagation();
 			event->preventDefault();

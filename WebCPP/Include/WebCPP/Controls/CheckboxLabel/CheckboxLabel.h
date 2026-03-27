@@ -26,6 +26,8 @@ namespace web
 		void setText(const std::string& text);
 
 	private:
+		void onClicked();
+
 		std::shared_ptr<Checkbox> checkbox;
 		std::shared_ptr<ImageBox> imagebox;
 		std::shared_ptr<TextLabel> label;

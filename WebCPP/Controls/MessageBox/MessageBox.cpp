@@ -14,7 +14,7 @@ namespace web
 			addClass("messagebox");
 			auto centerView = getCenterView();
 			labelText = std::make_shared<TextLabel>();
-			buttonOK = getButtonBar()->addButton("OK", [=]() { onOK(); });
+			buttonOK = getButtonBar()->addButton("OK", std::bind_front(&MessageBoxView::onOK, this));
 			buttonOK->element->setStyle("width", "80px");
 			auto layout = centerView->createVBoxLayout();
 			layout->addView(labelText);
@@ -22,7 +22,7 @@ namespace web
 
 		void addCancelButton()
 		{
-			buttonCancel = getButtonBar()->addButton("Cancel", [=]() { onCancel(); });
+			buttonCancel = getButtonBar()->addButton("Cancel", std::bind_front(&MessageBoxView::onCancel, this));
 			buttonCancel->element->setStyle("width", "80px");
 		}
 

@@ -69,13 +69,14 @@ namespace web
 
 	private:
 		void setupUi();
+		void onColumnsUpdated();
 		void onBodyClick(Event* event);
 		void onBodyScroll(Event* event);
 		void onBodyFocus(Event* event);
 		void onBodyBlur(Event* event);
 		void onBodyKeyDown(Event* event);
-		void onItemClick(Event* event, ListViewItem* item);
-		void onItemContextMenu(Event* event, ListViewItem* item);
+		void onItemClick(ListViewItem* item, Event* event);
+		void onItemContextMenu(ListViewItem* item, Event* event);
 		void onItemAttached(ListViewItem* item);
 		void onItemDetached(ListViewItem* item);
 		void openItem(ListViewItem* item);

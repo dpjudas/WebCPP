@@ -34,14 +34,14 @@ namespace web
 		scrollHorz->addClass("listview-scrollhorz");
 		scrollCorner = std::make_shared<ScrollbarCorner>();
 		scrollCorner->addClass("listview-scrollcorner");
-		header->columnsUpdated = [=]() { body->updateColumns(header.get()); updateScrollbars(); };
-		body->element->addEventListener("click", [=](Event* e) { onBodyClick(e); });
-		body->element->addEventListener("scroll", [=](Event* e) { onBodyScroll(e); });
-		body->element->addEventListener("focus", [=](Event* e) { onBodyFocus(e); });
-		body->element->addEventListener("blur", [=](Event* e) { onBodyBlur(e); });
-		body->element->addEventListener("keydown", [=](Event* e) { onBodyKeyDown(e); });
-		scrollVert->scroll = [=]() { onScrollbarScroll(); };
-		scrollHorz->scroll = [=]() { onScrollbarScroll(); };
+		header->columnsUpdated = std::bind_front(&ListView::onColumnsUpdated, this);
+		body->element->addEventListener("click", std::bind_front(&ListView::onBodyClick, this));
+		body->element->addEventListener("scroll", std::bind_front(&ListView::onBodyScroll, this));
+		body->element->addEventListener("focus", std::bind_front(&ListView::onBodyFocus, this));
+		body->element->addEventListener("blur", std::bind_front(&ListView::onBodyBlur, this));
+		body->element->addEventListener("keydown", std::bind_front(&ListView::onBodyKeyDown, this));
+		scrollVert->scroll = std::bind_front(&ListView::onScrollbarScroll, this);
+		scrollHorz->scroll = std::bind_front(&ListView::onScrollbarScroll, this);
 
 		auto layout = createGridLayout();
 		layout->setColumns({ GridLayout::autoSize, GridLayout::minContentSize });
@@ -54,8 +54,14 @@ namespace web
 
 		body->addClass("uses-scrollbar");
 
-		resizeObserver.onResize = [=](std::vector<ResizeObserverEntry> entries) { onResize(std::move(entries)); };
+		resizeObserver.onResize = std::bind_front(&ListView::onResize, this);
 		resizeObserver.observe(body->element.get());
+	}
+
+	void ListView::onColumnsUpdated()
+	{
+		body->updateColumns(header.get());
+		updateScrollbars();
 	}
 
 	void ListView::onResize(std::vector<ResizeObserverEntry> entries)
@@ -225,7 +231,7 @@ namespace web
 			scroll();
 	}
 
-	void ListView::onItemClick(Event* event, ListViewItem* item)
+	void ListView::onItemClick(ListViewItem* item, Event* event)
 	{
 		int detail = event->handle["detail"].as<int>();
 		event->stopPropagation();
@@ -250,7 +256,7 @@ namespace web
 		}
 	}
 
-	void ListView::onItemContextMenu(Event* event, ListViewItem* item)
+	void ListView::onItemContextMenu(ListViewItem* item, Event* event)
 	{
 		event->stopPropagation();
 		event->preventDefault();
@@ -463,8 +469,8 @@ namespace web
 	{
 		item->view = std::make_shared<ListViewItemView>(item);
 
-		item->view->element->addEventListener("click", [=](Event* e) { onItemClick(e, item); });
-		item->view->element->addEventListener("contextmenu", [=](Event* e) { onItemContextMenu(e, item); });
+		item->view->element->addEventListener("click", std::bind_front(&ListView::onItemClick, this, item));
+		item->view->element->addEventListener("contextmenu", std::bind_front(&ListView::onItemContextMenu, this, item));
 
 		ListViewItem* nextItem = item;
 		while (nextItem && !nextItem->nextSibling())

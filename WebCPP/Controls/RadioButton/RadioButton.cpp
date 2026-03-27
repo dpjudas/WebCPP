@@ -12,7 +12,13 @@ namespace web
 
 	void RadioButton::setChangeHandler(const std::function<void(bool checked)>& handler)
 	{
-		element->addEventListener("change", [=](Event* e) { e->stopPropagation(); handler(isChecked()); });
+		element->addEventListener("change", std::bind_front(&RadioButton::onChange, this, handler));
+	}
+
+	void RadioButton::onChange(std::function<void(bool checked)> handler, Event* e)
+	{
+		e->stopPropagation();
+		handler(isChecked());
 	}
 
 	void RadioButton::setId(const std::string& value)

@@ -35,6 +35,7 @@ namespace web
 		void updateUi();
 		void onClick(Event* e);
 		void onFocusIn(Event* e);
+		void onPopupLayerClick(Event* e);
 		void onColorPickerChanged();
 
 		std::function<void()> changeHandler;
@@ -68,9 +69,11 @@ namespace web
 		void updateColorCircle();
 		void onSatValChanged();
 		void onHueChanged();
-		void onRgbChanged();
-		void onNoColorChanged();
+		void onRgbChanged(const std::string&);
+		void onNoColorChanged(bool);
 		void onKeyDown(Event* event);
+		void onClick(Event* event);
+		void onResize(std::vector<ResizeObserverEntry> entries);
 
 		ColorPicker* combo = nullptr;
 		ResizeObserver observer;

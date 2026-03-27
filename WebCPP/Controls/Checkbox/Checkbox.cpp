@@ -11,7 +11,7 @@ namespace web
 
 	void Checkbox::setChangeHandler(const std::function<void(bool checked)>& handler)
 	{
-		element->addEventListener("change", [=](Event* e) { e->stopPropagation(); handler(isChecked()); });
+		element->addEventListener("change", std::bind_front(&Checkbox::onChange, this, handler));
 	}
 
 	void Checkbox::setChecked(bool value)
@@ -32,5 +32,11 @@ namespace web
 	bool Checkbox::getEnabled() const
 	{
 		return element->handle["disabled"].as<bool>() == false;
+	}
+
+	void Checkbox::onChange(std::function<void(bool checked)> handler, Event* e)
+	{
+		e->stopPropagation();
+		handler(isChecked());
 	}
 }

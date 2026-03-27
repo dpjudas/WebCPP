@@ -7,12 +7,12 @@ namespace web
 	{
 		setupUi();
 
-		buttonDecr->element->addEventListener("click", [=](Event* e) { onButtonDecrClick(e); });
-		buttonIncr->element->addEventListener("click", [=](Event* e) { onButtonIncrClick(e); });
-		track->element->addEventListener("pointerdown", [=](Event* e) { onTrackPointerDown(e); });
-		track->element->addEventListener("pointerup", [=](Event* e) { onTrackPointerUp(e); });
-		track->element->addEventListener("pointercancel", [=](Event* e) { onTrackPointerCancel(e); });
-		track->element->addEventListener("pointermove", [=](Event* e) { onTrackPointerMove(e); });
+		buttonDecr->element->addEventListener("click", std::bind_front(&Scrollbar::onButtonDecrClick, this));
+		buttonIncr->element->addEventListener("click", std::bind_front(&Scrollbar::onButtonIncrClick, this));
+		track->element->addEventListener("pointerdown", std::bind_front(&Scrollbar::onTrackPointerDown, this));
+		track->element->addEventListener("pointerup", std::bind_front(&Scrollbar::onTrackPointerUp, this));
+		track->element->addEventListener("pointercancel", std::bind_front(&Scrollbar::onTrackPointerCancel, this));
+		track->element->addEventListener("pointermove", std::bind_front(&Scrollbar::onTrackPointerMove, this));
 	}
 
 	void Scrollbar::onButtonDecrClick(Event* e)

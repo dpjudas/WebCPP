@@ -20,9 +20,9 @@ namespace web
 		std::string getText();
 		void setEnabled(bool value);
 		bool getEnabled() const;
-		void setReadOnly(const bool value);
+		void setReadOnly(bool value);
 		bool getReadOnly() const;
-		void setMaxLength(const int value);
+		void setMaxLength(int value);
 
 		void setFlat();
 
@@ -33,6 +33,11 @@ namespace web
 		void setChangeHandler(const std::function<void(const std::string& text)>& handler);
 
 	private:
+		void onFocus(Event* event);
+		void onBlur(Event* event);
+		void onInput(std::function<void(const std::string& text)> handler, Event* event);
+		void onChange(std::function<void(const std::string& text)> handler, Event* event);
+
 		bool enabled = true;
 		bool readonly = false;
 		std::shared_ptr<View> input;
