@@ -20,7 +20,12 @@ namespace web
 		positionAtCenter
 	};
 
-	typedef std::tuple<std::string, std::string, std::string> ComboboxItemType; // icon, text, id
+	struct ComboBoxItem
+	{
+		std::string icon;
+		std::string text;
+		std::string id;
+	};
 
 	class ComboBox : public View
 	{
@@ -28,6 +33,7 @@ namespace web
 		ComboBox();
 
 		void setEditable();
+		bool isEditable() const { return lineedit != nullptr; }
 
 		void setChangeHandler(const std::function<void()>& handler);
 
@@ -37,17 +43,17 @@ namespace web
 		void clearItems();
 		int addItem(std::string text, const std::string& id = {});
 		int addItem(const std::string& icon, const std::string& text, const std::string& id = {});
-		std::vector<ComboboxItemType> getItems() const { return items; }
+		std::vector<ComboBoxItem> getItems() const { return items; }
 		void sort();
 		void setValue(const std::string& text);
-		void setSelectedIndex(const int index);
+		void setSelectedIndex(int index);
 		std::string getId() const;
 		std::string getValue() const;
 		int getSelectedIndex() const;
 
 		bool setFocus() override;
 
-		void setEnabled(const bool value);
+		void setEnabled(bool value);
 		bool getEnabled() const;
 
 		void closePopup();
@@ -56,6 +62,13 @@ namespace web
 
 	private:
 		void onClick(Event* event);
+		void onFocus(Event* event);
+		void onFocusIn(Event* event);
+		void onFocusOut(Event* event);
+		void onLineEditInput(const std::string& text);
+		void onLineEditChange(const std::string& text);
+		void onPopupModalLayerClick(Event* event);
+		void onPopupItemClick(int index);
 
 		std::function<void()> changeHandler;
 		bool enabled = true;
@@ -65,7 +78,7 @@ namespace web
 		std::shared_ptr<ImageBox> imagebox;
 		std::shared_ptr<TextLabel> label;
 		std::shared_ptr<LineEdit> lineedit;
-		std::vector<ComboboxItemType> items;
+		std::vector<ComboBoxItem> items;
 	};
 
 	class ComboBoxPopup : public View
@@ -78,19 +91,21 @@ namespace web
 		void setMaxItems(const int maxItems);
 
 		int getSelectedIndex() const;
-		void setSelectedIndex(const int index);
+		void setSelectedIndex(int index);
 		ComboBoxPopupItem* getSelectedItem() const;
 		void setSelectedItem(ComboBoxPopupItem* item);
 
 		int count() const { return items.size(); }
 
-		ComboBoxPopupItem* addItem(std::string icon, std::string text, const bool selected, std::function<void()> onClick);
+		ComboBoxPopupItem* addItem(std::string icon, std::string text, bool selected, std::function<void()> onClick);
 		ComboBoxPopupItemSeparator* addSeparator();
 
 	private:
+		void onItemPointerDown(Event* event);
+		void onItemClick(std::function<void()> onClick, Event* event);
 		void onKeyDown(Event* event);
+		void onResize(std::vector<ResizeObserverEntry> entries);
 
-	private:
 		ComboBox* combobox = nullptr;
 		std::vector<std::shared_ptr<ComboBoxPopupItem>> items;
 		ResizeObserver observer;
@@ -102,7 +117,7 @@ namespace web
 		ComboBoxPopupItem();
 
 		bool isSelected() const { return selected; }
-		void setSelected(const bool value);
+		void setSelected(bool value);
 
 		std::shared_ptr<ImageBox> icon;
 		std::shared_ptr<TextLabel> text;
@@ -116,8 +131,6 @@ namespace web
 	class ComboBoxPopupItemSeparator : public View
 	{
 	public:
-		ComboBoxPopupItemSeparator() : View("comboboxpopupitemseparator-view")
-		{
-		}
+		ComboBoxPopupItemSeparator() : View("comboboxpopupitemseparator-view") {}
 	};
 }

@@ -21,14 +21,15 @@ namespace web
 		layout->addView(label, true, true);
 
 		element->setTabIndex(0);
-		element->addEventListener("click", [=](Event* event) { if (getEnabled() == true) onClick(event); });
-		element->addEventListener("focus", [=](Event* event) { if (lineedit != nullptr && lineedit->getVisible() == true) { lineedit->setFocus(); event->stopPropagation(); event->preventDefault(); } });
-		element->addEventListener("focusin", [=](Event* event) { addClass("focus"); });
+		element->addEventListener("click", std::bind_front(&ComboBox::onClick, this));
+		element->addEventListener("focus", std::bind_front(&ComboBox::onFocus, this));
+		element->addEventListener("focusin", std::bind_front(&ComboBox::onFocusIn, this));
+		element->addEventListener("focusout", std::bind_front(&ComboBox::onFocusOut, this));
 	}
 
 	void ComboBox::setEditable()
 	{
-		if (lineedit == nullptr)
+		if (!isEditable())
 		{
 			imagebox->hide();
 			label->hide();
@@ -37,8 +38,8 @@ namespace web
 			lineedit->addClass("combobox-lineedit");
 			lineedit->setFlat();
 			lineedit->setText(label->getText());
-			lineedit->setInputHandler([=](const std::string& text) { setSelectedIndex(-1); label->setText(lineedit->getText()); });
-			lineedit->setChangeHandler([=](const std::string& text) { setSelectedIndex(-1); lineedit->setText(text); label->setText(text); if (changeHandler) changeHandler(); });
+			lineedit->setInputHandler(std::bind_front(&ComboBox::onLineEditInput, this));
+			lineedit->setChangeHandler(std::bind_front(&ComboBox::onLineEditChange, this));
 
 			getLayout<HBoxLayout>()->addView(lineedit, true, true);
 
@@ -46,12 +47,27 @@ namespace web
 		}
 	}
 
+	void ComboBox::onLineEditInput(const std::string& text)
+	{
+		setSelectedIndex(-1);
+		label->setText(lineedit->getText());
+	}
+
+	void ComboBox::onLineEditChange(const std::string& text)
+	{
+		setSelectedIndex(-1);
+		lineedit->setText(text);
+		label->setText(text);
+		if (changeHandler)
+			changeHandler();
+	}
+
 	void ComboBox::setChangeHandler(const std::function<void()>& handler)
 	{
 		changeHandler = handler;
 	}
 
-	void ComboBox::setMaxItems(const int value)
+	void ComboBox::setMaxItems(int value)
 	{
 		maxItems = value;
 		if (popup != nullptr)
@@ -81,9 +97,9 @@ namespace web
 	{
 		struct SortItem
 		{
-			SortItem(const std::tuple<std::string, std::string, std::string>& tuple) : tuple(tuple), sortCompareString(std::get<1>(tuple)) {}
+			SortItem(const ComboBoxItem& item) : item(item), sortCompareString(item.text) {}
 
-			std::tuple<std::string, std::string, std::string> tuple;
+			ComboBoxItem item;
 			JSValue sortCompareString;
 		};
 
@@ -95,7 +111,7 @@ namespace web
 
 		items.clear();
 		for (const SortItem& item : sortitems)
-			addItem(std::get<0>(item.tuple), std::get<1>(item.tuple), std::get<2>(item.tuple));
+			addItem(item.item.icon, item.item.text, item.item.id);
 
 		setSelectedIndex(0);
 	}
@@ -105,32 +121,49 @@ namespace web
 		int index = 0;
 		for (auto& item : items)
 		{
-			if (std::get<1>(item) == text)
+			if (item.text == text)
 			{
 				setSelectedIndex(index);
-				break;
+				return;
 			}
 			index++;
 		}
+
+		setSelectedIndex(-1);
+		if (isEditable())
+			lineedit->setText(text);
+		label->setText(text);
 	}
 
-	void ComboBox::setSelectedIndex(const int index)
+	std::string ComboBox::getValue() const
+	{
+		int index = getSelectedIndex();
+		if (index != -1)
+			return items[index].text;
+		else if (isEditable())
+			return lineedit->getText();
+		else
+			return label->getText();
+	}
+
+
+	void ComboBox::setSelectedIndex(int index)
 	{
 		if (index == -1)
 		{
 			imagebox->hide();
 			label->removeClass("combobox-label-hasicon");
 			label->setText("");
-			if (lineedit != nullptr)
+			if (isEditable())
 				lineedit->setText("");
 			selectedIndex = index;
 		}
 		else if (index < items.size())
 		{
 			const auto& item = items.at(index);
-			if (std::get<0>(item).empty() == false)
+			if (item.icon.empty() == false)
 			{
-				imagebox->setSrc(std::get<0>(item));
+				imagebox->setSrc(item.icon);
 				imagebox->show();
 				label->addClass("combobox-label-hasicon");
 			}
@@ -139,8 +172,8 @@ namespace web
 				imagebox->hide();
 				label->removeClass("combobox-label-hasicon");
 			}
-			label->setText(std::get<1>(item));
-			if (lineedit != nullptr)
+			label->setText(item.text);
+			if (isEditable())
 				lineedit->setText(label->getText());
 			selectedIndex = index;
 		}
@@ -148,20 +181,11 @@ namespace web
 
 	std::string ComboBox::getId() const
 	{
-		const int index = getSelectedIndex();
+		int index = getSelectedIndex();
 		if (index != -1)
-			return std::get<2>(items[index]);
+			return items[index].id;
 		else
-			return label->getText();
-	}
-
-	std::string ComboBox::getValue() const
-	{
-		const int index = getSelectedIndex();
-		if (index != -1)
-			return std::get<1>(items[index]);
-		else
-			return label->getText();
+			return {};
 	}
 
 	int ComboBox::getSelectedIndex() const
@@ -175,7 +199,7 @@ namespace web
 		return true;
 	}
 
-	void ComboBox::setEnabled(const bool value)
+	void ComboBox::setEnabled(bool value)
 	{
 		if (enabled != value)
 		{
@@ -192,8 +216,29 @@ namespace web
 		return enabled;
 	}
 
+	void ComboBox::onFocus(Event* event)
+	{
+		if (lineedit != nullptr && lineedit->getVisible())
+		{
+			lineedit->setFocus(); event->stopPropagation(); event->preventDefault();
+		}
+	}
+
+	void ComboBox::onFocusIn(Event* event)
+	{
+		addClass("focus");
+	}
+
+	void ComboBox::onFocusOut(Event* event)
+	{
+		removeClass("focus");
+	}
+
 	void ComboBox::onClick(Event* event)
 	{
+		if (!getEnabled())
+			return;
+
 		if (popup == nullptr)
 		{
 			if (items.empty() == false && (lineedit == nullptr || event->target() == element->handle))
@@ -203,22 +248,30 @@ namespace web
 				for (int idx = 0, size = items.size(); idx < size; idx++)
 				{
 					const auto& item = items.at(idx);
-
-					popup->addItem(std::get<0>(item), std::get<1>(item), (getSelectedIndex() == idx), [=]() {
-						setSelectedIndex(idx);
-						closePopup();
-						if (changeHandler != nullptr)
-							changeHandler();
-						});
+					popup->addItem(item.icon, item.text, (getSelectedIndex() == idx), std::bind_front(&ComboBox::onPopupItemClick, this, idx));
 				}
 				auto layer = popup->showPopupModal(true);
-				layer->element->addEventListener("click", [=](Event* event) { event->stopPropagation(); closePopup(); });
+				layer->element->addEventListener("click", std::bind_front(&ComboBox::onPopupModalLayerClick, this));
 			}
 		}
 		else
 		{
 			closePopup();
 		}
+	}
+
+	void ComboBox::onPopupModalLayerClick(Event* event)
+	{
+		event->stopPropagation();
+		closePopup();
+	}
+
+	void ComboBox::onPopupItemClick(int index)
+	{
+		setSelectedIndex(index);
+		closePopup();
+		if (changeHandler != nullptr)
+			changeHandler();
 	}
 
 	void ComboBox::closePopup()
@@ -240,7 +293,7 @@ namespace web
 		element->setTabIndex(0);
 		setDefaultFocused();
 
-		element->addEventListener("keydown", [=](Event* e) { onKeyDown(e); });
+		element->addEventListener("keydown", std::bind_front(&ComboBoxPopup::onKeyDown, this));
 
 		// initial size and position
 		const Rect& rect = combobox->element->getBoundingClientRect();
@@ -248,12 +301,15 @@ namespace web
 		element->setStyle("top", std::to_string(rect.y + rect.height - 1) + "px");
 		element->setStyle("width", std::to_string(rect.width - 2) + "px");
 
-		observer.onResize = [=](std::vector<ResizeObserverEntry>) {
-			const Rect& rect = combobox->element->getBoundingClientRect();
-			element->setStyle("left", std::to_string(rect.x) + "px");
-			element->setStyle("top", std::to_string(rect.y + rect.height - 1) + "px");
-			};
+		observer.onResize = std::bind_front(&ComboBoxPopup::onResize, this);
 		observer.observe(combobox->element.get());
+	}
+
+	void ComboBoxPopup::onResize(std::vector<ResizeObserverEntry> entries)
+	{
+		const Rect& rect = combobox->element->getBoundingClientRect();
+		element->setStyle("left", std::to_string(rect.x) + "px");
+		element->setStyle("top", std::to_string(rect.y + rect.height - 1) + "px");
 	}
 
 	void ComboBoxPopup::scrollToItem(ComboBoxPopupItem* item, ComboboxScrollToHint hint)
@@ -286,7 +342,7 @@ namespace web
 		}
 	}
 
-	void ComboBoxPopup::setMaxItems(const int maxItems)
+	void ComboBoxPopup::setMaxItems(int maxItems)
 	{
 		element->setStyle("max-height", std::to_string(maxItems * 20) + "px");
 	}
@@ -301,7 +357,7 @@ namespace web
 		return -1;
 	}
 
-	void ComboBoxPopup::setSelectedIndex(const int index)
+	void ComboBoxPopup::setSelectedIndex(int index)
 	{
 		for (int idx = 0, size = items.size(); idx < size; idx++)
 			items.at(idx)->setSelected(idx == index);
@@ -323,7 +379,7 @@ namespace web
 			item->setSelected(item.get() == value);
 	}
 
-	ComboBoxPopupItem* ComboBoxPopup::addItem(std::string icon, std::string text, const bool selected, std::function<void()> onClick)
+	ComboBoxPopupItem* ComboBoxPopup::addItem(std::string icon, std::string text, bool selected, std::function<void()> onClick)
 	{
 		auto item = std::make_shared<ComboBoxPopupItem>();
 		item->addClass("comboboxpopupitem");
@@ -333,12 +389,8 @@ namespace web
 		else
 			item->icon->hide();
 		item->text->setText(text);
-		item->element->addEventListener("pointerdown", [=](Event* event) { event->preventDefault(); });
-		item->element->addEventListener("click", [=](Event* event) {
-			event->stopPropagation();
-			if (onClick)
-				onClick();
-			});
+		item->element->addEventListener("pointerdown", std::bind_front(&ComboBoxPopup::onItemPointerDown, this));
+		item->element->addEventListener("click", std::bind_front(&ComboBoxPopup::onItemClick, this, onClick));
 		items.push_back(item);
 		getLayout<VBoxLayout>()->addView(item);
 		return item.get();
@@ -350,6 +402,18 @@ namespace web
 		sep->addClass("menu-sep");
 		getLayout<VBoxLayout>()->addView(sep);
 		return sep.get();
+	}
+
+	void ComboBoxPopup::onItemClick(std::function<void()> onClick, Event* event)
+	{
+		event->stopPropagation();
+		if (onClick)
+			onClick();
+	}
+
+	void ComboBoxPopup::onItemPointerDown(Event* event)
+	{
+		event->preventDefault();
 	}
 
 	void ComboBoxPopup::onKeyDown(Event* event)
@@ -416,17 +480,17 @@ namespace web
 		icon->addClass("comboboxpopupitem-icon");
 		text->addClass("comboboxpopupitem-text");
 
-		element->addEventListener("mouseenter", [=](Event* event) { onMouseEnter(event); });
+		element->addEventListener("mouseenter", std::bind_front(&ComboBoxPopupItem::onMouseEnter, this));
 
 		auto layout = createHBoxLayout();
 		layout->addView(icon);
 		layout->addView(text);
 	}
 
-	void ComboBoxPopupItem::setSelected(const bool value)
+	void ComboBoxPopupItem::setSelected(bool value)
 	{
 		selected = value;
-		if (selected == true)
+		if (selected)
 			addClass("comboboxpopup-itemselected");
 		else
 			removeClass("comboboxpopup-itemselected");
