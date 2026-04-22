@@ -283,6 +283,16 @@ namespace web
 			body->removeClass("alternate");
 	}
 
+	void ListView::setItemsSelectable(bool selectable)
+	{
+		itemsSelectable = selectable;
+		if (!itemsSelectable)
+		{
+			focusItem(nullptr);
+			selectItem(nullptr);
+		}
+	}
+
 	void ListView::scrollToItem(ListViewItem* item, ScrollToHint hint)
 	{
 		if (item->view)
@@ -369,6 +379,9 @@ namespace web
 
 	void ListView::selectItem(ListViewItem* item)
 	{
+		if (!itemsSelectable)
+			item = nullptr;
+
 		if (curSelectedItem != item)
 		{
 			if (curSelectedItem && curSelectedItem->view)

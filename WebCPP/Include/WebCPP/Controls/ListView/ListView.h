@@ -43,6 +43,7 @@ namespace web
 		ListViewItem* focusedItem() { return curFocusItem; }
 
 		void setAlternatingRowColors(bool enable);
+		void setItemsSelectable(bool enable);
 
 		void scrollToItem(ListViewItem* item, ScrollToHint hint = ScrollToHint::ensureVisible);
 
@@ -96,6 +97,7 @@ namespace web
 		std::shared_ptr<Scrollbar> scrollHorz;
 		std::shared_ptr<ScrollbarCorner> scrollCorner;
 		ResizeObserver resizeObserver;
+		bool itemsSelectable = true;
 
 		friend class ListViewItem;
 		friend class ListViewItemView;
