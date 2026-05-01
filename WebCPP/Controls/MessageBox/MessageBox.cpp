@@ -63,10 +63,10 @@ namespace web
 		return promise->get_future();
 	}
 
-	task<MessageBoxResult> MessageBox::question(const std::string& title, const std::string& text, const std::string& okLabel, const std::string& cancelLabel)
+	task<bool> MessageBox::question(const std::string& title, const std::string& text, const std::string& okLabel, const std::string& cancelLabel)
 	{
-		auto promise = std::make_shared<task_promise<MessageBoxResult>>();
-		question(title, text, [=]() { promise->set_value(MessageBoxResult::okClicked); }, [=]() { promise->set_value(MessageBoxResult::cancelClicked); }, okLabel, cancelLabel);
+		auto promise = std::make_shared<task_promise<bool>>();
+		question(title, text, [=]() { promise->set_value(true); }, [=]() { promise->set_value(false); }, okLabel, cancelLabel);
 		return promise->get_future();
 	}
 
