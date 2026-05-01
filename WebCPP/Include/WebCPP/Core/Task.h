@@ -341,25 +341,16 @@ namespace web
 	};
 
 	template<typename R = void>
-	class [[nodiscard]] task
+	class task
 	{
 	public:
 		task() = default;
 		task(std::shared_ptr<task_state<R>> state) : state(std::move(state)) {}
 
-		~task()
-		{
-			// You must call get() or detach() on a started task
-			if (state)
-				std::terminate();
-		}
-
 		bool ready() const { if (state) return state->ready(); else throw std::runtime_error("Cannot get the ready state of an empty task!"); }
 		R get() { auto s = std::move(state); if (s) return s->get(); else throw std::runtime_error("Cannot get the value of an empty task!"); }
 
 		void wait() { if (state) return state->wait(); else throw std::runtime_error("Cannot get the value of an empty task!"); }
-
-		void detach() { state.reset(); }
 
 		template<class Rep, class Period>
 		bool wait_for(const std::chrono::duration<Rep, Period>& rel_time) { if (state) return state->wait_for(rel_time); else throw std::runtime_error("Cannot wait on an empty task!"); }
@@ -377,25 +368,16 @@ namespace web
 	};
 
 	template<>
-	class [[nodiscard]] task<void>
+	class task<void>
 	{
 	public:
 		task() = default;
 		task(std::shared_ptr<task_state<void>> state) : state(std::move(state)) {}
 
-		~task()
-		{
-			// You must call get() or detach() on a started task
-			if (state)
-				std::terminate();
-		}
-
 		bool ready() const { if (state) return state->ready(); else throw std::runtime_error("Cannot get the ready state of an empty task!"); }
 		void get() { auto s = std::move(state); if (s) s->get(); else throw std::runtime_error("Cannot get the value of an empty task!"); }
 
 		void wait() { if (state) return state->wait(); else throw std::runtime_error("Cannot get the value of an empty task!"); }
-
-		void detach() { state.reset(); }
 
 		template<class Rep, class Period>
 		bool wait_for(const std::chrono::duration<Rep, Period>& rel_time) { if (state) return state->wait_for(rel_time); else throw std::runtime_error("Cannot wait on an empty task!"); }

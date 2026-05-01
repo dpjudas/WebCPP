@@ -37,8 +37,8 @@ public:
 		layout->addView(buttonBar);
 		layout->addView(pongLabel);
 
-		// Start an async web request and detach the resulting task object
-		testApi().detach();
+		// Start an async web request
+		testApi();
 	}
 
 	web::task<> testApi()
