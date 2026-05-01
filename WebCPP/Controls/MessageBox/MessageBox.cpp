@@ -56,6 +56,20 @@ namespace web
 		std::function<void()> okCallback, cancelCallback;
 	};
 
+	task<> MessageBox::show(const std::string& title, const std::string& text, const std::string& okLabel)
+	{
+		auto promise = std::make_shared<task_promise<>>();
+		show(title, text, [=]() { promise->set_value(); }, okLabel);
+		return promise->get_future();
+	}
+
+	task<MessageBoxResult> MessageBox::question(const std::string& title, const std::string& text, const std::string& okLabel, const std::string& cancelLabel)
+	{
+		auto promise = std::make_shared<task_promise<MessageBoxResult>>();
+		question(title, text, [=]() { promise->set_value(MessageBoxResult::okClicked); }, [=]() { promise->set_value(MessageBoxResult::cancelClicked); }, okLabel, cancelLabel);
+		return promise->get_future();
+	}
+
 	void MessageBox::show(const std::string& title, const std::string& text, std::function<void()> okClicked, const std::string& okLabel)
 	{
 		auto dialog = std::make_shared<MessageBoxView>();
