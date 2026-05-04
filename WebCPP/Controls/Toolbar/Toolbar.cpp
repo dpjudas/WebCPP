@@ -1,5 +1,6 @@
 
 #include "WebCPP/Controls/Toolbar/Toolbar.h"
+#include "WebCPP/Controls/CheckboxLabel/CheckboxLabel.h"
 
 namespace web
 {
@@ -62,6 +63,17 @@ namespace web
 		button->icon->setSrc(img);
 		getLayout<HBoxLayout>()->addView(button);
 		return button;
+	}
+
+	std::shared_ptr<ToolbarCheckbox> Toolbar::addCheckbox(std::string label, std::function<void(bool)> onChange)
+	{
+		auto item = std::make_shared<ToolbarCheckbox>();
+		item->addClass("toolbar-checkbox");
+		item->setText(label);
+		if (onChange)
+			item->setChangeHandler(onChange);
+		getLayout<HBoxLayout>()->addView(item);
+		return item;
 	}
 
 	void Toolbar::addView(std::shared_ptr<View> view)

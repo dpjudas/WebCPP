@@ -5,6 +5,7 @@
 #include "../../Controls/Combobox/Combobox.h"
 #include "../../Controls/LineEdit/LineEdit.h"
 #include "../../Controls/ImageBox/ImageBox.h"
+#include "../../Controls/CheckboxLabel/CheckboxLabel.h"
 
 namespace web
 {
@@ -12,6 +13,7 @@ namespace web
 	class ToolbarSeparator;
 	class ToolbarDropdown;
 	class ToolbarTextInput;
+	class ToolbarCheckbox;
 	class TextLabel;
 	class ComboBox;
 	class LineEdit;
@@ -26,6 +28,7 @@ namespace web
 		std::shared_ptr<ToolbarDropdown> addDropdown(std::string label, std::vector<std::string> items);
 		std::shared_ptr<ToolbarTextInput> addTextInput(std::string label, std::string text = std::string());
 		std::shared_ptr<ToolbarButton> addRadioButton(std::string img);
+		std::shared_ptr<ToolbarCheckbox> addCheckbox(std::string label, std::function<void(bool)> onChange = nullptr);
 		void addView(std::shared_ptr<View> view);
 		void addSpacer();
 	};
@@ -133,4 +136,14 @@ namespace web
 		std::shared_ptr<TextLabel> label;
 		std::shared_ptr<LineEdit> edit;
 	};
+
+	class ToolbarCheckbox : public CheckboxLabel
+	{
+	public:
+		ToolbarCheckbox() : CheckboxLabel()
+		{
+			addClass("toolbarcheckbox-view");
+		}
+	};
+
 }
