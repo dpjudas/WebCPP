@@ -3,6 +3,9 @@
 #include "SocketWebserver.h"
 #include "Webserver/WebContext.h"
 #include <mutex>
+#ifndef WIN32
+#include <arpa/inet.h>
+#endif
 
 namespace web
 {
