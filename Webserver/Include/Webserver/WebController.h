@@ -56,7 +56,7 @@ namespace web
 	public:
 		WebControllerException(int statusCode, std::string statusText, std::string message) : statusCode(statusCode), statusText(std::move(statusText)), message(std::move(message)) {}
 
-		char const* what() const override { return message.c_str(); }
+		char const* what() const noexcept override { return message.c_str(); }
 
 		int getStatusCode() const { return statusCode; }
 		const std::string& getStatusText() const { return statusText; }
