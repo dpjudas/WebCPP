@@ -5,6 +5,7 @@
 #include "WebCPP/Core/Event.h"
 #include "WebCPP/Core/Storage.h"
 #include "WebCPP/Core/HtmlDocument.h"
+#include "WebCPP/Core/Native.h"
 #include "WebCPP/Core/View.h"
 #include "WebCPP/Core/DateTime.h"
 #include <regex>
@@ -265,15 +266,18 @@ namespace web
 			SessionStorage::setString("webcpp.token", accessToken);
 		}
 
-		std::string url = SessionStorage::getString("webcpp.loginFromUrl");
-		if (!url.empty())
+		if (!web::Native::isApp()) // native app's do not navigate
 		{
-			SessionStorage::removeItem("webcpp.loginFromUrl");
-			navigateTo(url, true);
-		}
-		else if (router)
-		{
-			navigateTo(router->getDefaultUrl());
+			std::string url = SessionStorage::getString("webcpp.loginFromUrl");
+			if (!url.empty())
+			{
+				SessionStorage::removeItem("webcpp.loginFromUrl");
+				navigateTo(url, true);
+			}
+			else if (router)
+			{
+				navigateTo(router->getDefaultUrl());
+			}
 		}
 	}
 
