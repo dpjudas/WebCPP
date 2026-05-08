@@ -109,8 +109,13 @@ namespace web
 							break;
 					}
 
-					focusItem(item);
-					selectItem(item);
+					while (item && !item->isSelectable())
+						item = item->prevOpenItem();
+					if (item)
+					{
+						focusItem(item);
+						selectItem(item);
+					}
 				}
 			}
 		}
@@ -133,8 +138,13 @@ namespace web
 							break;
 					}
 
-					focusItem(item);
-					selectItem(item);
+					while (item && !item->isSelectable())
+						item = item->nextOpenItem();
+					if (item)
+					{
+						focusItem(item);
+						selectItem(item);
+					}
 				}
 			}
 		}
@@ -143,6 +153,8 @@ namespace web
 			ListViewItem* item = rootItem()->lastChild();
 			while (item && item->lastChild())
 				item = item->lastChild();
+			while (item && !item->isSelectable())
+				item = item->prevOpenItem();
 			if (item)
 			{
 				focusItem(item);
@@ -152,6 +164,8 @@ namespace web
 		else if (keyCode == 36) // Home
 		{
 			ListViewItem* item = rootItem()->firstChild();
+			while (item && !item->isSelectable())
+				item = item->nextOpenItem();
 			if (item)
 			{
 				focusItem(item);
@@ -161,6 +175,8 @@ namespace web
 		else if (keyCode == 38) // Arrow up
 		{
 			ListViewItem* item = focusedItem() ? focusedItem()->prevOpenItem() : nullptr;
+			while (item && !item->isSelectable())
+				item = item->prevOpenItem();
 			if (item)
 			{
 				focusItem(item);
@@ -170,6 +186,8 @@ namespace web
 		else if (keyCode == 40) // Arrow down
 		{
 			ListViewItem* item = focusedItem() ? focusedItem()->nextOpenItem() : nullptr;
+			while (item && !item->isSelectable())
+				item = item->nextOpenItem();
 			if (item)
 			{
 				focusItem(item);
@@ -238,6 +256,10 @@ namespace web
 
 		body->element->focus();
 		addClass("focused");
+
+		if (!item->isSelectable())
+			return;
+
 		focusItem(item);
 		selectItem(item);
 
@@ -379,7 +401,7 @@ namespace web
 
 	void ListView::selectItem(ListViewItem* item)
 	{
-		if (!itemsSelectable)
+		if (!itemsSelectable || (item && !item->isSelectable()))
 			item = nullptr;
 
 		if (curSelectedItem != item)
