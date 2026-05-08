@@ -31,6 +31,9 @@ namespace web
 		const std::string& id() const { return itemId; }
 		void setId(std::string id) { itemId = std::move(id); }
 
+		bool isSelectable() const { return selectableFlag; }
+		void setSelectable(bool selectable) { selectableFlag = selectable; }
+
 		const ListViewItem* root() const;
 		ListViewItem* parent() const { return parentObj; }
 		ListViewItem* prevSibling() const { return prevSiblingObj; }
@@ -63,6 +66,7 @@ namespace web
 		std::string itemId;
 		std::shared_ptr<ListViewItemView> view;
 		bool openFlag = true;
+		bool selectableFlag = true;
 
 		friend class ListView;
 	};
