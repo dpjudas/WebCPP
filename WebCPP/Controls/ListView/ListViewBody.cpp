@@ -8,8 +8,7 @@ namespace web
 {
 	ListViewBody::ListViewBody() : View("listviewbody-view")
 	{
-		auto layout = createGridLayout();
-		layout->setGap(0.0, 0.0);
+		createGridLayout();
 	}
 
 	void ListViewBody::updateColumns(ListViewHeader* header)
