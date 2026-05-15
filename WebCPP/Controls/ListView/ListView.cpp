@@ -429,6 +429,12 @@ namespace web
 		return header->getColumnCount() - 1;
 	}
 
+	void ListView::setColumnVisible(size_t index, bool visible)
+	{
+		header->setColumnVisible(index, visible);
+		onColumnsUpdated();
+	}
+
 	std::vector<std::string> ListView::columnNames() const
 	{
 		return header->columnNames();
