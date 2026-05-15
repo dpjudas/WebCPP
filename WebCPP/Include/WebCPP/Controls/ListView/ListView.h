@@ -33,6 +33,7 @@ namespace web
 		void clearList();
 
 		int addColumn(std::string name, double width, bool expanding = false);
+		void setColumnVisible(size_t index, bool visible);
 
 		std::vector<std::string> columnNames() const;
 

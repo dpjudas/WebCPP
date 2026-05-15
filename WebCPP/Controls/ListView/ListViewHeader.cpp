@@ -37,6 +37,24 @@ namespace web
 		columns.push_back(col);
 	}
 
+	void ListViewHeader::setColumnVisible(size_t index, bool visible)
+	{
+		if (index >= columns.size())
+			return;
+
+		columns[index].visible = visible;
+		columns[index].label->setVisible(visible);
+
+		for (size_t i = 0, size = columns.size(); i < size; i++)
+		{
+			if (columns[i].splitter)
+			{
+				bool splitterVisible = columns[i].visible && (i + 1 < columns.size() ? columns[i + 1].visible : true);
+				columns[i].splitter->setVisible(splitterVisible);
+			}
+		}
+	}
+
 	std::vector<std::string> ListViewHeader::columnNames() const
 	{
 		std::vector<std::string> names;

@@ -10,10 +10,11 @@ namespace web
 		ListViewHeader();
 
 		void addColumn(std::string name, double width, bool expanding);
+		void setColumnVisible(size_t index, bool visible);
 		size_t getColumnCount() const { return columns.size(); }
 
-		double getColumnWidth(size_t i) const { return columns[i].width; }
-		bool isColumnExpanding(size_t i) const { return columns[i].expanding; }
+		double getColumnWidth(size_t i) const { return columns[i].visible ? columns[i].width : 0.0; }
+		bool isColumnExpanding(size_t i) const { return columns[i].visible && columns[i].expanding; }
 
 		std::vector<std::string> columnNames() const;
 
