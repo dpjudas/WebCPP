@@ -9,23 +9,32 @@ namespace web
 	ListViewBody::ListViewBody() : View("listviewbody-view")
 	{
 		auto layout = createGridLayout();
-		layout->setGap(0.0, 10.0);
+		layout->setGap(0.0, 0.0);
 	}
 
 	void ListViewBody::updateColumns(ListViewHeader* header)
 	{
-		std::vector<GridTrackSize> sizes;
-		for (size_t i = 0, count = header->getColumnCount(); i < count; i++)
+		size_t count = header->getColumnCount();
+
+		size_t lastVisible = count;
+		for (size_t i = 0; i < count; i++)
 		{
-			if (header->isColumnExpanding(i))
-			{
-				sizes.push_back(GridLayout::minmaxSize(header->getColumnWidth(i), GridLayout::autoSize));
-			}
-			else
-			{
-				sizes.push_back(header->getColumnWidth(i));
-			}
+			if (header->getColumnWidth(i) > 0.0 || header->isColumnExpanding(i))
+				lastVisible = i;
 		}
+
+		std::vector<GridTrackSize> sizes;
+		for (size_t i = 0; i < count; i++)
+		{
+			double width = header->getColumnWidth(i);
+			double gap = (lastVisible < count && i < lastVisible) ? 10.0 : 0.0;
+
+			if (header->isColumnExpanding(i))
+				sizes.push_back(GridLayout::minmaxSize(width + gap, GridLayout::autoSize));
+			else
+				sizes.push_back(width + gap);
+		}
+
 		getLayout<GridLayout>()->setColumns(sizes);
 	}
 
