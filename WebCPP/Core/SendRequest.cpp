@@ -54,6 +54,25 @@ namespace web
 		co_return JsonValue::parse(responseText.as<std::string>());
 	}
 
+	task<std::vector<uint8_t>> sendRequestBinary(std::string url, const JsonValue& jsonRequest)
+	{
+		auto requestHeaders = JSValue::object();
+		requestHeaders.set("Content-Type", std::string("application/json"));
+		std::string accessToken = Navigation::getAccessToken();
+		if (!accessToken.empty())
+			requestHeaders.set("Authorization", std::string("Bearer " + accessToken));
+
+		auto request = JSValue::object();
+		request.set("method", std::string("POST"));
+		request.set("body", jsonRequest.to_json());
+		request.set("headers", requestHeaders);
+
+		auto response = co_await createTaskPromise(JSValue::global("fetch")(url, request));
+		auto arrayBuffer = co_await createTaskPromise(response.call<JSValue>("arrayBuffer"));
+		JSValue uint8Array = JSValue::global("Uint8Array").new_(arrayBuffer);
+		co_return vecFromJSArray<uint8_t>(uint8Array);
+	}
+
 	void sendRequest(std::string url, const JsonValue& request, std::function<void(JsonValue response)> responseHandler, std::function<void(int statusCode, std::string contentType, std::string body)> errorHandler)
 	{
 		JSValue httpRequest = JSValue::global("XMLHttpRequest").new_();
@@ -98,6 +117,59 @@ namespace web
 		httpRequest.set("onreadystatechange", onreadystatechange->getHandler());
 
 		httpRequest.call<void>("open", std::string("POST"), url, true);
+		std::string accessToken = Navigation::getAccessToken();
+		if (!accessToken.empty())
+			httpRequest.call<void>("setRequestHeader", std::string("Authorization"), "Bearer " + accessToken);
+		httpRequest.call<void>("setRequestHeader", std::string("Content-Type"), std::string("application/json"));
+		httpRequest.call<void>("send", request.to_json());
+	}
+
+	void sendRequestBinary(std::string url, const JsonValue& request, std::function<void(std::vector<uint8_t>)> responseHandler, std::function<void(int statusCode, std::string contentType, std::string body)> errorHandler)
+	{
+		JSValue httpRequest = JSValue::global("XMLHttpRequest").new_();
+		auto onreadystatechange = new JSCallback();
+		onreadystatechange->setCallback([=](JSValue args) -> JSValue
+			{
+				if (httpRequest["readyState"].as<int>() == 4 /*XMLHttpRequest.DONE*/)
+				{
+					int statusCode = httpRequest["status"].as<int>();
+					std::string contentType;
+					if (statusCode != 0)
+					{
+						JSValue result = httpRequest.call<JSValue>("getResponseHeader", std::string("Content-Type"));
+						if (!result.isNull())
+							contentType = result.as<std::string>();
+					}
+					if (statusCode == 200)
+					{
+						if (responseHandler)
+						{
+							JSValue uint8Array = JSValue::global("Uint8Array").new_(httpRequest["response"]);
+							responseHandler(vecFromJSArray<uint8_t>(uint8Array));
+						}
+					}
+					else
+					{
+						JSValue responseText = httpRequest["responseText"];
+						if (errorHandler)
+						{
+							errorHandler(statusCode, contentType, responseText.isString() ? responseText.as<std::string>() : "");
+						}
+						else
+						{
+							callDefaultRequestErrorHandler(statusCode, contentType, responseText.isString() ? responseText.as<std::string>() : "");
+						}
+					}
+					delete onreadystatechange;
+				}
+
+				return JSValue::undefined();
+			});
+
+		httpRequest.set("onreadystatechange", onreadystatechange->getHandler());
+
+		httpRequest.call<void>("open", std::string("POST"), url, true);
+		httpRequest.set("responseType", std::string("arraybuffer"));
 		std::string accessToken = Navigation::getAccessToken();
 		if (!accessToken.empty())
 			httpRequest.call<void>("setRequestHeader", std::string("Authorization"), "Bearer " + accessToken);
