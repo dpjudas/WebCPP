@@ -26,6 +26,6 @@ splitview-divider-view::after {
 
 splitview-divider-view:hover::after,
 splitview-divider-view.dragging::after {
-	background-color: #888;
+	filter: brightness(0.6);
 	height: 48px;
 }
