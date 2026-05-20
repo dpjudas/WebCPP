@@ -23,12 +23,14 @@ namespace web
 		catch (const WebControllerException& e)
 		{
 			auto response = JsonValue::object();
+			response["ErrorCode"] = JsonValue::number(e.getStatusCode());
 			response["Error"] = JsonValue::string(e.getMessage());
 			context->setJsonResponse(response, e.getStatusCode(), e.getStatusText());
 		}
 		catch (const std::exception& e)
 		{
 			auto response = JsonValue::object();
+			response["ErrorCode"] = JsonValue::number(500);
 			response["Error"] = JsonValue::string(e.what());
 			context->setJsonResponse(response, 500, "Internal Server Error");
 		}
