@@ -21,3 +21,4 @@
 @import "Controls/RadioButtonLabel/RadioButtonLabel.css" layer(webcpp.layout);
 @import "Controls/Scrollbar/Scrollbar.css" layer(webcpp.layout);
 @import "Controls/ImageCanvas/ImageCanvas.css" layer(webcpp.layout);
+@import "Controls/SplitView/SplitView.css" layer(webcpp.layout);

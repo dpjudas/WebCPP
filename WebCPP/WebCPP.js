@@ -56,6 +56,7 @@ var includeFiles = [
 	"Include/WebCPP/Controls/TabControl/TabBarTab.h",
 	"Include/WebCPP/Controls/TabControl/TabControl.h",
 	"Include/WebCPP/Controls/TextLabel/TextLabel.h",
+	"Include/WebCPP/Controls/SplitView/SplitView.h",
 	"Include/WebCPP/Controls/Toolbar/Toolbar.h",
 	"Include/WebCPP/Controls/Toolbar/VToolbar.h",
 	"Include/WebCPP/Controls/ImageCanvas/ImageCanvas.h",
@@ -140,6 +141,8 @@ var files = [
 	"Controls/Toolbar/VToolbar.css",
 	"Controls/ImageCanvas/ImageCanvas.cpp",
 	"Controls/ImageCanvas/ImageCanvas.css",
+	"Controls/SplitView/SplitView.cpp",
+	"Controls/SplitView/SplitView.css",
 ];
 
 var webcpp = Target.addWebLibrary("WebCPP");
