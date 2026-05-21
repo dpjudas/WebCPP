@@ -47,6 +47,15 @@ namespace web
 		applyWidth();
 	}
 
+	void SplitView::setDividerWidth(double width)
+	{
+		const std::string px = std::to_string(static_cast<int>(std::round(width))) + "px";
+		divider->element->setStyle("width", px);
+		divider->element->setStyle("min-width", px);
+		divider->element->setStyle("max-width", px);
+		divider->element->setStyle("flex-basis", px);
+	}
+
 	void SplitView::applyWidth()
 	{
 		View* target = fixSecond ? secondView.get() : firstView.get();

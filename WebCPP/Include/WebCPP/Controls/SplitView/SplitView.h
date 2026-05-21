@@ -21,6 +21,8 @@ namespace web
 		double secondWidth() const;
 		void setSecondWidth(double width);
 
+		void setDividerWidth(double width);
+
 		std::function<void(double)> resized;
 
 	private:
