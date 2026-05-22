@@ -1,6 +1,7 @@
 import { Target, PackageInstaller, Directory } from "cppbuild";
 
 var includeFiles = [
+	"Include/WebCPP/Core/Base64.h",
 	"Include/WebCPP/Core/Clipboard.h",
 	"Include/WebCPP/Core/DateTime.h",
 	"Include/WebCPP/Core/Element.h",
@@ -66,6 +67,7 @@ var files = [
 	"WebCPP.js",
 	"Reset.css",
 	"WebCPP.css",
+	"Core/Base64.cpp",
 	"Core/Clipboard.cpp",
 	"Core/DateTime.cpp",
 	"Core/Element.cpp",

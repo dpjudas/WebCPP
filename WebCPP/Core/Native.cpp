@@ -1,5 +1,6 @@
 
 #include "WebCPP/Core/Native.h"
+#include "WebCPP/Core/Base64.h"
 #include "WebCPP/Core/JSCallback.h"
 
 namespace web
@@ -91,19 +92,13 @@ namespace web
 		return r;
 	}
 
-	static std::vector<uint8_t> decodeBinaryResponse(const std::string& base64)
-	{
-		const std::string decoded = JSValue::global("window").call<std::string>("atob", base64);
-		return std::vector<uint8_t>(decoded.begin(), decoded.end());
-	}
-
 	task<std::vector<uint8_t>> Native::queryBinary(const JsonValue& request)
 	{
 		auto promise = std::make_shared<web::task_promise<std::vector<uint8_t>>>();
 
 		auto successHandler = std::make_unique<JSCallback>([=](JSValue args) -> JSValue
 		{
-			promise->set_value(decodeBinaryResponse(args[0].as<std::string>()));
+			promise->set_value(Base64::decode(args[0].as<std::string>()));
 			return JSValue::undefined();
 		});
 
@@ -140,7 +135,7 @@ namespace web
 		auto successHandler = std::make_unique<JSCallback>([=](JSValue args) -> JSValue
 		{
 			if (onSuccess)
-				onSuccess(decodeBinaryResponse(args[0].as<std::string>()));
+				onSuccess(Base64::decode(args[0].as<std::string>()));
 			return JSValue::undefined();
 		});
 
