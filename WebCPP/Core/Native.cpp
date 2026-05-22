@@ -14,14 +14,13 @@ namespace web
 		return !JSValue::global("window")["cefQuery"].isUndefined();
 	}
 
-	task<JsonValue> Native::query(const JsonValue& request)
+	task<std::string> Native::query(const std::string& request)
 	{
-		auto promise = std::make_shared<web::task_promise<web::JsonValue>>();
+		auto promise = std::make_shared<web::task_promise<std::string>>();
 
 		auto successHandler = std::make_unique<JSCallback>([=](JSValue args) -> JSValue
 			{
-				auto responseJson = web::JsonValue::parse(args[0].as<std::string>());
-				promise->set_value(responseJson);
+				promise->set_value(args[0].as<std::string>());
 				return JSValue::undefined();
 			});
 
@@ -41,7 +40,7 @@ namespace web
 			});
 
 		JSValue args = JSValue::object();
-		args.set("request", request.to_json());
+		args.set("request", request);
 		args.set("persistent", false);
 		args.set("onSuccess", successHandler->getHandler());
 		args.set("onFailure", failureHandler->getHandler());
@@ -53,13 +52,12 @@ namespace web
 		return promise->get_future();
 	}
 
-	void Native::query(const JsonValue& request, std::function<void(JsonValue response)> onSuccess, std::function<void(int code, std::string message)> onFailure)
+	void Native::query(const std::string& request, std::function<void(std::string response)> onSuccess, std::function<void(int code, std::string message)> onFailure)
 	{
 		auto successHandler = std::make_unique<JSCallback>([=](JSValue args) -> JSValue
 			{
-				JsonValue response = JsonValue::parse(args[0].as<std::string>());
 				if (onSuccess)
-					onSuccess(response);
+					onSuccess(args[0].as<std::string>());
 				return JSValue::undefined();
 			});
 
@@ -73,7 +71,7 @@ namespace web
 			});
 
 		JSValue args = JSValue::object();
-		args.set("request", request.to_json());
+		args.set("request", request);
 		args.set("persistent", false);
 		args.set("onSuccess", successHandler->getHandler());
 		args.set("onFailure", failureHandler->getHandler());
@@ -84,13 +82,12 @@ namespace web
 		JSValue::global("window").call<void>("cefQuery", args);
 	}
 
-	int Native::subscribe(const JsonValue& request, std::function<void(JsonValue message)> onMessage, std::function<void(int code, std::string message)> onUnsubscribe)
+	int Native::subscribe(const std::string& request, std::function<void(std::string message)> onMessage, std::function<void(int code, std::string message)> onUnsubscribe)
 	{
 		auto successHandler = std::make_unique<JSCallback>([=](JSValue args) -> JSValue
 			{
-				JsonValue response = JsonValue::parse(args[0].as<std::string>());
 				if (onMessage)
-					onMessage(response);
+					onMessage(args[0].as<std::string>());
 				return JSValue::undefined();
 			});
 
@@ -104,7 +101,7 @@ namespace web
 			});
 
 		JSValue args = JSValue::object();
-		args.set("request", request.to_json());
+		args.set("request", request);
 		args.set("persistent", true);
 		args.set("onSuccess", successHandler->getHandler());
 		args.set("onFailure", failureHandler->getHandler());
