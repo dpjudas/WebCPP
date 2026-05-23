@@ -24,6 +24,7 @@ namespace web
 		{
 			buttonCancel = getButtonBar()->addButton("Cancel", std::bind_front(&MessageBoxView::onCancel, this));
 			buttonCancel->element->setStyle("width", "80px");
+			setCancelButton(buttonCancel);
 		}
 
 		void onOK()

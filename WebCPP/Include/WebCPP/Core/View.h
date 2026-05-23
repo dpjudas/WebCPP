@@ -56,6 +56,7 @@ namespace web
 		virtual void onModalAttach() {}
 
 		bool applyDefaultFocus();
+		bool focusFirstChild();
 
 		std::unique_ptr<Element> element;
 		std::unique_ptr<ShadowRoot> shadowRoot;
@@ -67,7 +68,6 @@ namespace web
 
 	private:
 		void updateClassAttribute();
-		bool focusFirstChild();
 
 		std::unique_ptr<ViewLayout> layout;
 		ViewLayoutItem* layoutItem = nullptr;

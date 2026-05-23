@@ -67,7 +67,11 @@ namespace web
 
 	std::shared_ptr<ModalLayer> HtmlDocumentBody::beginDialogModal()
 	{
+		JSValue activeElement = JSValue::global("document")["activeElement"];
+		if (!modalLayers.empty())
+			modalLayers.back()->element->setAttribute("inert", "");
 		auto layer = std::make_shared<ModalLayer>(true);
+		layer->oldActiveElement = std::move(activeElement);
 		getLayout<FlowLayout>()->addView(layer);
 		modalLayers.push_back(layer);
 		return layer;
@@ -75,7 +79,11 @@ namespace web
 
 	std::shared_ptr<ModalLayer> HtmlDocumentBody::beginPopupModal()
 	{
+		JSValue activeElement = JSValue::global("document")["activeElement"];
+		if (!modalLayers.empty())
+			modalLayers.back()->element->setAttribute("inert", "");
 		auto layer = std::make_shared<ModalLayer>(false);
+		layer->oldActiveElement = std::move(activeElement);
 		getLayout<FlowLayout>()->addView(layer);
 		modalLayers.push_back(layer);
 		return layer;
@@ -89,8 +97,16 @@ namespace web
 			modalLayers.pop_back();
 			layer->detach();
 			JSValue oldActiveElement = std::move(layer->oldActiveElement);
+			if (!modalLayers.empty())
+				modalLayers.back()->element->removeAttribute("inert");
 			if (!oldActiveElement.isNull())
 				oldActiveElement.call<void>("focus");
+			if (!modalLayers.empty())
+			{
+				JSValue active = JSValue::global("document")["activeElement"];
+				if (active == element->handle)
+					modalLayers.back()->focusFirstChild();
+			}
 		}
 	}
 
