@@ -79,12 +79,20 @@ namespace web
 		if (keyCode == 13) // Enter
 		{
 			if (acceptButton)
+			{
 				acceptButton->click(event);
+				event->stopPropagation();
+				event->preventDefault();
+			}
 		}
 		else if (keyCode == 27) // Escape
 		{
 			if (cancelButton)
+			{
 				cancelButton->click(event);
+				event->stopPropagation();
+				event->preventDefault();
+			}
 		}
 	}
 
