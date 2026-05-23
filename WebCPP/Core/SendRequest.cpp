@@ -49,8 +49,10 @@ namespace web
 		request.set("headers", requestHeaders);
 
 		auto response = co_await createTaskPromise(JSValue::global("fetch")(url, request));
-		//int statusCode = response["status"].as<int>();
+		int statusCode = response["status"].as<int>();
 		auto responseText = co_await response.call<JSValue>("text");
+		if (statusCode != 200)
+			callDefaultRequestErrorHandler(statusCode, {}, responseText.isString() ? responseText.as<std::string>() : "");
 		co_return JsonValue::parse(responseText.as<std::string>());
 	}
 
@@ -68,6 +70,13 @@ namespace web
 		request.set("headers", requestHeaders);
 
 		auto response = co_await createTaskPromise(JSValue::global("fetch")(url, request));
+		int statusCode = response["status"].as<int>();
+		if (statusCode != 200)
+		{
+			auto responseText = co_await response.call<JSValue>("text");
+			callDefaultRequestErrorHandler(statusCode, {}, responseText.isString() ? responseText.as<std::string>() : "");
+			co_return {};
+		}
 		auto arrayBuffer = co_await createTaskPromise(response.call<JSValue>("arrayBuffer"));
 		JSValue uint8Array = JSValue::global("Uint8Array").new_(arrayBuffer);
 		co_return vecFromJSArray<uint8_t>(uint8Array);
