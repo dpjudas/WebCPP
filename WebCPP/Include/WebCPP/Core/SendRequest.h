@@ -3,11 +3,31 @@
 #include "JSValue.h"
 #include "JsonValue.h"
 #include "Task.h"
+#include <exception>
 #include <functional>
+#include <string>
 #include <vector>
 
 namespace web
 {
+	class WebSendRequestException : public std::exception
+	{
+	public:
+		WebSendRequestException(int statusCode, std::string statusText, std::string message) : statusCode(statusCode), statusText(std::move(statusText)), message(std::move(message)) {}
+
+		char const* what() const noexcept override { return message.c_str(); }
+
+		int getStatusCode() const { return statusCode; }
+		const std::string& getStatusText() const { return statusText; }
+		const std::string& getMessage() const { return message; }
+
+	private:
+		int statusCode = 0;
+		std::string statusText;
+		std::string message;
+	};
+
+
 	task<JsonValue> sendRequest(std::string url, const JsonValue& request);
 	task<std::vector<uint8_t>> sendRequestBinary(std::string url, const JsonValue& request);
 
