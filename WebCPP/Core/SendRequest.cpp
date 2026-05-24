@@ -41,6 +41,7 @@ namespace web
 			{
 				message = std::to_string(statusCode);
 			}
+			callDefaultRequestErrorHandler(statusCode, {}, message);
 			return WebSendRequestException(statusCode, std::move(statusText), std::move(message), std::move(jsonBody));
 		}
 	}
