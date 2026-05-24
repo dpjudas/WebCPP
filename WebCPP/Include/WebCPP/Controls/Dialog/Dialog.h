@@ -37,6 +37,7 @@ namespace web
 		void setupUi();
 		void onClick(Event* event);
 		void onKeyDown(Event* event);
+		void onCancel(Event* event);
 
 		std::shared_ptr<DialogHeader> header;
 		std::shared_ptr<View> centerView;
