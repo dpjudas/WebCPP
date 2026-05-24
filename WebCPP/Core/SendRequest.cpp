@@ -30,17 +30,18 @@ namespace web
 		{
 			std::string statusText = response["statusText"].isString() ? response["statusText"].as<std::string>() : "";
 			std::string message;
+			JsonValue jsonBody;
 			try
 			{
-				JsonValue json = JsonValue::parse(body);
-				JsonValue errorField = json["Error"];
+				jsonBody = JsonValue::parse(body);
+				JsonValue errorField = jsonBody["Error"];
 				message = (errorField.is_undefined() == false && errorField.is_null() == false) ? errorField.to_string() : std::to_string(statusCode);
 			}
 			catch (...)
 			{
 				message = std::to_string(statusCode);
 			}
-			return WebSendRequestException(statusCode, std::move(statusText), std::move(message));
+			return WebSendRequestException(statusCode, std::move(statusText), std::move(message), std::move(jsonBody));
 		}
 	}
 

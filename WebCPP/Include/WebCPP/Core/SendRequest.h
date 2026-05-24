@@ -13,18 +13,20 @@ namespace web
 	class WebSendRequestException : public std::exception
 	{
 	public:
-		WebSendRequestException(int statusCode, std::string statusText, std::string message) : statusCode(statusCode), statusText(std::move(statusText)), message(std::move(message)) {}
+		WebSendRequestException(int statusCode, std::string statusText, std::string message, JsonValue body) : statusCode(statusCode), statusText(std::move(statusText)), message(std::move(message)), body(std::move(body)) {}
 
 		char const* what() const noexcept override { return message.c_str(); }
 
 		int getStatusCode() const { return statusCode; }
 		const std::string& getStatusText() const { return statusText; }
 		const std::string& getMessage() const { return message; }
+		const JsonValue& getBody() const { return body; }
 
 	private:
 		int statusCode = 0;
 		std::string statusText;
 		std::string message;
+		JsonValue body;
 	};
 
 
