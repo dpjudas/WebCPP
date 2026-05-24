@@ -1,16 +1,17 @@
 
 #include "WebCPP/Controls/Dialog/Dialog.h"
 #include "WebCPP/Controls/Button/Button.h"
-#include <cmath>
+#include "WebCPP/Core/HtmlDocument.h"
 
 namespace web
 {
-	Dialog::Dialog(const std::string& title) : View("dialog-view")
+	Dialog::Dialog(const std::string& title) : View("dialog")
 	{
 		setupUi();
 		setTitle(title);
 
 		element->addEventListener("keydown", std::bind_front(&Dialog::onKeyDown, this));
+		element->addEventListener("cancel", std::bind_front(&Dialog::onCancel, this));
 	}
 
 	void Dialog::setupUi()
@@ -59,8 +60,6 @@ namespace web
 
 	void Dialog::setSize(double width, double height, bool fixedHeight)
 	{
-		element->setStyle("left", "calc(50vw - " + std::to_string(std::round(width * 0.5)) + "px)");
-		element->setStyle("top", "calc(50vh - " + std::to_string(std::round(height * 0.5)) + "px)");
 		element->setStyle("width", std::to_string(width) + "px");
 		if (fixedHeight)
 			element->setStyle("height", std::to_string(height) + "px");
@@ -76,37 +75,42 @@ namespace web
 	void Dialog::onKeyDown(Event* event)
 	{
 		int keyCode = event->handle["keyCode"].as<int>();
-		if (keyCode == 13) // Enter
+		if (keyCode == 13 && acceptButton) // Enter
 		{
-			if (acceptButton)
-			{
-				acceptButton->click(event);
-				event->stopPropagation();
-				event->preventDefault();
-			}
+			acceptButton->click(event);
+			event->stopPropagation();
+			event->preventDefault();
 		}
-		else if (keyCode == 27) // Escape
-		{
-			if (cancelButton)
-			{
-				cancelButton->click(event);
-				event->stopPropagation();
-				event->preventDefault();
-			}
-		}
+	}
+
+	void Dialog::onCancel(Event* event)
+	{
+		event->preventDefault(); // Prevent native close; we manage lifetime via done()
+		if (cancelButton)
+			cancelButton->click(event);
+		else
+			reject();
 	}
 
 	task<int> Dialog::exec()
 	{
-		showDialogModal();
+		HtmlDocument::body()->addView(shared_from_this());
+		element->handle.call<void>("showModal");
 		execTaskPromise = std::make_unique<task_promise<int>>();
+		onModalAttach();
+		if (!applyDefaultFocus() && !focusFirstChild())
+		{
+			element->setTabIndex(0);
+			element->focus();
+		}
 		return execTaskPromise->get_future();
 	}
 
 	void Dialog::done(int resultCode)
 	{
 		auto pin = shared_from_this();
-		closeModal();
+		element->handle.call<void>("close"); // close native top-layer if opened via exec()
+		closeModal(); // detach + endModal() for ModalLayer if opened via showDialogModal()
 		if (execTaskPromise)
 		{
 			execTaskPromise->set_value(resultCode);
