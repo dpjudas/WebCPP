@@ -25,6 +25,23 @@ namespace web
 	namespace
 	{
 		std::function<void(int statusCode, std::string contentType, std::string body)> defaultErrorHandler;
+
+		WebSendRequestException makeException(int statusCode, JSValue response, std::string body)
+		{
+			std::string statusText = response["statusText"].isString() ? response["statusText"].as<std::string>() : "";
+			std::string message;
+			try
+			{
+				JsonValue json = JsonValue::parse(body);
+				JsonValue errorField = json["Error"];
+				message = (errorField.is_undefined() == false && errorField.is_null() == false) ? errorField.to_string() : std::to_string(statusCode);
+			}
+			catch (...)
+			{
+				message = std::to_string(statusCode);
+			}
+			return WebSendRequestException(statusCode, std::move(statusText), std::move(message));
+		}
 	}
 
 	task<JSValue> createTaskPromise(JSValue jsPromise)
@@ -51,8 +68,8 @@ namespace web
 		auto response = co_await createTaskPromise(JSValue::global("fetch")(url, request));
 		int statusCode = response["status"].as<int>();
 		auto responseText = co_await response.call<JSValue>("text");
-		if (statusCode != 200)
-			callDefaultRequestErrorHandler(statusCode, {}, responseText.isString() ? responseText.as<std::string>() : "");
+		if (statusCode < 200 || statusCode >= 300)
+			throw makeException(statusCode, response, responseText.isString() ? responseText.as<std::string>() : "");
 		co_return JsonValue::parse(responseText.as<std::string>());
 	}
 
@@ -71,11 +88,10 @@ namespace web
 
 		auto response = co_await createTaskPromise(JSValue::global("fetch")(url, request));
 		int statusCode = response["status"].as<int>();
-		if (statusCode != 200)
+		if (statusCode < 200 || statusCode >= 300)
 		{
 			auto responseText = co_await response.call<JSValue>("text");
-			callDefaultRequestErrorHandler(statusCode, {}, responseText.isString() ? responseText.as<std::string>() : "");
-			co_return {};
+			throw makeException(statusCode, response, responseText.isString() ? responseText.as<std::string>() : "");
 		}
 		auto arrayBuffer = co_await createTaskPromise(response.call<JSValue>("arrayBuffer"));
 		JSValue uint8Array = JSValue::global("Uint8Array").new_(arrayBuffer);
