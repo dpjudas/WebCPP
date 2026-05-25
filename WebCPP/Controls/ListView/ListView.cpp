@@ -245,6 +245,7 @@ namespace web
 	void ListView::onBodyScroll(Event* event)
 	{
 		updateScrollbars();
+		header->element->scrollTo(body->element->scrollLeft(), 0.0);
 		if (scroll)
 			scroll();
 	}
