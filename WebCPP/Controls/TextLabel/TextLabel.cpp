@@ -17,7 +17,10 @@ namespace web
 	{
 		enabled = value;
 
-		element->setStyle("color", enabled ? "#000000" : "#888888");
+		if (enabled)
+			element->removeStyle("color");
+		else
+			element->setStyle("color", "#888888");
 	}
 
 	bool TextLabel::getEnabled() const
