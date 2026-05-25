@@ -41,5 +41,39 @@ button-view {
         border-radius: 3px;
         margin: 0;
         padding: 5px 20px;
+
+        &:hover {
+            background: rgb(250,250,250);
+        }
     }
 }
+
+/* Styling for dialog boxes */
+dialog-view {
+    position: fixed;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+    border-radius: 6px;
+    overflow: clip;
+
+    dialogheader-view {
+        background-color: darkgray;
+        color: white;
+        padding: 5px 10px;
+        font-weight: bold;
+    }
+
+    .dialog-centerview {
+        margin: 10px;
+    }
+
+    dialogbuttonbar-view {
+        margin: 10px;
+    }
+
+    .dialogheader-closebutton {
+        width: 20px;
+    }
+}
+
+

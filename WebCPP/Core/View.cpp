@@ -84,8 +84,11 @@ namespace web
 
 	std::shared_ptr<ModalLayer> View::showDialogModal(bool setFocus)
 	{
-		auto layer = HtmlDocument::body()->beginDialogModal();
+		auto layer = std::make_shared<ModalLayer>(true, [this](Event* e) { onModalCancel(e); });
+		modalLayers.push_back(layer);
+		HtmlDocument::body()->addView(layer);
 		layer->addView(shared_from_this());
+		layer->showModal();
 		onModalAttach();
 		if (!applyDefaultFocus() && !focusFirstChild())
 		{
@@ -97,8 +100,11 @@ namespace web
 
 	std::shared_ptr<ModalLayer> View::showPopupModal(bool setFocus)
 	{
-		auto layer = HtmlDocument::body()->beginPopupModal();
+		auto layer = std::make_shared<ModalLayer>(false, [this](Event* e) { onModalCancel(e); });
+		modalLayers.push_back(layer);
+		HtmlDocument::body()->addView(layer);
 		layer->addView(shared_from_this());
+		layer->showModal();
 		onModalAttach();
 		if (setFocus && !applyDefaultFocus() && !focusFirstChild())
 		{
@@ -111,7 +117,24 @@ namespace web
 	void View::closeModal()
 	{
 		detach();
-		HtmlDocument::body()->endModal();
+
+		if (!modalLayers.empty())
+		{
+			auto layer = modalLayers.back();
+			modalLayers.pop_back();
+			layer->close();
+			layer->detach();
+
+			JSValue oldActiveElement = std::move(layer->oldActiveElement);
+			if (!oldActiveElement.isNull())
+				oldActiveElement.call<void>("focus");
+			if (!modalLayers.empty())
+			{
+				JSValue active = JSValue::global("document")["activeElement"];
+				if (active == element->handle)
+					modalLayers.back()->focusFirstChild();
+			}
+		}
 	}
 
 	void View::setDefaultFocused()
@@ -138,6 +161,42 @@ namespace web
 	View* View::parent() const
 	{
 		return layoutItem ? layoutItem->layout->owner : nullptr;
+	}
+
+	std::vector<std::shared_ptr<ModalLayer>> View::modalLayers;
+
+	////////////////////////////////////////////////////////////////////////////
+
+	ModalLayer::ModalLayer(bool dialog, std::function<void(Event* event)> onCancelCallback) : View("dialog"), onCancelCallback(onCancelCallback)
+	{
+		addClass("modallayer");
+		oldActiveElement = JSValue::global("document")["activeElement"];
+		element->addEventListener("cancel", std::bind_front(&ModalLayer::onCancel, this));
+		if (dialog)
+			addClass("shaded");
+		createFlowLayout();
+	}
+
+	void ModalLayer::addView(std::shared_ptr<View> view)
+	{
+		getLayout<FlowLayout>()->addView(view);
+	}
+
+	void ModalLayer::showModal()
+	{
+		element->handle.call<void>("showModal");
+	}
+
+	void ModalLayer::close()
+	{
+		element->handle.call<void>("close");
+	}
+
+	void ModalLayer::onCancel(Event* event)
+	{
+		event->preventDefault(); // Prevent native close; we manage lifetime via endModal()
+		if (onCancelCallback)
+			onCancelCallback(event);
 	}
 }
 

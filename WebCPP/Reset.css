@@ -1,7 +1,7 @@
 
 /* reset css styling */
 
-body, header, footer, section, h1, h2, h3, h4, h5, p, ul, ol, li, menu, menuitem {
+body, header, footer, section, h1, h2, h3, h4, h5, p, ul, ol, li, menu, menuitem, dialog {
     margin: 0;
     border: none;
     padding: 0;

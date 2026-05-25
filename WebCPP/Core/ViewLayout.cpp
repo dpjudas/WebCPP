@@ -152,6 +152,14 @@ namespace web
 			owner->element->appendChild(element);
 	}
 
+	void ViewLayout::prependChild(Element* element)
+	{
+		if (owner->shadowRoot)
+			owner->shadowRoot->prependChild(element);
+		else
+			owner->element->prependChild(element);
+	}
+
 	void ViewLayout::insertBefore(Element* newElement, Element* insertPoint)
 	{
 		if (owner->shadowRoot)
@@ -213,6 +221,21 @@ namespace web
 	{
 		attachView(view, std::make_unique<FlowLayoutItem>(FlowPosition::unspecified));
 		appendChild(view->element.get());
+	}
+
+	void FlowLayout::addViewToFront(std::shared_ptr<View> view)
+	{
+		attachView(view, std::make_unique<FlowLayoutItem>(FlowPosition::unspecified));
+		prependChild(view->element.get());
+	}
+
+	void FlowLayout::addViewBefore(std::shared_ptr<View> view, std::shared_ptr<View> sibling)
+	{
+		attachView(view, std::make_unique<FlowLayoutItem>(FlowPosition::unspecified));
+		if (!sibling)
+			appendChild(view->element.get());
+		else
+			insertBefore(view->element.get(), sibling->element.get());
 	}
 
 	std::string FlowLayout::getStyles()

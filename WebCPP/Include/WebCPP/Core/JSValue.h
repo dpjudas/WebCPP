@@ -18,6 +18,7 @@ namespace web
 		static JSValue global(const std::string& name);
 		static JSValue object();
 		static JSValue undefined();
+		static JSValue null();
 		template<typename T> static JSValue array(const std::vector<T>& items);
 		template<typename... Args> JSValue new_(Args... args) const;
 		JSValue operator[](const std::string& name) const;

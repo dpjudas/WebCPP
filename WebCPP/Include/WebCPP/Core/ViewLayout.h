@@ -40,6 +40,7 @@ namespace web
 	protected:
 		void attachView(std::shared_ptr<View> view, std::unique_ptr<ViewLayoutItem> item);
 		void appendChild(Element* element);
+		void prependChild(Element* element);
 		void insertBefore(Element* newElement, Element* insertPoint);
 		void removeChild(Element* element);
 
@@ -81,6 +82,8 @@ namespace web
 		~FlowLayout();
 
 		void addView(std::shared_ptr<View> view);
+		void addViewToFront(std::shared_ptr<View> view);
+		void addViewBefore(std::shared_ptr<View> view, std::shared_ptr<View> sibling);
 
 		std::string getStyles() override;
 	};

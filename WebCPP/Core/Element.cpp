@@ -24,7 +24,12 @@ namespace web
 
 	void Element::insertBefore(Element* newElement, Element* insertPoint)
 	{
-		handle.call<void>("insertBefore", newElement->handle, insertPoint->handle);
+		handle.call<void>("insertBefore", newElement->handle, insertPoint ? insertPoint->handle : JSValue::null());
+	}
+
+	void Element::prependChild(Element* newElement)
+	{
+		handle.call<void>("insertBefore", newElement->handle, handle["firstChild"]);
 	}
 
 	void Element::appendChild(Element* newElement)

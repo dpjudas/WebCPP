@@ -38,6 +38,7 @@ namespace web
 		void onClick(Event* event);
 		void onKeyDown(Event* event);
 		void onCancel(Event* event);
+		void onModalCancel(Event* event) override { onCancel(event); }
 
 		std::shared_ptr<DialogHeader> header;
 		std::shared_ptr<View> centerView;

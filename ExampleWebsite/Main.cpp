@@ -6,6 +6,7 @@
 #include <WebCPP/Core/SendRequest.h>
 #include <WebCPP/Controls/TextLabel/TextLabel.h>
 #include <WebCPP/Controls/Button/Button.h>
+#include <WebCPP/Controls/MessageBox/MessageBox.h>
 
 // This is the view shown for the main page
 class HomePage : public web::View
@@ -24,11 +25,17 @@ public:
 
 		auto button = std::make_shared<web::Button>();
 		button->setText("Go to about page");
-		button->pressed = []() { web::Navigation::navigateTo("/about"); };
+		button->pressed = std::bind_front(&HomePage::onButtonPressed, this);
+
+		auto button2 = std::make_shared<web::Button>();
+		button2->setText("Show message");
+		button2->pressed = std::bind_front(&HomePage::onShowMessageBox, this);
 
 		auto buttonBar = std::make_shared<web::View>();
 		auto barLayout = buttonBar->createHBoxLayout();
+		barLayout->setGap(5);
 		barLayout->addView(button);
+		barLayout->addView(button2);
 
 		auto layout = createVBoxLayout();
 		layout->setGap(5);
@@ -39,6 +46,16 @@ public:
 
 		// Start an async web request
 		testApi();
+	}
+
+	void onButtonPressed()
+	{
+		web::Navigation::navigateTo("/about");
+	}
+
+	void onShowMessageBox()
+	{
+		web::MessageBox::show("Information", "This is a message box!");
 	}
 
 	web::task<> testApi()

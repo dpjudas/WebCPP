@@ -65,64 +65,8 @@ namespace web
 		getLayout<FlowLayout>()->addView(view);
 	}
 
-	std::shared_ptr<ModalLayer> HtmlDocumentBody::beginDialogModal()
+	void HtmlDocumentBody::addViewToFront(std::shared_ptr<View> view)
 	{
-		JSValue activeElement = JSValue::global("document")["activeElement"];
-		if (!modalLayers.empty())
-			modalLayers.back()->element->setAttribute("inert", "");
-		auto layer = std::make_shared<ModalLayer>(true);
-		layer->oldActiveElement = std::move(activeElement);
-		getLayout<FlowLayout>()->addView(layer);
-		modalLayers.push_back(layer);
-		return layer;
-	}
-
-	std::shared_ptr<ModalLayer> HtmlDocumentBody::beginPopupModal()
-	{
-		JSValue activeElement = JSValue::global("document")["activeElement"];
-		if (!modalLayers.empty())
-			modalLayers.back()->element->setAttribute("inert", "");
-		auto layer = std::make_shared<ModalLayer>(false);
-		layer->oldActiveElement = std::move(activeElement);
-		getLayout<FlowLayout>()->addView(layer);
-		modalLayers.push_back(layer);
-		return layer;
-	}
-
-	void HtmlDocumentBody::endModal()
-	{
-		if (!modalLayers.empty())
-		{
-			auto layer = modalLayers.back();
-			modalLayers.pop_back();
-			layer->detach();
-			JSValue oldActiveElement = std::move(layer->oldActiveElement);
-			if (!modalLayers.empty())
-				modalLayers.back()->element->removeAttribute("inert");
-			if (!oldActiveElement.isNull())
-				oldActiveElement.call<void>("focus");
-			if (!modalLayers.empty())
-			{
-				JSValue active = JSValue::global("document")["activeElement"];
-				if (active == element->handle)
-					modalLayers.back()->focusFirstChild();
-			}
-		}
-	}
-
-	////////////////////////////////////////////////////////////////////////////
-
-	ModalLayer::ModalLayer(bool dialog) : View("modallayer-view")
-	{
-		if (dialog)
-			addClass("shaded");
-
-		oldActiveElement = JSValue::global("document")["activeElement"];
-		createFlowLayout();
-	}
-
-	void ModalLayer::addView(std::shared_ptr<View> view)
-	{
-		getLayout<FlowLayout>()->addView(view);
+		getLayout<FlowLayout>()->addViewToFront(view);
 	}
 }

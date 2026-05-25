@@ -57,6 +57,11 @@ namespace web
 		handle.call<void>("insertBefore", newElement->handle, insertPoint->handle);
 	}
 
+	void ShadowRoot::prependChild(Element* newElement)
+	{
+		handle.call<void>("insertBefore", newElement->handle, handle.call<JSValue>("firstChild"));
+	}
+
 	void ShadowRoot::appendChild(Element* newElement)
 	{
 		handle.call<void>("appendChild", newElement->handle);

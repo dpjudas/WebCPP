@@ -15,6 +15,7 @@ namespace web
 		~ShadowRoot();
 
 		void insertBefore(Element* newElement, Element* insertPoint);
+		void prependChild(Element* newElement);
 		void appendChild(Element* newElement);
 		void removeChild(Element* childElement);
 

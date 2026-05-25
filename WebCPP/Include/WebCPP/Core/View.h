@@ -54,6 +54,7 @@ namespace web
 		virtual void setDefaultFocused();
 		virtual bool setFocus();
 		virtual void onModalAttach() {}
+		virtual void onModalCancel(Event* event) {}
 
 		bool applyDefaultFocus();
 		bool focusFirstChild();
@@ -76,6 +77,25 @@ namespace web
 
 		bool defaultFocused = false;
 
+		static std::vector<std::shared_ptr<ModalLayer>> modalLayers;
+
 		friend class ViewLayout;
+	};
+
+	class ModalLayer : public View
+	{
+	public:
+		ModalLayer(bool dialog, std::function<void(Event* event)> onCancelCallback);
+		void addView(std::shared_ptr<View> view);
+
+	private:
+		void showModal();
+		void close();
+		void onCancel(Event* event);
+
+		std::function<void(Event* event)> onCancelCallback;
+
+		JSValue oldActiveElement = JSValue::undefined();
+		friend class View;
 	};
 }
