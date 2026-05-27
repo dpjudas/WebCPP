@@ -116,6 +116,7 @@ namespace web
 
 	void View::closeModal()
 	{
+		auto pin = shared_from_this();
 		detach();
 
 		if (!modalLayers.empty())
