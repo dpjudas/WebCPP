@@ -74,7 +74,7 @@ namespace web
 		static void navigateTo(std::string url, bool replace = false);
 
 		static void beginLogin(std::string loginUrl);
-		static void endLogin(OAuthStatus status, const std::string& accessToken = {}, const std::string& loginError = {});
+		static void endLogin(OAuthStatus status, const std::string& accessToken = {}, const std::string& loginError = {}, bool rememberMe = false);
 		static void logout();
 
 		static void pushState(std::string pageTitle, std::vector<std::string> pathParts);

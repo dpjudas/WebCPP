@@ -209,6 +209,8 @@ namespace web
 
 		// Are we still authenticated?
 		std::string token = SessionStorage::getString("webcpp.token");
+		if (token.empty())
+			token = LocalStorage::getString("webcpp.token");
 		JsonValue savedjwt = extractJwt(token);
 		if (!savedjwt.is_undefined() && savedjwt.properties().find("exp") != savedjwt.properties().end())
 		{
@@ -225,7 +227,10 @@ namespace web
 			}
 		}
 		if (authStatus != OAuthStatus::authenticated)
+		{
 			SessionStorage::removeItem("webcpp.token");
+			LocalStorage::removeItem("webcpp.token");
+		}
 
 		onPopStateCallback = std::make_unique<JSCallback>([=](JSValue args)
 			{
@@ -254,7 +259,7 @@ namespace web
 		navigateTo(url, true);
 	}
 
-	void Navigation::endLogin(OAuthStatus newStatus, const std::string& newAccessToken, const std::string& newLoginError)
+	void Navigation::endLogin(OAuthStatus newStatus, const std::string& newAccessToken, const std::string& newLoginError, bool rememberMe)
 	{
 		authStatus = newStatus;
 		accessToken = newAccessToken;
@@ -264,6 +269,8 @@ namespace web
 		if (authStatus == OAuthStatus::authenticated && !jwt.is_undefined() && !accessToken.empty())
 		{
 			SessionStorage::setString("webcpp.token", accessToken);
+			if (rememberMe)
+				LocalStorage::setString("webcpp.token", accessToken);
 		}
 
 		if (!web::Native::isApp()) // native app's do not navigate
@@ -284,6 +291,7 @@ namespace web
 	void Navigation::logout()
 	{
 		SessionStorage::removeItem("webcpp.token");
+		LocalStorage::removeItem("webcpp.token");
 		authStatus = OAuthStatus::unauthenticated;
 		accessToken = {};
 		authError = {};
