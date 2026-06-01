@@ -49,8 +49,19 @@ namespace web
 		{
 			if (columns[i].splitter)
 			{
-				bool splitterVisible = columns[i].visible && (i + 1 < columns.size() ? columns[i + 1].visible : true);
-				columns[i].splitter->setVisible(splitterVisible);
+				bool hasNextVisible = false;
+				if (columns[i].visible)
+				{
+					for (size_t j = i + 1; j < size; j++)
+					{
+						if (columns[j].visible)
+						{
+							hasNextVisible = true;
+							break;
+						}
+					}
+				}
+				columns[i].splitter->setVisible(columns[i].visible && hasNextVisible);
 			}
 		}
 	}

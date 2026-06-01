@@ -30,7 +30,7 @@ namespace web
 				columns[index]->detach();
 			columns[index] = view;
 
-			getLayout<GridLayout>()->addViewBefore(view, index + 1 < columns.size() ? columns[index + 1] : nullptr);
+			getLayout<GridLayout>()->addViewBefore(view, index + 1 < columns.size() ? columns[index + 1] : nullptr, (int)(index + 1));
 
 			item->listview()->onColumnViewChanged(this, index);
 		}
