@@ -39,7 +39,6 @@ namespace web
 		oninterval->setCallback([=](JSValue args) -> JSValue
 			{
 				onInterval();
-				pendingIntervals.erase(id);
 				return JSValue::undefined();
 			});
 
