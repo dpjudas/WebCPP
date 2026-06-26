@@ -493,6 +493,15 @@ namespace web
 	{
 		if (item != root.get() && item->view)
 		{
+			if (item == curFocusItem)
+				curFocusItem = nullptr;
+			if (item == curSelectedItem)
+			{
+				curSelectedItem = nullptr;
+				if (selectionChanged)
+					selectionChanged();
+			}
+
 			if (item->isOpen())
 			{
 				for (ListViewItem* cur = item->firstChild(); cur != nullptr; cur = cur->nextSibling())
