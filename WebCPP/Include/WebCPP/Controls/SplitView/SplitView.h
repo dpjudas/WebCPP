@@ -6,8 +6,6 @@
 namespace web
 {
 	// Horizontal split view with a draggable divider.
-	// Pass fully-configured views (with their own layouts) to the constructor
-	// so WebCPP's LayoutStyles can capture their display:flex styles correctly.
 	class SplitView : public View
 	{
 	public:

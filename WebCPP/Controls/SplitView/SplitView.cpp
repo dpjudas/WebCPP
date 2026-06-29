@@ -32,8 +32,15 @@ namespace web
 		divider->element->addEventListener("pointermove", std::bind_front(&SplitView::onPointerMove, this));
 	}
 
-	double SplitView::firstWidth() const { return currentWidth; }
-	double SplitView::secondWidth() const { return currentWidth; }
+	double SplitView::firstWidth() const
+	{
+		return currentWidth;
+	}
+
+	double SplitView::secondWidth() const
+	{
+		return currentWidth;
+	}
 
 	void SplitView::setFirstWidth(double width)
 	{
