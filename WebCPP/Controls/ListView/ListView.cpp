@@ -570,6 +570,9 @@ namespace web
 		{
 			// columnView->element->setStyle("padding-left", "5px");
 		}
+
+		if (splitterSize > 0)
+			columnView->element->setStyle("padding-right", std::to_string(splitterSize) + "px");
 	}
 
 	bool ListView::setFocus()
