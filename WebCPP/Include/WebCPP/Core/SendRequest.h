@@ -32,6 +32,7 @@ namespace web
 
 	task<JsonValue> sendRequest(std::string url, const JsonValue& request);
 	task<std::vector<uint8_t>> sendRequestBinary(std::string url, const JsonValue& request);
+	task<JsonValue> sendRequest(std::string url, const uint8_t* data, size_t size, const std::string& contentType);
 
 	void sendRequest(std::string url, const JsonValue& request, std::function<void(JsonValue response)> responseHandler, std::function<void(int statusCode, std::string contentType, std::string body)> errorHandler = {});
 	void sendRequestBinary(std::string url, const JsonValue& request, std::function<void(std::vector<uint8_t> response)> responseHandler, std::function<void(int statusCode, std::string contentType, std::string body)> errorHandler = {});

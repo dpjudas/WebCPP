@@ -234,7 +234,7 @@ namespace web
 				throw HttpErrorException(); // To do: implement chunked transfer
 
 			int64_t contentLength = std::atoll(itContentLength->second.c_str());
-			if (contentLength < 0 || contentLength > 4 * 1024 * 1024)
+			if (contentLength < 0 || contentLength > 50 * 1024 * 1024)
 				throw HttpErrorException(); // To do: implement streaming large uploads
 
 			webctx.request.content = DataBuffer::create(contentLength);
