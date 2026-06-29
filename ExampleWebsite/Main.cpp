@@ -53,9 +53,17 @@ public:
 		web::Navigation::navigateTo("/about");
 	}
 
-	void onShowMessageBox()
+	web::task<> onShowMessageBox()
 	{
-		web::MessageBox::show("Information", "This is a message box!");
+		bool result = co_await web::MessageBox::question("Question", "Are you tired of hearing about AI?", "YES", "OH YES");
+		if (result)
+		{
+			web::MessageBox::show("Information", "You are right!");
+		}
+		else
+		{
+			web::MessageBox::show("Information", "You are SO RIGHT!");
+		}
 	}
 
 	web::task<> testApi()
