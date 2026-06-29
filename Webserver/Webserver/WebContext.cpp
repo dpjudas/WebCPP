@@ -13,6 +13,11 @@ namespace web
 		return JsonValue::parse(std::string((const char*)request.content->data(), request.content->size()));
 	}
 
+	std::shared_ptr<DataBuffer> WebContext::getBinaryRequest() const
+	{
+		return request.content;
+	}
+
 	void WebContext::setJsonResponse(const JsonValue& value, int statusCode, const std::string& statusText)
 	{
 		setTextResponse(value.to_json(), "application/json", statusCode, statusText);

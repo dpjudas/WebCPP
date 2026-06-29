@@ -25,6 +25,7 @@ namespace web
 		bool handled = false;
 
 		JsonValue getJsonRequest() const;
+		std::shared_ptr<DataBuffer> getBinaryRequest() const;
 
 		void setJsonResponse(const JsonValue& value, int statusCode = 200, const std::string& statusText = "OK");
 		void setHtmlResponse(const std::string& html, int statusCode = 200, const std::string& statusText = "OK");

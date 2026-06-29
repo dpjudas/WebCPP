@@ -75,6 +75,29 @@ namespace web
 		co_return JsonValue::parse(responseText.as<std::string>());
 	}
 
+	task<JsonValue> sendRequest(std::string url, const uint8_t* data, size_t size, const std::string& contentType)
+	{
+		auto requestHeaders = JSValue::object();
+		requestHeaders.set("Content-Type", contentType);
+		std::string accessToken = Navigation::getAccessToken();
+		if (!accessToken.empty())
+			requestHeaders.set("Authorization", std::string("Bearer " + accessToken));
+
+		JSValue uint8Array = emscripten::val(emscripten::typed_memory_view(size, data));
+
+		auto request = JSValue::object();
+		request.set("method", std::string("POST"));
+		request.set("body", uint8Array);
+		request.set("headers", requestHeaders);
+
+		auto response = co_await createTaskPromise(JSValue::global("fetch")(url, request));
+		int statusCode = response["status"].as<int>();
+		auto responseText = co_await response.call<JSValue>("text");
+		if (statusCode < 200 || statusCode >= 300)
+			throw makeException(statusCode, response, responseText.isString() ? responseText.as<std::string>() : "");
+		co_return JsonValue::parse(responseText.as<std::string>());
+	}
+
 	task<std::vector<uint8_t>> sendRequestBinary(std::string url, const JsonValue& jsonRequest)
 	{
 		auto requestHeaders = JSValue::object();

@@ -124,13 +124,27 @@ namespace web
 			}
 			else if (request->Verb == HttpVerbPOST)
 			{
-				// To do: read request body
+				std::shared_ptr<DataBuffer> content;
+				const HTTP_KNOWN_HEADER& clHeader = request->Headers.KnownHeaders[HttpHeaderContentLength];
+				if (clHeader.RawValueLength > 0)
+				{
+					const int64_t contentLength = std::atoll(clHeader.pRawValue);
+					if (contentLength > 0 && contentLength <= 50 * 1024 * 1024)
+					{
+						content = DataBuffer::create(contentLength);
+						ULONG bytesRead = 0;
+						ULONG result = HttpReceiveRequestEntityBody(webserver->requestQueue, request->RequestId, 0, content->data(), (ULONG)contentLength, &bytesRead, nullptr);
+						if (result != NO_ERROR)
+							content = nullptr;
+					}
+				}
 
 				try
 				{
 					WebContext webctx;
 					webctx.request.verb = WebRequestVerb::post;
 					webctx.request.url = WebRequestUrl(from_utf16(request->CookedUrl.pFullUrl));
+					webctx.request.content = std::move(content);
 					addHeaders(request, webctx);
 
 					webserver->processRequest(&webctx);
