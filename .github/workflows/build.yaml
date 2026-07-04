@@ -1,0 +1,113 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }} | ${{ matrix.config.build_type }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - name: Visual Studio 2026
+          os: windows-2025-vs2026
+
+#        - name: Linux GCC 12
+#          os: ubuntu-26.04
+#          deps_cmdline: sudo apt update && sudo apt install libxx-dev
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        if [[ -n "${{ matrix.config.deps_cmdline }}" ]]; then
+          eval ${{ matrix.config.deps_cmdline }}
+        fi
+        mkdir build
+
+    - name: Install CPPBuild
+      shell: bash
+      run: |
+        git clone https://github.com/dpjudas/CPPBuild.git
+        cd CPPBuild
+        if [[ "${{ runner.os }}" == 'Windows' ]]; then
+          msbuild /p:Configuration=Release CPPBuild.sln
+          export PATH=$PATH:$(pwd)/Build/Release/x64/bin
+        elif [[ "${{ runner.os }}" == 'Linux' ]]; then
+          make -j 4
+          make install
+        fi
+        cd ..
+
+    - name: Install Emscripten
+      shell: bash
+      run: |
+        git clone https://github.com/emscripten-core/emsdk.git
+        cd emsdk
+        if [[ "${{ runner.os }}" == 'Windows' ]]; then
+          emsdk install 6.0.1
+          emsdk activate 6.0.1
+        elif [[ "${{ runner.os }}" == 'Linux' ]]; then
+          ./emsdk install 6.0.1
+          ./emsdk activate 6.0.1
+        fi
+        cd ..
+
+    - name: Configure
+      shell: bash
+      run: |
+        cppbuild configure
+
+    - name: Build
+      shell: bash
+      run: |
+        if [[ "${{ runner.os }}" == 'Windows' ]]; then
+          msbuild /p:Configuration=Debug WebCPP.sln
+          msbuild /p:Configuration=Release WebCPP.sln
+        elif [[ "${{ runner.os }}" == 'Linux' ]]; then
+          make
+        fi
+
+    - name: Create Package
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        cppbuild create-package
+
+    - name: Upload WebCPP Package
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v7
+      with:
+        path: Build/Packages/WebCPP.zip
+        name: WebCPP-emsdk-${{ matrix.config.emver }}
+
+    - name: List Build Directory
+      if: always()
+      shell: bash
+      run: |
+        git status
+        ls -lR Build
+
+  deploy:
+    name: Update Latest successful build
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+
+    steps:
+    - name: Download Emscripten artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: WebCPP-emsdk-6.0.1
+        path: build/WebCPP-emsdk-6.0.1.zip
+
+    - name: Update nightly release
+      uses: pyTooling/Actions/releaser@r0
+      with:
+        tag: nightly
+        rm: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        files: build/WebCPP-emsdk-6.0.1.zip
