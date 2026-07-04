@@ -102,7 +102,6 @@ jobs:
       uses: actions/download-artifact@v8
       with:
         name: WebCPP-emscripten-6.0.1.zip
-        path: build/WebCPP-emscripten-6.0.1.zip
 
     - name: Update nightly release
       uses: pyTooling/Actions/releaser@r0
@@ -110,4 +109,4 @@ jobs:
         tag: nightly
         rm: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        files: build/WebCPP-emscripten-6.0.1.zip
+        files: WebCPP-emscripten-6.0.1.zip
