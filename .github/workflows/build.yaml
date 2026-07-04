@@ -47,8 +47,8 @@ jobs:
     - name: Add cppbuild to PATH
       if: runner.os == 'Windows'
       run: |
-        echo "Adding directory to search path: %cd%\CPPBuild\Build\Release"
-        echo "%cd%\CPPBuild\Build\Release" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
+        echo "Adding directory to search path: $($pwd.Path)\CPPBuild\Build\Release"
+        echo "$($pwd.Path)\CPPBuild\Build\Release" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
 
     - name: Install Emscripten
       shell: bash
