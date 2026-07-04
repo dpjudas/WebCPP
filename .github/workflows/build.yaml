@@ -37,7 +37,7 @@ jobs:
         git clone https://github.com/dpjudas/CPPBuild.git
         cd CPPBuild
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          msbuild /p:Configuration=Release CPPBuild.sln
+          msbuild.exe /p:Configuration=Release CPPBuild.sln
           export PATH=$PATH:$(pwd)/Build/Release/x64/bin
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
           make -j 4
@@ -51,8 +51,8 @@ jobs:
         git clone https://github.com/emscripten-core/emsdk.git
         cd emsdk
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          emsdk install 6.0.1
-          emsdk activate 6.0.1
+          emsdk.bat install 6.0.1
+          emsdk.bat activate 6.0.1
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
           ./emsdk install 6.0.1
           ./emsdk activate 6.0.1
@@ -68,8 +68,8 @@ jobs:
       shell: bash
       run: |
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          msbuild /p:Configuration=Debug WebCPP.sln
-          msbuild /p:Configuration=Release WebCPP.sln
+          msbuild.exe /p:Configuration=Debug WebCPP.sln
+          msbuild.exe /p:Configuration=Release WebCPP.sln
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
           make
         fi
