@@ -15,18 +15,29 @@ namespace web
 	{
 		size_t count = header->getColumnCount();
 
-		size_t lastVisible = count;
-		for (size_t i = 0; i < count; i++)
-		{
-			if (header->getColumnWidth(i) > 0.0 || header->isColumnExpanding(i))
-				lastVisible = i;
-		}
+		auto isVisible = [&](size_t i) { return header->getColumnWidth(i) > 0.0 || header->isColumnExpanding(i); };
 
 		std::vector<GridTrackSize> sizes;
 		for (size_t i = 0; i < count; i++)
 		{
 			double width = header->getColumnWidth(i);
-			double gap = (lastVisible < count && i < lastVisible) ? 10.0 : 0.0;
+
+			// The header only renders a (10px) splitter after column i when column i itself is
+			// visible and some later column is also visible. Mirror that exactly here, otherwise
+			// a hidden column followed by a later visible column gets a phantom gap the header
+			// doesn't have, desyncing the row grid from the header from that point onward.
+			double gap = 0.0;
+			if (isVisible(i))
+			{
+				for (size_t j = i + 1; j < count; j++)
+				{
+					if (isVisible(j))
+					{
+						gap = 10.0;
+						break;
+					}
+				}
+			}
 
 			if (header->isColumnExpanding(i))
 				sizes.push_back(GridLayout::minmaxSize(width + gap, GridLayout::autoSize));
