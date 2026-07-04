@@ -110,3 +110,10 @@ jobs:
         rm: true
         token: ${{ secrets.GITHUB_TOKEN }}
         files: WebCPP-emscripten-6.0.1.zip
+
+    - name: List downloaded files
+      if: always()
+      shell: bash
+      run: |
+        git status
+        ls -lR
