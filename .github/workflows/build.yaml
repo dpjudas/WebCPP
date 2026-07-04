@@ -51,8 +51,8 @@ jobs:
         git clone https://github.com/emscripten-core/emsdk.git
         cd emsdk
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          emsdk.bat install 6.0.1
-          emsdk.bat activate 6.0.1
+          ./emsdk.bat install 6.0.1
+          ./emsdk.bat activate 6.0.1
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
           ./emsdk install 6.0.1
           ./emsdk activate 6.0.1
