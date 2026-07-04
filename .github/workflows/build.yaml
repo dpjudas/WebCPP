@@ -38,12 +38,15 @@ jobs:
         cd CPPBuild
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
           msbuild.exe //t:Build "//p:Configuration=Release;Platform=x64" CPPBuild.sln
-          export PATH=$PATH:$(pwd)/Build/Release/x64/bin
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
           make -j 4
           make install
         fi
         cd ..
+
+    - name: Add cppbuild to PATH
+      if: runner.os == 'Windows'
+      run: echo "%cd%\CPPBuild\Build\Release" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
 
     - name: Install Emscripten
       shell: bash
