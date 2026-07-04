@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: ${{ matrix.config.name }} | ${{ matrix.config.build_type }}
+    name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
@@ -73,6 +73,7 @@ jobs:
       shell: bash
       run: |
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
+          cat WebCPP.sln
           msbuild.exe //t:Build "//p:Configuration=Debug;Platform=x64" WebCPP.sln
           msbuild.exe //t:Build "//p:Configuration=Release;Platform=x64" WebCPP.sln
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
