@@ -23,6 +23,11 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v3
 
+    - name: Install Emscripten
+      uses: emscripten-core/setup-emsdk@v15
+      with:
+        version: 6.0.1
+
     - name: Install Dependencies
       shell: bash
       run: |
@@ -50,25 +55,6 @@ jobs:
         echo "Adding directory to search path: $($pwd.Path)\CPPBuild\Build\Release\x64\bin"
         echo "$($pwd.Path)\CPPBuild\Build\Release\x64\bin" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
 
-    - name: Install Emscripten
-      uses: emscripten-core/setup-emsdk@v15
-      with:
-        version: 6.0.1
-
-#    - name: Install Emscripten
-#      shell: bash
-#      run: |
-#        git clone https://github.com/emscripten-core/emsdk.git
-#        cd emsdk
-#        if [[ "${{ runner.os }}" == 'Windows' ]]; then
-#          ./emsdk.bat install 6.0.1
-#          ./emsdk.bat activate 6.0.1 --permanent
-#        elif [[ "${{ runner.os }}" == 'Linux' ]]; then
-#          ./emsdk install 6.0.1
-#          ./emsdk activate 6.0.1
-#        fi
-#        cd ..
-
     - name: Configure
       shell: bash
       run: |
@@ -95,14 +81,14 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         path: Build/Packages/WebCPP.zip
-        name: WebCPP-emsdk-${{ matrix.config.emver }}
+        name: WebCPP-emscripten-6.0.1
 
-    - name: List Build Directory
-      if: always()
-      shell: bash
-      run: |
-        git status
-        ls -lR Build
+#    - name: List Build Directory
+#      if: always()
+#      shell: bash
+#      run: |
+#        git status
+#        ls -lR Build
 
   deploy:
     name: Update Latest successful build
@@ -114,8 +100,8 @@ jobs:
     - name: Download Emscripten artifact
       uses: actions/download-artifact@v4
       with:
-        name: WebCPP-emsdk-6.0.1
-        path: build/WebCPP-emsdk-6.0.1.zip
+        name: WebCPP-emscripten-6.0.1
+        path: build/WebCPP-emscripten-6.0.1.zip
 
     - name: Update nightly release
       uses: pyTooling/Actions/releaser@r0
@@ -123,4 +109,4 @@ jobs:
         tag: nightly
         rm: true
         token: ${{ secrets.GITHUB_TOKEN }}
-        files: build/WebCPP-emsdk-6.0.1.zip
+        files: build/WebCPP-emscripten-6.0.1.zip
