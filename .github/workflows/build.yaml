@@ -51,18 +51,22 @@ jobs:
         echo "$($pwd.Path)\CPPBuild\Build\Release\x64\bin" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
 
     - name: Install Emscripten
-      shell: bash
-      run: |
-        git clone https://github.com/emscripten-core/emsdk.git
-        cd emsdk
-        if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          ./emsdk.bat install 6.0.1
-          ./emsdk.bat activate 6.0.1
-        elif [[ "${{ runner.os }}" == 'Linux' ]]; then
-          ./emsdk install 6.0.1
-          ./emsdk activate 6.0.1
-        fi
-        cd ..
+      uses: emscripten-core/setup-emsdk@v15
+      version: 6.0.1
+
+#    - name: Install Emscripten
+#      shell: bash
+#      run: |
+#        git clone https://github.com/emscripten-core/emsdk.git
+#        cd emsdk
+#        if [[ "${{ runner.os }}" == 'Windows' ]]; then
+#          ./emsdk.bat install 6.0.1
+#          ./emsdk.bat activate 6.0.1 --permanent
+#        elif [[ "${{ runner.os }}" == 'Linux' ]]; then
+#          ./emsdk install 6.0.1
+#          ./emsdk activate 6.0.1
+#        fi
+#        cd ..
 
     - name: Configure
       shell: bash
@@ -73,7 +77,6 @@ jobs:
       shell: bash
       run: |
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          cat WebCPP.sln
           msbuild.exe //t:Build "//p:Configuration=Debug;Platform=x64" WebCPP.sln
           msbuild.exe //t:Build "//p:Configuration=Release;Platform=x64" WebCPP.sln
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
