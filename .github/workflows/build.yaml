@@ -75,13 +75,13 @@ jobs:
       shell: bash
       run: |
         cppbuild create-package
+        mv Build/Packages/WebCPP.zip Build/Packages/WebCPP-emscripten-6.0.1.zip
 
     - name: Upload WebCPP Package
       if: runner.os == 'Windows'
       uses: actions/upload-artifact@v7
       with:
-        path: Build/Packages/WebCPP.zip
-        name: WebCPP-emscripten-6.0.1.zip
+        path: Build/Packages/WebCPP-emscripten-6.0.1.zip
         archive: false
 
 #    - name: List Build Directory
