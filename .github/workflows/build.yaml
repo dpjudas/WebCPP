@@ -73,8 +73,8 @@ jobs:
       shell: bash
       run: |
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          msbuild.exe //t:Build" "//p:Configuration=Debug;Platform=x64" WebCPP.sln
-          msbuild.exe //t:Build" "//p:Configuration=Release;Platform=x64" WebCPP.sln
+          msbuild.exe //t:Build "//p:Configuration=Debug;Platform=x64" WebCPP.sln
+          msbuild.exe //t:Build "//p:Configuration=Release;Platform=x64" WebCPP.sln
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
           make
         fi
