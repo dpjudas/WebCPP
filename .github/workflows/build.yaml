@@ -81,7 +81,8 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         path: Build/Packages/WebCPP.zip
-        name: WebCPP-emscripten-6.0.1
+        name: WebCPP-emscripten-6.0.1.zip
+        archive: false
 
 #    - name: List Build Directory
 #      if: always()
@@ -100,7 +101,7 @@ jobs:
     - name: Download Emscripten artifact
       uses: actions/download-artifact@v8
       with:
-        name: WebCPP-emscripten-6.0.1
+        name: WebCPP-emscripten-6.0.1.zip
         path: build/WebCPP-emscripten-6.0.1.zip
 
     - name: Update nightly release
