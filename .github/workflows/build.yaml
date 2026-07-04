@@ -37,7 +37,7 @@ jobs:
         git clone https://github.com/dpjudas/CPPBuild.git
         cd CPPBuild
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          msbuild.exe /p:Configuration=Release CPPBuild.sln
+          msbuild.exe msbuild.exe /t:Build /p:Configuration=Release;Platform=x64 CPPBuild.sln
           export PATH=$PATH:$(pwd)/Build/Release/x64/bin
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
           make -j 4
@@ -68,8 +68,8 @@ jobs:
       shell: bash
       run: |
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          msbuild.exe /p:Configuration=Debug WebCPP.sln
-          msbuild.exe /p:Configuration=Release WebCPP.sln
+          msbuild.exe /t:Build /p:Configuration=Debug;Platform=x64 WebCPP.sln
+          msbuild.exe /t:Build /p:Configuration=Release;Platform=x64 WebCPP.sln
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
           make
         fi
