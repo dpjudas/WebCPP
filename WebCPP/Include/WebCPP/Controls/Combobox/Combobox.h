@@ -102,6 +102,7 @@ namespace web
 		ComboBoxPopupItemSeparator* addSeparator();
 
 	private:
+		void onModalAttach() override;
 		void onItemPointerDown(Event* event);
 		void onItemClick(std::function<void()> onClick, Event* event);
 		void onKeyDown(Event* event);
@@ -110,6 +111,7 @@ namespace web
 		ComboBox* combobox = nullptr;
 		std::vector<std::shared_ptr<ComboBoxPopupItem>> items;
 		ResizeObserver observer;
+		int maxItems = 7;
 	};
 
 	class ComboBoxPopupItem : public View

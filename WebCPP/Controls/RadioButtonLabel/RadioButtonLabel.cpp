@@ -95,6 +95,6 @@ namespace web
 	void RadioButtonLabel::onClick()
 	{
 		if (getEnabled())
-			setChecked(!isChecked());
+			setChecked(true);
 	}
 }

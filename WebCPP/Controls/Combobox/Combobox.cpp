@@ -366,9 +366,17 @@ namespace web
 		}
 	}
 
-	void ComboBoxPopup::setMaxItems(int maxItems)
+	void ComboBoxPopup::setMaxItems(int value)
 	{
-		element->setStyle("max-height", std::to_string(maxItems * 20) + "px");
+		maxItems = value;
+	}
+
+	void ComboBoxPopup::onModalAttach()
+	{
+		View::onModalAttach();
+
+		if (items.empty() == false)
+			element->setStyle("max-height", std::to_string(maxItems * items.front()->element->offsetHeight()) + "px");
 	}
 
 	int ComboBoxPopup::getSelectedIndex() const
