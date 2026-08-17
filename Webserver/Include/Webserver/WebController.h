@@ -54,17 +54,20 @@ namespace web
 	class WebControllerException : public std::exception
 	{
 	public:
-		WebControllerException(int statusCode, std::string statusText, std::string message) : statusCode(statusCode), statusText(std::move(statusText)), message(std::move(message)) {}
+		// retryAfterSeconds is optional (0 = not set) - when positive, WebController::process() sets a Retry-After response header with this value
+		WebControllerException(int statusCode, std::string statusText, std::string message, int retryAfterSeconds = 0) : statusCode(statusCode), statusText(std::move(statusText)), message(std::move(message)), retryAfterSeconds(retryAfterSeconds) {}
 
 		char const* what() const noexcept override { return message.c_str(); }
 
 		int getStatusCode() const { return statusCode; }
 		const std::string& getStatusText() const { return statusText; }
 		const std::string& getMessage() const { return message; }
+		int getRetryAfterSeconds() const { return retryAfterSeconds; }
 
 	private:
 		int statusCode = 0;
 		std::string statusText;
 		std::string message;
+		int retryAfterSeconds = 0;
 	};
 }

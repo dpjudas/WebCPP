@@ -25,6 +25,8 @@ namespace web
 			auto response = JsonValue::object();
 			response["Error"] = JsonValue::string(e.getMessage());
 			context->setJsonResponse(response, e.getStatusCode(), e.getStatusText());
+			if (e.getRetryAfterSeconds() > 0)
+				context->response.headers["Retry-After"] = std::to_string(e.getRetryAfterSeconds());
 		}
 		catch (const std::exception& e)
 		{
