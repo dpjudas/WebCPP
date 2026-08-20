@@ -25,14 +25,20 @@ namespace web
 		removeClass("focus");
 	}
 
-	std::shared_ptr<ImageBox> LineEdit::addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler)
+	std::shared_ptr<ImageBox> LineEdit::addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler, LineEditActionPosition position)
 	{
 		auto result = std::make_shared<ImageBox>();
 		result->addClass("lineedit-imagebox");
 		result->setAlt(text);
 		result->setSrc(icon);
 		result->clicked = clickHandler;
-		getLayout<HBoxLayout>()->addView(result);
+
+		auto layout = getLayout<HBoxLayout>();
+		if (position == LineEditActionPosition::Leading)
+			layout->addViewBefore(result, input);
+		else
+			layout->addView(result);
+
 		return result;
 	}
 
