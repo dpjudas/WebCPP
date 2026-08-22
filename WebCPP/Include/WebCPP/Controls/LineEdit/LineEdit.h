@@ -8,8 +8,8 @@ namespace web
 
 	enum class LineEditActionPosition
 	{
-		Leading,
-		Trailing,
+		leading,
+		trailing,
 	};
 
 	class LineEdit : public View
@@ -17,7 +17,7 @@ namespace web
 	public:
 		LineEdit();
 
-		std::shared_ptr<ImageBox> addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler = nullptr, LineEditActionPosition position = LineEditActionPosition::Trailing);
+		std::shared_ptr<ImageBox> addButton(const std::string& icon, const std::string& text, const std::function<void()>& clickHandler = nullptr, LineEditActionPosition position = LineEditActionPosition::trailing);
 
 		bool getPasswordMode() const;
 		void setPasswordMode(bool value);
