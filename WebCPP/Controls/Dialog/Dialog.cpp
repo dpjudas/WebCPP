@@ -22,6 +22,11 @@ namespace web
 		buttonbar = std::make_shared<DialogButtonbar>();
 		buttonbar->addClass("dialog-buttonbar");
 		element->addEventListener("click", std::bind_front(&Dialog::onClick, this));
+		header->helpButton->element->addEventListener("click", [this](Event* event)
+		{
+			if (helpButtonHandler)
+				helpButtonHandler();
+		});
 
 		auto layout = createVBoxLayout();
 		layout->addView(header);
@@ -55,6 +60,12 @@ namespace web
 	void Dialog::setTitle(std::string text)
 	{
 		header->caption->setText(text);
+	}
+
+	void Dialog::setHelpButtonClicked(std::function<void()> handler)
+	{
+		helpButtonHandler = std::move(handler);
+		header->helpButton->setVisible(helpButtonHandler != nullptr);
 	}
 
 	void Dialog::setSize(double width, double height, bool fixedHeight)
