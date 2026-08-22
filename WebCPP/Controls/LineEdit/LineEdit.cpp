@@ -34,7 +34,7 @@ namespace web
 		result->clicked = clickHandler;
 
 		auto layout = getLayout<HBoxLayout>();
-		if (position == LineEditActionPosition::Leading)
+		if (position == LineEditActionPosition::leading)
 			layout->addViewBefore(result, input);
 		else
 			layout->addView(result);
