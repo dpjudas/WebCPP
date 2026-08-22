@@ -15,11 +15,13 @@ namespace web
 		DialogHeader();
 
 		std::shared_ptr<TextLabel> caption;
+		std::shared_ptr<DialogHeaderButton> helpButton;
 		std::shared_ptr<DialogHeaderButton> closeButton;
 
 		static const std::string CloseIconSvg;
 		static const std::string MaximizedIconSvg;
 		static const std::string MaximizeIconSvg;
 		static const std::string MinimizeIconSvg;
+		static const std::string HelpIconSvg;
 	};
 }

@@ -9,12 +9,16 @@ namespace web
 	{
 		caption = std::make_shared<TextLabel>();
 		caption->addClass("dialogheader-caption");
+		helpButton = std::make_shared<DialogHeaderButton>(HelpIconSvg);
+		helpButton->addClass("dialogheader-helpbutton");
+		helpButton->hide();
 		closeButton = std::make_shared<DialogHeaderButton>(CloseIconSvg);
 		closeButton->addClass("dialogheader-closebutton");
 		closeButton->element->addEventListener("click", [this](Event* event) { static_cast<Dialog*>(parent())->onClose(event); });
 
 		auto layout = createHBoxLayout();
 		layout->addView(caption, true);
+		layout->addView(helpButton);
 		layout->addView(closeButton);
 	}
 
@@ -62,4 +66,11 @@ namespace web
 		"IGhlaWdodD0iMSIgcng9IjAiIHJ5PSIwIiBmaWxsPSIjRkZGRkZGIiBjbGFzcz0iTWFzayIgdGFn"
 		"PSJNYXNrIiAvPg0KICA8L2c+DQogIDxnIGlkPSJMYXllcl8yIiB0YWc9IkVsZW1lbnQxIiAvPg0K"
 		"PC9zdmc+";
+
+	const std::string DialogHeader::HelpIconSvg =
+		"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMCAx"
+		"MCI+CjxjaXJjbGUgY3g9IjUiIGN5PSI1IiByPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZG"
+		"RkZGRiIgc3Ryb2tlLXdpZHRoPSIwLjkiLz4KPHRleHQgeD0iNSIgeT0iNy4xIiBmb250LWZhbWls"
+		"eT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNS42IiBmb250LXdlaWdodD0iYm9sZCIg"
+		"ZmlsbD0iI0ZGRkZGRiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+PzwvdGV4dD4KPC9zdmc+";
 }

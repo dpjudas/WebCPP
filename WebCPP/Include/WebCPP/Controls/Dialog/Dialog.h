@@ -33,6 +33,8 @@ namespace web
 		void setAcceptButton(std::shared_ptr<Button> button) { acceptButton = button; }
 		void setCancelButton(std::shared_ptr<Button> button) { cancelButton = button; }
 
+		void setHelpButtonClicked(std::function<void()> handler);
+
 	private:
 		void setupUi();
 		void onClick(Event* event);
@@ -45,6 +47,7 @@ namespace web
 		std::shared_ptr<DialogButtonbar> buttonbar;
 		std::shared_ptr<Button> acceptButton;
 		std::shared_ptr<Button> cancelButton;
+		std::function<void()> helpButtonHandler;
 
 		std::unique_ptr<task_promise<int>> execTaskPromise;
 	};
