@@ -4,7 +4,7 @@
 
 namespace web
 {
-	class ImageBox;
+	class IconBox;
 	class TextLabel;
 
 	class Button : public View
@@ -31,7 +31,7 @@ namespace web
 		void onKeyDown(Event* event);
 
 		std::shared_ptr<View> button;
-		std::shared_ptr<ImageBox> image;
+		std::shared_ptr<IconBox> image;
 		std::shared_ptr<TextLabel> label;
 	};
 }

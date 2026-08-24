@@ -14,9 +14,7 @@ namespace web
 	{
 		auto button = std::make_shared<ToolbarButton>();
 		button->addClass("toolbar-button");
-		button->icon->setSrc(img);
-		if (img.empty())
-			button->icon->setVisible(false);
+		button->setIcon(img);
 		button->text->setText(text);
 		if (onClick)
 		{
@@ -60,7 +58,7 @@ namespace web
 	{
 		auto button = std::make_shared<ToolbarButton>();
 		button->addClass("toolbar-radiobutton");
-		button->icon->setSrc(img);
+		button->setIcon(img);
 		getLayout<HBoxLayout>()->addView(button);
 		return button;
 	}

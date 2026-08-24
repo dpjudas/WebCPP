@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../../Core/View.h"
+#include "../../Controls/IconBox/IconBox.h"
 
 namespace web
 {
-	class ImageBox : public View
+	class ImageBox : public IconBox
 	{
 	public:
 		ImageBox();
 
-		void setSrc(std::string src);
+		void setSrc(std::string src) override;
 		void setSize(const int width, const int height);
 		void setAlt(const std::string& alternateText);
 
