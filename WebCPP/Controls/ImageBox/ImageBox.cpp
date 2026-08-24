@@ -3,7 +3,7 @@
 
 namespace web
 {
-	ImageBox::ImageBox() : View("imagebox-view")
+	ImageBox::ImageBox() : IconBox()
 	{
 		img = std::make_shared<View>("img");
 		img->element->setStyle("visibility", "hidden");

@@ -1,6 +1,6 @@
 
 #include "WebCPP/Controls/Button/Button.h"
-#include "WebCPP/Controls/ImageBox/ImageBox.h"
+#include "WebCPP/Controls/IconBox/IconBox.h"
 #include "WebCPP/Controls/TextLabel/TextLabel.h"
 
 namespace web
@@ -22,9 +22,11 @@ namespace web
 
 	void Button::setIcon(std::string src)
 	{
-		if (!image)
+		if (!image || image->isExtended() != IconBox::isExtendedSrc(src))
 		{
-			image = std::make_shared<ImageBox>();
+			if (image)
+				image->detach();
+			image = createIconBox(src);
 			button->getLayout<HBoxLayout>()->addViewBefore(image, label);
 		}
 		image->setSrc(src);

@@ -4,6 +4,7 @@
 #include "../../Controls/TextLabel/TextLabel.h"
 #include "../../Controls/Combobox/Combobox.h"
 #include "../../Controls/LineEdit/LineEdit.h"
+#include "../../Controls/IconBox/IconBox.h"
 #include "../../Controls/ImageBox/ImageBox.h"
 #include "../../Controls/CheckboxLabel/CheckboxLabel.h"
 
@@ -73,10 +74,23 @@ namespace web
 			}
 		}
 
+		void setIcon(std::string src)
+		{
+			if (icon->isExtended() != IconBox::isExtendedSrc(src))
+			{
+				icon->detach();
+				icon = createIconBox(src);
+				icon->addClass("toolbarbutton-icon");
+				getLayout<HBoxLayout>()->addViewBefore(icon, text);
+			}
+			icon->setSrc(src);
+			icon->setVisible(!src.empty());
+		}
+
 		bool getEnabled() const { return enabled; }
 		bool getSelected() const { return selected; }
 
-		std::shared_ptr<ImageBox> icon;
+		std::shared_ptr<IconBox> icon;
 		std::shared_ptr<TextLabel> text;
 
 	private:
