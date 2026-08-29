@@ -323,7 +323,7 @@ namespace web
 		const Rect& rect = combobox->element->getBoundingClientRect();
 		element->setStyle("left", std::to_string(rect.x) + "px");
 		element->setStyle("top", std::to_string(rect.y + rect.height - 1) + "px");
-		element->setStyle("width", std::to_string(rect.width - 2) + "px");
+		element->setStyle("width", std::to_string(rect.width) + "px");
 
 		observer.onResize = std::bind_front(&ComboBoxPopup::onResize, this);
 		observer.observe(combobox->element.get());
