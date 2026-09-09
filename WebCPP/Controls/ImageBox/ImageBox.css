@@ -2,3 +2,7 @@
 imagebox-view {
     display: block;
 }
+
+imagebox-view.clickable {
+    cursor: pointer;
+}
