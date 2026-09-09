@@ -10,6 +10,8 @@ namespace web
 
 		auto layout = createHBoxLayout();
 		layout->addView(img);
+
+		element->addEventListener("click", std::bind_front(&ImageBox::onClicked, this));
 	}
 
 	void ImageBox::setSrc(std::string src)

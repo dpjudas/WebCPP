@@ -32,6 +32,11 @@ namespace web
 		result->setAlt(text);
 		result->setSrc(icon);
 		result->clicked = clickHandler;
+		if (clickHandler != nullptr)
+		{
+			result->element->setAttribute("title", text);
+			result->addClass("clickable");
+		}
 
 		auto layout = getLayout<HBoxLayout>();
 		if (position == LineEditActionPosition::leading)
