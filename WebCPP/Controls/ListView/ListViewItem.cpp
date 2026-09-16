@@ -17,6 +17,8 @@ namespace web
 
 	ListViewItem* ListViewItem::add(std::unique_ptr<ListViewItem> item)
 	{
+		const bool wasLeaf = (firstChildObj == nullptr);
+
 		item->parentObj = this;
 		item->prevSiblingObj = lastChildObj;
 		if (lastChildObj)
@@ -26,8 +28,11 @@ namespace web
 			firstChildObj = lastChildObj;
 
 		ListView* lv = listview();
-		if (lv)
+		if (lv && isOpen())
 			lv->onItemAttached(item.get());
+
+		if (wasLeaf && lv)
+			updateColumn(0);
 
 		return item.release();
 	}
@@ -49,7 +54,7 @@ namespace web
 		sibling->prevSiblingObj = item.get();
 
 		ListView* lv = listview();
-		if (lv)
+		if (lv && isOpen())
 			lv->onItemAttached(item.get());
 
 		return item.release();
@@ -112,6 +117,8 @@ namespace web
 	{
 		if (!openFlag)
 		{
+			openFlag = true;
+
 			ListView* lv = listview();
 			if (lv)
 				lv->openItem(this);
@@ -122,6 +129,8 @@ namespace web
 	{
 		if (openFlag)
 		{
+			openFlag = false;
+
 			ListView* lv = listview();
 			if (lv)
 				lv->closeItem(this);

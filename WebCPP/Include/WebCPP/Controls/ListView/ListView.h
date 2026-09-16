@@ -35,6 +35,8 @@ namespace web
 		int addColumn(std::string name, double width, bool expanding = false);
 		void setColumnVisible(size_t index, bool visible);
 
+		void setTreeToggleIcons(std::string collapsedIcon, std::string expandedIcon) { treeToggleCollapsedIcon = std::move(collapsedIcon); treeToggleExpandedIcon = std::move(expandedIcon); }
+
 		std::vector<std::string> columnNames() const;
 
 		ListViewItem* rootItem() { return root.get(); }
@@ -99,6 +101,8 @@ namespace web
 		std::shared_ptr<ScrollbarCorner> scrollCorner;
 		ResizeObserver resizeObserver;
 		bool itemsSelectable = true;
+		std::string treeToggleCollapsedIcon; // empty = fall back to a plain text glyph
+		std::string treeToggleExpandedIcon;
 
 		friend class ListViewItem;
 		friend class ListViewItemView;
