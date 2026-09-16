@@ -463,6 +463,8 @@ namespace web
 			item->openFlag = true;
 			for (ListViewItem* cur = item->lastChild(); cur != nullptr; cur = cur->prevSibling())
 				onItemAttached(cur);
+			if (expanded)
+				expanded(item);
 		}
 	}
 
@@ -473,6 +475,8 @@ namespace web
 			for (ListViewItem* cur = item->firstChild(); cur != nullptr; cur = cur->nextSibling())
 				onItemDetached(cur);
 			item->openFlag = false;
+			if (collapsed)
+				collapsed(item);
 		}
 	}
 
@@ -570,6 +574,12 @@ namespace web
 			if (indent > 0)
 				columnView->element->setStyle("padding-left", std::to_string(indent) + "px");
 
+			if (std::shared_ptr<View> oldToggle = itemview->getTreeToggle())
+			{
+				oldToggle->detach();
+				itemview->setTreeToggle(nullptr);
+			}
+
 			if (hasChildren)
 			{
 				itemview->element->setStyle("position", "relative");
@@ -591,8 +601,8 @@ namespace web
 					ImageBox* imageRaw = image.get();
 					image->clicked = [this, toggleAction, item, imageRaw]()
 					{
+						imageRaw->setSrc(item->isOpen() ? treeToggleCollapsedIcon : treeToggleExpandedIcon);
 						toggleAction();
-						imageRaw->setSrc(item->isOpen() ? treeToggleExpandedIcon : treeToggleCollapsedIcon);
 					};
 					toggle = image;
 				}
@@ -603,8 +613,8 @@ namespace web
 					label->element->addEventListener("click", [toggleAction, item, labelRaw](Event* e)
 					{
 						e->stopPropagation();
+						labelRaw->setText(item->isOpen() ? "▸" : "▾");
 						toggleAction();
-						labelRaw->setText(item->isOpen() ? "▾" : "▸");
 					});
 					toggle = label;
 				}
@@ -612,6 +622,7 @@ namespace web
 				toggle->addClass("listviewtreetoggle");
 				toggle->element->setStyle("left", std::to_string(depth * 24.0) + "px");
 
+				itemview->setTreeToggle(toggle);
 				if (ViewLayout* rowLayout = itemview->getLayout())
 					rowLayout->addAbsoluteView(toggle);
 			}
