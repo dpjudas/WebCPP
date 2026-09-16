@@ -5,6 +5,7 @@
 #include "WebCPP/Controls/ListView/ListViewBody.h"
 #include "WebCPP/Controls/ListView/RootListViewItem.h"
 #include "WebCPP/Controls/TextLabel/TextLabel.h"
+#include "WebCPP/Controls/ImageBox/ImageBox.h"
 #include "WebCPP/Controls/Scrollbar/Scrollbar.h"
 #include "WebCPP/Controls/Menu/Menu.h"
 
@@ -460,7 +461,8 @@ namespace web
 		if (item != root.get())
 		{
 			item->openFlag = true;
-			onItemAttached(item);
+			for (ListViewItem* cur = item->lastChild(); cur != nullptr; cur = cur->prevSibling())
+				onItemAttached(cur);
 		}
 	}
 
@@ -468,7 +470,8 @@ namespace web
 	{
 		if (item != root.get())
 		{
-			onItemDetached(item);
+			for (ListViewItem* cur = item->firstChild(); cur != nullptr; cur = cur->nextSibling())
+				onItemDetached(cur);
 			item->openFlag = false;
 		}
 	}
@@ -552,18 +555,65 @@ namespace web
 
 		if (i == 0)
 		{
+			ListViewItem* item = itemview->getItem();
+
 			int depth = 0;
-			ListViewItem* p = itemview->getItem()->parent();
+			ListViewItem* p = item->parent();
 			while (p && p != root.get())
 			{
 				depth++;
 				p = p->parent();
 			}
 
-			if (i == 0 && depth > 0)
+			const bool hasChildren = item->firstChild() != nullptr;
+			const double indent = depth * 24.0;
+			if (indent > 0)
+				columnView->element->setStyle("padding-left", std::to_string(indent) + "px");
+
+			if (hasChildren)
 			{
-				double padding = depth * 24;
-				columnView->element->setStyle("padding-left", std::to_string(padding) + "px");
+				itemview->element->setStyle("position", "relative");
+
+				auto toggleAction = [item]()
+				{
+					if (item->isOpen())
+						item->close();
+					else
+						item->open();
+				};
+
+				std::shared_ptr<View> toggle;
+				if (treeToggleCollapsedIcon.empty() == false || treeToggleExpandedIcon.empty() == false)
+				{
+					auto image = std::make_shared<ImageBox>();
+					image->setSize(16, 16);
+					image->setSrc(item->isOpen() ? treeToggleExpandedIcon : treeToggleCollapsedIcon);
+					ImageBox* imageRaw = image.get();
+					image->clicked = [this, toggleAction, item, imageRaw]()
+					{
+						toggleAction();
+						imageRaw->setSrc(item->isOpen() ? treeToggleExpandedIcon : treeToggleCollapsedIcon);
+					};
+					toggle = image;
+				}
+				else
+				{
+					auto label = std::make_shared<TextLabel>(item->isOpen() ? "▾" : "▸");
+					TextLabel* labelRaw = label.get();
+					label->element->addEventListener("click", [toggleAction, item, labelRaw](Event* e)
+					{
+						e->stopPropagation();
+						toggleAction();
+						labelRaw->setText(item->isOpen() ? "▾" : "▸");
+					});
+					toggle = label;
+				}
+
+				toggle->addClass("listviewtreetoggle");
+				toggle->element->setStyle("left", std::to_string(depth * 24.0) + "px");
+
+				if (ViewLayout* rowLayout = itemview->getLayout())
+					rowLayout->addAbsoluteView(toggle);
 			}
 		}
 		else
