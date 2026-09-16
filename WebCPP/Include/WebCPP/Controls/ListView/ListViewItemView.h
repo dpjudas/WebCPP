@@ -16,8 +16,12 @@ namespace web
 
 		ListViewItem* getItem() const { return item; }
 
+		std::shared_ptr<View> getTreeToggle() const { return treeToggle; }
+		void setTreeToggle(std::shared_ptr<View> toggle) { treeToggle = std::move(toggle); }
+
 	private:
 		ListViewItem* item = nullptr;
 		std::vector<std::shared_ptr<View>> columns;
+		std::shared_ptr<View> treeToggle;
 	};
 }
