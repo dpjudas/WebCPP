@@ -321,21 +321,22 @@ namespace web
 	{
 		if (item->view)
 		{
-			double headerHeight = header->element->clientHeight();
 			double pageHeight = body->element->clientHeight();
-			double offsetTop = item->view->element->offsetTop();
-			double offsetHeight = item->view->element->offsetHeight();
+			double scrollTop = body->element->scrollTop();
+			Rect itemRect = item->view->element->getBoundingClientRect();
+			Rect bodyRect = body->element->getBoundingClientRect();
+			double offsetTop = itemRect.y - bodyRect.y - body->element->clientTop() + scrollTop;
+			double offsetHeight = itemRect.height;
 			if (hint == ScrollToHint::ensureVisible)
 			{
-				double scrollTop = body->element->scrollTop();
-				if (offsetTop < scrollTop + headerHeight)
-					body->element->setScrollTop(std::max(offsetTop - headerHeight, 0.0));
+				if (offsetTop < scrollTop)
+					body->element->setScrollTop(offsetTop);
 				else if (offsetTop + offsetHeight > scrollTop + pageHeight)
 					body->element->setScrollTop(std::max(offsetTop + offsetHeight - pageHeight, 0.0));
 			}
 			else if (hint == ScrollToHint::positionAtTop)
 			{
-				body->element->setScrollTop(std::max(offsetTop, headerHeight));
+				body->element->setScrollTop(offsetTop);
 			}
 			else if (hint == ScrollToHint::positionAtBottom)
 			{
@@ -343,7 +344,7 @@ namespace web
 			}
 			else if (hint == ScrollToHint::positionAtCenter)
 			{
-				body->element->setScrollTop(std::max(offsetTop + (offsetHeight - pageHeight) / 2.0 - headerHeight, 0.0));
+				body->element->setScrollTop(std::max(offsetTop + (offsetHeight - pageHeight) / 2.0, 0.0));
 			}
 		}
 	}
