@@ -2,7 +2,6 @@
 
 #include "../../Core/View.h"
 #include <functional>
-#include <string>
 
 namespace web
 {
@@ -20,10 +19,12 @@ namespace web
 		double secondWidth() const;
 		void setSecondWidth(double width);
 
+		// Floors the divider can't be dragged past (0 = no floor, the default for both). Applies to whichever panel is fixed directly, and to the growing panel by capping how far the divider can encroach on it. Re-clamps the current position immediately if it now violates one
+		void setMinSize(double minFirstWidth, double minSecondWidth);
+
 		std::function<void(double)> resized;
 
 	private:
-		static double parsePixels(const std::string& value);
 		double clampWidth(double width) const;
 		void applyWidth();
 		void onPointerDown(Event* e);
