@@ -1,4 +1,3 @@
-
 #include "WebCPP/Controls/SplitView/SplitView.h"
 #include <algorithm>
 #include <cmath>
@@ -9,13 +8,8 @@ namespace web
 	SplitView::SplitView(std::shared_ptr<View> first, std::shared_ptr<View> second, double initialWidth, bool fixSecond)
 		: View("splitview-view"), firstView(std::move(first)), secondView(std::move(second)), fixSecond(fixSecond), currentWidth(initialWidth)
 	{
-		// Captured once, before applyWidth() below starts overwriting the fixed panel's own min-width to pin its size
-		minFirstWidth = parsePixels(firstView->element->getStyle("min-width"));
-		minSecondWidth = parsePixels(secondView->element->getStyle("min-width"));
-
 		divider = std::make_shared<View>("splitview-divider-view");
 
-		currentWidth = clampWidth(currentWidth); // container isn't measurable yet at this point, so this only enforces the lower bound
 		applyWidth();
 
 		auto layout = createHBoxLayout();
@@ -60,16 +54,12 @@ namespace web
 		applyWidth();
 	}
 
-	double SplitView::parsePixels(const std::string& value)
+	void SplitView::setMinSize(double minFirstWidth, double minSecondWidth)
 	{
-		try
-		{
-			return value.empty() ? 0.0 : std::stod(value);
-		}
-		catch (const std::exception&)
-		{
-			return 0.0;
-		}
+		this->minFirstWidth = std::max(minFirstWidth, 0.0);
+		this->minSecondWidth = std::max(minSecondWidth, 0.0);
+		currentWidth = clampWidth(currentWidth);
+		applyWidth();
 	}
 
 	double SplitView::clampWidth(double width) const
@@ -77,7 +67,7 @@ namespace web
 		const double lowerBound = fixSecond ? minSecondWidth : minFirstWidth;
 		const double otherMin = fixSecond ? minFirstWidth : minSecondWidth;
 
-		// Container isn't measurable yet before the first layout pass (e.g. the initialWidth passed to the constructor) - only clamp the upper bound once it is
+		// Container isn't measurable before the first layout pass - only clamp the upper bound once it is
 		const double containerWidth = element->clientWidth();
 		const double upperBound = containerWidth > 0.0 ? std::max(lowerBound, containerWidth - divider->element->clientWidth() - otherMin) : std::numeric_limits<double>::max();
 
