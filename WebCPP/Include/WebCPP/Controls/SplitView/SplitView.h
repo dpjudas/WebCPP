@@ -2,6 +2,7 @@
 
 #include "../../Core/View.h"
 #include <functional>
+#include <string>
 
 namespace web
 {
@@ -22,6 +23,8 @@ namespace web
 		std::function<void(double)> resized;
 
 	private:
+		static double parsePixels(const std::string& value);
+		double clampWidth(double width) const;
 		void applyWidth();
 		void onPointerDown(Event* e);
 		void onPointerUp(Event* e);
@@ -33,6 +36,8 @@ namespace web
 		std::shared_ptr<View> secondView;
 
 		bool fixSecond = false;
+		double minFirstWidth = 0.0;
+		double minSecondWidth = 0.0;
 		double currentWidth;
 		double dragStartX = 0.0;
 		double dragStartWidth = 0.0;
