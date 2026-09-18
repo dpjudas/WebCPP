@@ -88,8 +88,20 @@ namespace web
 		bool processed = true;
 		if (keyCode == 13) // Enter
 		{
-			if (activated && focusedItem())
-				activated(focusedItem());
+			if (focusedItem())
+			{
+				if (doubleClicked)
+					doubleClicked(focusedItem());
+				if (activated)
+					activated(focusedItem());
+			}
+		}
+		else if (keyCode == 46) // Delete
+		{
+			if (deleteRequested && !selectedItems().empty())
+				deleteRequested();
+			else
+				processed = false;
 		}
 		else if (keyCode == 33) // Page up
 		{
