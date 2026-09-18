@@ -68,6 +68,7 @@ namespace web
 		std::function<void(ListViewItem*)> expanded;
 		std::function<void()> selectionChanged;
 		std::function<void()> scroll;
+		std::function<void()> deleteRequested; // Delete key pressed while at least one item is selected
 
 		bool setFocus() override;
 
