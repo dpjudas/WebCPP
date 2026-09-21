@@ -71,12 +71,21 @@ namespace web
 	void Dialog::setSize(double width, double height, bool fixedHeight)
 	{
 		element->setStyle("left", "calc(50vw - " + std::to_string(std::round(width * 0.5)) + "px)");
-		element->setStyle("top", "calc(50vh - " + std::to_string(std::round(height * 0.5)) + "px)");
 		element->setStyle("width", std::to_string(width) + "px");
+
 		if (fixedHeight)
+		{
+			element->setStyle("top", "calc(50vh - " + std::to_string(std::round(height * 0.5)) + "px)");
 			element->setStyle("height", std::to_string(height) + "px");
+			element->setStyle("transform", "");
+		}
 		else
+		{
+			// height is content-driven ("auto") - a fixed top offset computed from the passed-in height (often just a placeholder like 0) can't center it correctly, so center via a transform that adapts to the actual rendered height
+			element->setStyle("top", "50%");
+			element->setStyle("transform", "translateY(-50%)");
 			element->setStyle("height", "auto");
+		}
 	}
 
 	void Dialog::onClose(Event* event)
