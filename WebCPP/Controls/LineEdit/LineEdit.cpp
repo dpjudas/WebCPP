@@ -133,7 +133,7 @@ namespace web
 		if (getEnabled())
 		{
 			input->element->focus();
-			if (!getReadOnly())
+			if (!getReadOnly() && !getPasswordMode())
 				input->element->handle.call<void>("select");
 			return true;
 		}
