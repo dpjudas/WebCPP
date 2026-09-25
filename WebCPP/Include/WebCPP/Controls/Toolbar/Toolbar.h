@@ -85,10 +85,12 @@ namespace web
 			}
 			icon->setSrc(src);
 			icon->setVisible(!src.empty());
+			iconSrc = std::move(src);
 		}
 
 		bool getEnabled() const { return enabled; }
 		bool getSelected() const { return selected; }
+		const std::string& getIcon() const { return iconSrc; }
 
 		std::shared_ptr<IconBox> icon;
 		std::shared_ptr<TextLabel> text;
@@ -96,6 +98,7 @@ namespace web
 	private:
 		bool enabled = true;
 		bool selected = false;
+		std::string iconSrc;
 	};
 
 	class ToolbarSeparator : public View
