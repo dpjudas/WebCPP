@@ -34,12 +34,20 @@ namespace web
 			element->setStyle("bottom", "calc(100vh - " + std::to_string(clientY) + "px)");
 		}
 		parent()->element->addEventListener("click", std::bind_front(&Menu::onParentClick, this));
+		parent()->element->addEventListener("contextmenu", std::bind_front(&Menu::onParentContextMenu, this));
 		closeMenu = std::bind_front(&Menu::closeModal, this);
 	}
 
 	void Menu::onParentClick(Event* event)
 	{
 		event->stopPropagation();
+		closeModal();
+	}
+
+	void Menu::onParentContextMenu(Event* event)
+	{
+		event->stopPropagation();
+		event->preventDefault();
 		closeModal();
 	}
 
@@ -63,13 +71,16 @@ namespace web
 		if (!icon.empty())
 			item->icon->setSrc(icon);
 		item->text->setText(text);
-		item->element->addEventListener("click", std::bind_front(&Menu::onItemClick, this, onClick));
+		item->element->addEventListener("click", std::bind_front(&Menu::onItemClick, this, item.get(), onClick));
+		itemCount++;
 		return item;
 	}
 
-	void Menu::onItemClick(std::function<void()> onClick, Event* event)
+	void Menu::onItemClick(MenuItem* item, std::function<void()> onClick, Event* event)
 	{
 		event->stopPropagation();
+		if (!item->getEnabled())
+			return;
 		if (closeMenu)
 			closeMenu();
 		if (onClick)
@@ -97,5 +108,17 @@ namespace web
 		auto layout = createHBoxLayout();
 		layout->addView(icon);
 		layout->addView(text);
+	}
+
+	void MenuItem::setEnabled(bool value)
+	{
+		if (enabled != value)
+		{
+			enabled = value;
+			if (enabled)
+				removeClass("disabled");
+			else
+				addClass("disabled");
+		}
 	}
 }

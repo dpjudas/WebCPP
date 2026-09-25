@@ -28,12 +28,16 @@ namespace web
 		void setRightPosition(double x, double y);
 		std::shared_ptr<MenuItem> addItem(std::string icon, std::string text, std::function<void()> onClick = {});
 		std::shared_ptr<MenuItemSeparator> addSeparator();
+		bool hasItems() const { return itemCount > 0; }
 
 		std::function<void()> closeMenu;
 
 	private:
 		void onParentClick(Event* event);
-		void onItemClick(std::function<void()> onClick, Event* event);
+		void onParentContextMenu(Event* event);
+		void onItemClick(MenuItem* item, std::function<void()> onClick, Event* event);
+
+		size_t itemCount = 0;
 	};
 
 	class MenuItem : public View
@@ -41,8 +45,14 @@ namespace web
 	public:
 		MenuItem();
 
+		void setEnabled(bool value);
+		bool getEnabled() const { return enabled; }
+
 		std::shared_ptr<ImageBox> icon;
 		std::shared_ptr<TextLabel> text;
+
+	private:
+		bool enabled = true;
 	};
 
 	class MenuItemSeparator : public View

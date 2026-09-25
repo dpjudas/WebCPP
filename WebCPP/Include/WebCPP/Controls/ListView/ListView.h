@@ -82,6 +82,9 @@ namespace web
 		void onBodyKeyDown(Event* event);
 		void onItemClick(ListViewItem* item, Event* event);
 		void onItemContextMenu(ListViewItem* item, Event* event);
+		void onBodyContextMenu(Event* event);
+		void showContextMenu(ListViewItem* item, double clientX, double clientY);
+		bool containsItem(const ListViewItem* item) const;
 		void onItemAttached(ListViewItem* item);
 		void onItemDetached(ListViewItem* item);
 		void openItem(ListViewItem* item);
@@ -102,6 +105,7 @@ namespace web
 		std::shared_ptr<ScrollbarCorner> scrollCorner;
 		ResizeObserver resizeObserver;
 		bool itemsSelectable = true;
+		size_t detachCount = 0; // bumped on every detach so click handlers can detect removed items
 		std::string treeToggleCollapsedIcon; // empty = fall back to a plain text glyph
 		std::string treeToggleExpandedIcon;
 
