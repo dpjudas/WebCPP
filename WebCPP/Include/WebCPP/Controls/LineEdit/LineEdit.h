@@ -12,6 +12,18 @@ namespace web
 		trailing,
 	};
 
+	enum class InputMode
+	{
+		None,
+		Text, // default
+		Decimal,
+		Numeric,
+		Tel,
+		Search,
+		Email,
+		Url
+	};
+
 	class LineEdit : public View
 	{
 	public:
@@ -29,6 +41,8 @@ namespace web
 		void setReadOnly(bool value);
 		bool getReadOnly() const;
 		void setMaxLength(int value);
+		void setAutoComplete(std::string value);
+		void setInputMode(InputMode value);
 
 		void setFlat();
 

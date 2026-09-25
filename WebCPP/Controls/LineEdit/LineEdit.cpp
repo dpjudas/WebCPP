@@ -123,6 +123,42 @@ namespace web
 		input->element->setAttribute("maxlength", std::to_string(value));
 	}
 
+	void LineEdit::setAutoComplete(std::string value)
+	{
+		input->element->setAttribute("autocomplete", value);
+	}
+
+	void LineEdit::setInputMode(InputMode value)
+	{
+		switch (value)
+		{
+		case InputMode::Text:
+			input->element->setAttribute("inputmode", "text");
+			break;
+		case InputMode::Decimal:
+			input->element->setAttribute("inputmode", "decimal");
+			break;
+		case InputMode::Numeric:
+			input->element->setAttribute("inputmode", "numeric");
+			break;
+		case InputMode::Tel:
+			input->element->setAttribute("inputmode", "tel");
+			break;
+		case InputMode::Search:
+			input->element->setAttribute("inputmode", "search");
+			break;
+		case InputMode::Email:
+			input->element->setAttribute("inputmode", "email");
+			break;
+		case InputMode::Url:
+			input->element->setAttribute("inputmode", "url");
+			break;
+		default:
+			input->element->removeAttribute("inputmode");
+			break;
+		}
+	}
+
 	void LineEdit::setFlat()
 	{
 		addClass("flat");
