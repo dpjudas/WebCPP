@@ -41,6 +41,7 @@ namespace web
 		body->element->addEventListener("focus", std::bind_front(&ListView::onBodyFocus, this));
 		body->element->addEventListener("blur", std::bind_front(&ListView::onBodyBlur, this));
 		body->element->addEventListener("keydown", std::bind_front(&ListView::onBodyKeyDown, this));
+		body->element->addEventListener("contextmenu", std::bind_front(&ListView::onBodyContextMenu, this));
 		scrollVert->scroll = std::bind_front(&ListView::onScrollbarScroll, this);
 		scrollHorz->scroll = std::bind_front(&ListView::onScrollbarScroll, this);
 
@@ -265,6 +266,11 @@ namespace web
 
 	void ListView::onItemClick(ListViewItem* item, Event* event)
 	{
+		// Callbacks may rebuild the list or drop the ListView; pin it and re-check item after each one
+		std::shared_ptr<View> pin = weak_from_this().lock();
+		size_t detachCountBefore = detachCount;
+		auto itemAlive = [&]() { return detachCount == detachCountBefore || containsItem(item); };
+
 		int detail = event->handle["detail"].as<int>();
 		event->stopPropagation();
 
@@ -276,6 +282,8 @@ namespace web
 
 		focusItem(item);
 		selectItem(item);
+		if (!itemAlive())
+			return;
 
 		if (detail == 1)
 		{
@@ -287,27 +295,71 @@ namespace web
 			if (doubleClicked)
 				doubleClicked(item);
 
-			if (activated)
+			if (activated && itemAlive())
 				activated(item);
 		}
+	}
+
+	bool ListView::containsItem(const ListViewItem* item) const
+	{
+		for (const ListViewItem* cur = rootItem()->firstChild(); cur != nullptr; )
+		{
+			if (cur == item)
+				return true;
+			if (cur->firstChild())
+			{
+				cur = cur->firstChild();
+				continue;
+			}
+			while (cur && !cur->nextSibling())
+				cur = cur->parent() == rootItem() ? nullptr : cur->parent();
+			if (cur)
+				cur = cur->nextSibling();
+		}
+		return false;
 	}
 
 	void ListView::onItemContextMenu(ListViewItem* item, Event* event)
 	{
 		event->stopPropagation();
 		event->preventDefault();
-		focusItem(item);
-		selectItem(item);
+
+		std::shared_ptr<View> pin = weak_from_this().lock();
+		size_t detachCountBefore = detachCount;
+		body->element->focus();
+		addClass("focused");
+		if (item->isSelectable())
+		{
+			focusItem(item);
+			selectItem(item);
+			if (detachCount != detachCountBefore && !containsItem(item))
+				return;
+		}
+
+		showContextMenu(item, event->clientX(), event->clientY());
+	}
+
+	void ListView::onBodyContextMenu(Event* event)
+	{
+		event->stopPropagation();
+		event->preventDefault();
+
+		std::shared_ptr<View> pin = weak_from_this().lock();
+		body->element->focus();
+		addClass("focused");
+		selectItem(nullptr);
+
+		showContextMenu(nullptr, event->clientX(), event->clientY());
+	}
+
+	void ListView::showContextMenu(ListViewItem* item, double clientX, double clientY)
+	{
 		if (onContextMenu)
 		{
-			double clientX = event->clientX();
-			double clientY = event->clientY();
-			auto openMenu = new Menu();
-			onContextMenu(item, openMenu);
-			openMenu->showPopupModal();
-			openMenu->setLeftPosition(clientX, clientY);
-			openMenu->parent()->element->addEventListener("click", [=](Event* event) { event->stopPropagation(); openMenu->closeModal(); });
-			openMenu->closeMenu = [=]() { openMenu->closeModal(); };
+			auto menu = std::make_shared<Menu>();
+			onContextMenu(item, menu.get());
+			if (menu->hasItems())
+				menu->showContextMenu(clientX, clientY);
 		}
 	}
 
@@ -511,6 +563,7 @@ namespace web
 
 	void ListView::onItemDetached(ListViewItem* item)
 	{
+		detachCount++;
 		if (item != root.get() && item->view)
 		{
 			if (item == curFocusItem)
