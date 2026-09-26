@@ -77,7 +77,7 @@ namespace web
 	void ComboBox::clearItems()
 	{
 		items.clear();
-		selectedIndex = -1;
+		setSelectedIndex(-1);
 	}
 
 	int ComboBox::addItem(std::string text, const std::string& id)
