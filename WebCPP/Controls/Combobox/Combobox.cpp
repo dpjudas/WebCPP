@@ -80,11 +80,6 @@ namespace web
 		setSelectedIndex(-1);
 	}
 
-	int ComboBox::addItem(std::string text, const std::string& id)
-	{
-		return addItem({}, text, id);
-	}
-
 	int ComboBox::addItem(const std::string& icon, const std::string& text, const std::string& id)
 	{
 		items.push_back({ icon, text, id });

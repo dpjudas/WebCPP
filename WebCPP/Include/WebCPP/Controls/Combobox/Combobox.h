@@ -41,7 +41,6 @@ namespace web
 		void setMaxItems(const int value);
 
 		void clearItems();
-		int addItem(std::string text, const std::string& id = {});
 		int addItem(const std::string& icon, const std::string& text, const std::string& id = {});
 		std::vector<ComboBoxItem> getItems() const { return items; }
 		void sort();

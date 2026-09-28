@@ -39,7 +39,7 @@ namespace web
 		dropdown->addClass("toolbar-dropdown");
 		dropdown->label->setText(label);
 		for (const std::string& item : items)
-			dropdown->combobox->addItem(item);
+			dropdown->combobox->addItem({}, item);
 		getLayout<HBoxLayout>()->addView(dropdown);
 		return dropdown;
 	}
