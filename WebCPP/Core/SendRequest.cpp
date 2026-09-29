@@ -75,6 +75,23 @@ namespace web
 		co_return JsonValue::parse(responseText.as<std::string>());
 	}
 
+	void sendRequestKeepAlive(std::string url, const JsonValue& jsonRequest)
+	{
+		auto requestHeaders = JSValue::object();
+		requestHeaders.set("Content-Type", std::string("application/json"));
+		std::string accessToken = Navigation::getAccessToken();
+		if (!accessToken.empty())
+			requestHeaders.set("Authorization", std::string("Bearer " + accessToken));
+
+		auto request = JSValue::object();
+		request.set("method", std::string("POST"));
+		request.set("body", jsonRequest.to_json());
+		request.set("headers", requestHeaders);
+		request.set("keepalive", true);
+
+		JSValue::global("fetch")(url, request);
+	}
+
 	task<JsonValue> sendRequest(std::string url, const uint8_t* data, size_t size, const std::string& contentType)
 	{
 		auto requestHeaders = JSValue::object();
@@ -96,6 +113,26 @@ namespace web
 		if (statusCode < 200 || statusCode >= 300)
 			throw makeException(statusCode, response, responseText.isString() ? responseText.as<std::string>() : "");
 		co_return JsonValue::parse(responseText.as<std::string>());
+	}
+
+	void sendRequestKeepAlive(std::string url, const uint8_t* data, size_t size, const std::string& contentType)
+	{
+		auto requestHeaders = JSValue::object();
+		requestHeaders.set("Content-Type", contentType);
+		std::string accessToken = Navigation::getAccessToken();
+		if (!accessToken.empty())
+			requestHeaders.set("Authorization", std::string("Bearer " + accessToken));
+
+		// A copy rather than a view into the wasm heap - nothing awaits this request, so the caller may free data as soon as we return
+		JSValue uint8Array = JSValue::global("Uint8Array").new_(emscripten::val(emscripten::typed_memory_view(size, data)));
+
+		auto request = JSValue::object();
+		request.set("method", std::string("POST"));
+		request.set("body", uint8Array);
+		request.set("headers", requestHeaders);
+		request.set("keepalive", true);
+
+		JSValue::global("fetch")(url, request);
 	}
 
 	task<std::vector<uint8_t>> sendRequestBinary(std::string url, const JsonValue& jsonRequest)
