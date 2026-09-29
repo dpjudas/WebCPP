@@ -74,7 +74,7 @@ namespace web
 	{
 		event->stopPropagation();
 		event->preventDefault();
-		if (pressed)
+		if (enabled && pressed)
 			pressed();
 	}
 
