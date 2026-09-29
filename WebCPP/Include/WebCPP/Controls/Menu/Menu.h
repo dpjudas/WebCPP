@@ -21,12 +21,14 @@ namespace web
 	{
 	public:
 		Menu();
+		~Menu();
 
 		void showContextMenu(double clientX, double clientY, MenuOpenCorner openCorner = MenuOpenCorner::topLeft);
 
 		void setLeftPosition(double x, double y);
 		void setRightPosition(double x, double y);
 		std::shared_ptr<MenuItem> addItem(std::string icon, std::string text, std::function<void()> onClick = {});
+		std::shared_ptr<MenuItem> addSubMenu(std::string icon, std::string text);
 		std::shared_ptr<MenuItemSeparator> addSeparator();
 		bool hasItems() const { return itemCount > 0; }
 
@@ -36,8 +38,16 @@ namespace web
 		void onParentClick(Event* event);
 		void onParentContextMenu(Event* event);
 		void onItemClick(MenuItem* item, std::function<void()> onClick, Event* event);
+		void onSubMenuEnter(MenuItem* item, Event* event);
+		void onSubMenuLeave(MenuItem* item, Event* event);
 
 		size_t itemCount = 0;
+		void hideSubMenu();
+
+		Menu* parentMenu = nullptr;
+		MenuItem* firstItem = nullptr;
+		MenuItem* openSubMenuItem = nullptr;
+		int hideSubMenuTimeoutID = -1;
 	};
 
 	class MenuItem : public View
@@ -50,6 +60,7 @@ namespace web
 
 		std::shared_ptr<ImageBox> icon;
 		std::shared_ptr<TextLabel> text;
+		std::shared_ptr<Menu> subMenu; // only set for items created by Menu::addSubMenu
 
 	private:
 		bool enabled = true;

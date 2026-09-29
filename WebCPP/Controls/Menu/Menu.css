@@ -17,6 +17,11 @@ menuitem-view {
         white-space: pre;
     }
 
+    .menuitem-submenuarrow {
+        margin-left: auto;
+        padding-left: 20px;
+    }
+
 }
 
 menuitemseparator-view {
