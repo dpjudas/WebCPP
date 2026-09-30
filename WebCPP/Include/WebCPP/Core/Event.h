@@ -16,6 +16,7 @@ namespace web
 		JSValue getPointerId();
 
 		int getKeyCode();
+		bool getAltKey();
 
 		void stopPropagation();
 		void stopImmediatePropagation();

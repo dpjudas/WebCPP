@@ -17,6 +17,11 @@ namespace web
 		return handle["keyCode"].as<int>();
 	}
 
+	bool Event::getAltKey()
+	{
+		return handle["altKey"].as<bool>();
+	}
+
 	void Event::stopPropagation()
 	{
 		handle.call<void>("stopPropagation");
