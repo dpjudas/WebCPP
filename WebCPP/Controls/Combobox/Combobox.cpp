@@ -22,6 +22,7 @@ namespace web
 
 		element->setTabIndex(0);
 		element->addEventListener("click", std::bind_front(&ComboBox::onClick, this));
+		element->addEventListener("keydown", std::bind_front(&ComboBox::onKeyDown, this));
 		element->addEventListener("focus", std::bind_front(&ComboBox::onFocus, this));
 		element->addEventListener("focusin", std::bind_front(&ComboBox::onFocusIn, this));
 		element->addEventListener("focusout", std::bind_front(&ComboBox::onFocusOut, this));
@@ -260,22 +261,72 @@ namespace web
 
 		if (popup == nullptr)
 		{
-			if (items.empty() == false && (lineedit == nullptr || event->target() == element->handle))
-			{
-				popup = std::make_shared<ComboBoxPopup>(this);
-				popup->setMaxItems(getMaxItems());
-				for (int idx = 0, size = items.size(); idx < size; idx++)
-				{
-					const auto& item = items.at(idx);
-					popup->addItem(item.icon, item.text, (getSelectedIndex() == idx), std::bind_front(&ComboBox::onPopupItemClick, this, idx));
-				}
-				auto layer = popup->showPopupModal(true);
-				layer->element->addEventListener("click", std::bind_front(&ComboBox::onPopupModalLayerClick, this));
-			}
+			if (lineedit == nullptr || event->target() == element->handle)
+				openPopup();
 		}
 		else
 		{
 			closePopup();
+		}
+	}
+
+	void ComboBox::openPopup()
+	{
+		if (popup != nullptr || items.empty())
+			return;
+
+		popup = std::make_shared<ComboBoxPopup>(this);
+		popup->setMaxItems(getMaxItems());
+		for (int idx = 0, size = items.size(); idx < size; idx++)
+		{
+			const auto& item = items.at(idx);
+			popup->addItem(item.icon, item.text, (getSelectedIndex() == idx), std::bind_front(&ComboBox::onPopupItemClick, this, idx));
+		}
+		auto layer = popup->showPopupModal(true);
+		layer->element->addEventListener("click", std::bind_front(&ComboBox::onPopupModalLayerClick, this));
+	}
+
+	void ComboBox::onKeyDown(Event* event)
+	{
+		if (!getEnabled() || popup != nullptr)
+			return;
+
+		const int keyCode = event->getKeyCode();
+		const bool altDown = event->getAltKey();
+		bool processed = true;
+
+		if ((keyCode == 40 && altDown) || keyCode == 115) // Alt+Arrow down, F4
+		{
+			openPopup();
+		}
+		else if (isEditable())
+		{
+			processed = false; // the remaining keys belong to the text edit
+		}
+		else if (keyCode == 13 || keyCode == 32) // Enter, Space
+		{
+			openPopup();
+		}
+		else if ((keyCode == 38 || keyCode == 40) && items.empty() == false) // Arrow up/down selects without opening, like a native select
+		{
+			const int last = (int)items.size() - 1;
+			const int index = keyCode == 38 ? std::max(0, selectedIndex - 1) : std::min(last, selectedIndex + 1);
+			if (index != selectedIndex)
+			{
+				setSelectedIndex(index);
+				if (changeHandler != nullptr)
+					changeHandler();
+			}
+		}
+		else
+		{
+			processed = false;
+		}
+
+		if (processed)
+		{
+			event->preventDefault();
+			event->stopPropagation();
 		}
 	}
 
@@ -372,6 +423,8 @@ namespace web
 
 		if (items.empty() == false)
 			element->setStyle("max-height", std::to_string(maxItems * items.front()->element->offsetHeight()) + "px");
+
+		scrollToItem(getSelectedItem(), ComboboxScrollToHint::positionAtCenter);
 	}
 
 	int ComboBoxPopup::getSelectedIndex() const
@@ -454,8 +507,20 @@ namespace web
 		}
 		else if (keyCode == 13) // Enter
 		{
-			combobox->setSelectedIndex(getSelectedIndex());
-			combobox->closePopup();
+			const int index = getSelectedIndex();
+			if (index != -1)
+				combobox->onPopupItemClick(index); // same path as a click, so changeHandler fires
+			else
+				combobox->closePopup();
+		}
+		else if (keyCode == 9) // Tab
+		{
+			const int index = getSelectedIndex();
+			if (index != -1)
+				combobox->onPopupItemClick(index);
+			else
+				combobox->closePopup();
+			processed = false; // focus is back on the combobox, so the browser's default Tab moves on from there
 		}
 		else if (keyCode == 33) // Page up
 		{
@@ -480,12 +545,12 @@ namespace web
 		else if (keyCode == 38) // Arrow up
 		{
 			setSelectedIndex(std::max(0, getSelectedIndex() - 1));
-			scrollToItem(getSelectedItem(), ComboboxScrollToHint::positionAtTop);
+			scrollToItem(getSelectedItem(), ComboboxScrollToHint::ensureVisible);
 		}
 		else if (keyCode == 40) // Arrow down
 		{
 			setSelectedIndex(std::min(count() - 1, getSelectedIndex() + 1));
-			scrollToItem(getSelectedItem(), ComboboxScrollToHint::positionAtBottom);
+			scrollToItem(getSelectedItem(), ComboboxScrollToHint::ensureVisible);
 		}
 		else
 		{

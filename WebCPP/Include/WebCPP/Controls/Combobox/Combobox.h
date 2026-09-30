@@ -60,7 +60,9 @@ namespace web
 		std::shared_ptr<LineEdit> lineEdit() const { return lineedit; }
 
 	private:
+		void openPopup();
 		void onClick(Event* event);
+		void onKeyDown(Event* event);
 		void onFocus(Event* event);
 		void onFocusIn(Event* event);
 		void onFocusOut(Event* event);
@@ -79,6 +81,8 @@ namespace web
 		std::shared_ptr<TextLabel> label;
 		std::shared_ptr<LineEdit> lineedit;
 		std::vector<ComboBoxItem> items;
+
+		friend class ComboBoxPopup;
 	};
 
 	class ComboBoxPopup : public View

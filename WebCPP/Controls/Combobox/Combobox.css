@@ -28,6 +28,7 @@ combobox-view {
 }
 
 comboboxpopup-view {
+    outline: none;
     position: absolute;
     left: -1px;
     top: calc(22px - 2px);
