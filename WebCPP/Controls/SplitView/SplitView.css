@@ -8,7 +8,7 @@ splitview-divider-view {
 	width: 12px;
 	min-width: 12px;
 	flex-shrink: 0;
-	cursor: col-resize;
+	cursor: ew-resize;
 	background: transparent;
 	display: flex;
 	align-items: center;
@@ -21,11 +21,14 @@ splitview-divider-view::after {
 	height: 32px;
 	border-radius: 2px;
 	background-color: #ccc;
-	transition: background-color 0.15s, height 0.15s;
+	transition: background-color 0.15s;
 }
 
 splitview-divider-view:hover::after,
 splitview-divider-view.dragging::after {
 	filter: brightness(0.6);
-	height: 48px;
 }
+
+	splitview-divider-view.dragging {
+		cursor: ew-resize !important;
+	}
