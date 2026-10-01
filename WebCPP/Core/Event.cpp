@@ -22,6 +22,21 @@ namespace web
 		return handle["altKey"].as<bool>();
 	}
 
+	bool Event::getCtrlKey()
+	{
+		return handle["ctrlKey"].as<bool>();
+	}
+
+	bool Event::getMetaKey()
+	{
+		return handle["metaKey"].as<bool>();
+	}
+
+	std::string Event::getKey()
+	{
+		return handle["key"].as<std::string>();
+	}
+
 	void Event::stopPropagation()
 	{
 		handle.call<void>("stopPropagation");

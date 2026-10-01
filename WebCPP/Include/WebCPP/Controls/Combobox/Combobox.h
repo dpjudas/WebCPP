@@ -71,6 +71,8 @@ namespace web
 		void onPopupModalLayerClick(Event* event);
 		void onPopupItemClick(int index);
 		void updateSelectedIndexFromEdit();
+		int findTypeAheadMatch(Event* event, int currentIndex);
+		std::string toLowerCase(const std::string& text) const;
 
 		std::function<void()> changeHandler;
 		bool enabled = true;
@@ -81,6 +83,8 @@ namespace web
 		std::shared_ptr<TextLabel> label;
 		std::shared_ptr<LineEdit> lineedit;
 		std::vector<ComboBoxItem> items;
+		std::string typeAheadText;
+		double typeAheadTime = 0.0;
 
 		friend class ComboBoxPopup;
 	};

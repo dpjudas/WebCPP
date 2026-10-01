@@ -17,6 +17,9 @@ namespace web
 
 		int getKeyCode();
 		bool getAltKey();
+		bool getCtrlKey();
+		bool getMetaKey();
+		std::string getKey();
 
 		void stopPropagation();
 		void stopImmediatePropagation();

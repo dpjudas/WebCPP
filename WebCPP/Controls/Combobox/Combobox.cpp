@@ -303,6 +303,15 @@ namespace web
 		{
 			processed = false; // the remaining keys belong to the text edit
 		}
+		else if (int index = findTypeAheadMatch(event, selectedIndex); index != -2)
+		{
+			if (index != -1 && index != selectedIndex)
+			{
+				setSelectedIndex(index);
+				if (changeHandler)
+					changeHandler();
+			}
+		}
 		else if (keyCode == 13 || keyCode == 32) // Enter, Space
 		{
 			openPopup();
@@ -328,6 +337,48 @@ namespace web
 			event->preventDefault();
 			event->stopPropagation();
 		}
+	}
+
+	// Returns -2 if the key isn't type-ahead input, -1 if nothing matches, otherwise the matching item index
+	int ComboBox::findTypeAheadMatch(Event* event, int currentIndex)
+	{
+		if (event->getAltKey() || event->getCtrlKey() || event->getMetaKey())
+			return -2;
+
+		const double now = JSValue::global("Date").call<double>("now");
+		if (now - typeAheadTime > 1000.0)
+			typeAheadText.clear();
+
+		// Space only counts as input while a search is in progress, otherwise it opens the popup
+		const std::string key = event->getKey();
+		if (JSValue(key)["length"].as<int>() != 1 || (key == " " && typeAheadText.empty()))
+			return -2;
+
+		typeAheadTime = now;
+		typeAheadText += toLowerCase(key);
+
+		// Repeating one letter cycles through the items starting with it, like a native select
+		const bool cycling = std::all_of(typeAheadText.begin(), typeAheadText.end(), [&](char c) { return c == typeAheadText.front(); });
+		const std::string search = cycling ? toLowerCase(key) : typeAheadText;
+		const int count = (int)items.size();
+		const int start = cycling ? currentIndex + 1 : std::max(currentIndex, 0);
+
+		int containsMatch = -1;
+		for (int i = 0; i < count; i++)
+		{
+			const int index = (start + i) % count;
+			const std::string text = toLowerCase(items[index].text);
+			if (text.starts_with(search))
+				return index;
+			if (containsMatch == -1 && text.find(search) != std::string::npos)
+				containsMatch = index;
+		}
+		return containsMatch;
+	}
+
+	std::string ComboBox::toLowerCase(const std::string& text) const
+	{
+		return JSValue(text).call<std::string>("toLocaleLowerCase");
 	}
 
 	void ComboBox::onPopupModalLayerClick(Event* event)
@@ -551,6 +602,14 @@ namespace web
 		{
 			setSelectedIndex(std::min(count() - 1, getSelectedIndex() + 1));
 			scrollToItem(getSelectedItem(), ComboboxScrollToHint::ensureVisible);
+		}
+		else if (int index = combobox->isEditable() ? -2 : combobox->findTypeAheadMatch(event, getSelectedIndex()); index != -2)
+		{
+			if (index != -1)
+			{
+				setSelectedIndex(index);
+				scrollToItem(getSelectedItem(), ComboboxScrollToHint::positionAtCenter);
+			}
 		}
 		else
 		{
