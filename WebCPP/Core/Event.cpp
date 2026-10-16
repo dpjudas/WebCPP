@@ -37,6 +37,11 @@ namespace web
 		return handle["key"].as<std::string>();
 	}
 
+	int Event::getButton()
+	{
+		return handle["button"].as<int>();
+	}
+
 	void Event::stopPropagation()
 	{
 		handle.call<void>("stopPropagation");
