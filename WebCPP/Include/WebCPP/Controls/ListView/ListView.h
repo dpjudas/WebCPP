@@ -83,6 +83,7 @@ namespace web
 		void onItemClick(ListViewItem* item, Event* event);
 		void onItemContextMenu(ListViewItem* item, Event* event);
 		void onBodyContextMenu(Event* event);
+		void onEmptyAreaContextMenu(Event* event);
 		void showContextMenu(ListViewItem* item, double clientX, double clientY);
 		bool containsItem(const ListViewItem* item) const;
 		void onItemAttached(ListViewItem* item);

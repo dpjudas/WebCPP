@@ -45,6 +45,7 @@ namespace web
 		}
 		parent()->element->addEventListener("click", std::bind_front(&Menu::onParentClick, this));
 		parent()->element->addEventListener("contextmenu", std::bind_front(&Menu::onParentContextMenu, this));
+		parent()->element->addEventListener("mousedown", std::bind_front(&Menu::onParentMouseDown, this));
 		closeMenu = std::bind_front(&Menu::closeModal, this);
 	}
 
@@ -59,6 +60,15 @@ namespace web
 		event->stopPropagation();
 		event->preventDefault();
 		closeModal();
+	}
+
+	void Menu::onParentMouseDown(Event* event)
+	{
+		if (event->getButton() == 2 && event->target() == parent()->element->handle)
+		{
+			event->stopPropagation();
+			closeModal();
+		}
 	}
 
 	void Menu::setLeftPosition(double x, double y)

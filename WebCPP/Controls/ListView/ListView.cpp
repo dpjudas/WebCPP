@@ -42,6 +42,7 @@ namespace web
 		body->element->addEventListener("blur", std::bind_front(&ListView::onBodyBlur, this));
 		body->element->addEventListener("keydown", std::bind_front(&ListView::onBodyKeyDown, this));
 		body->element->addEventListener("contextmenu", std::bind_front(&ListView::onBodyContextMenu, this));
+		element->addEventListener("contextmenu", std::bind_front(&ListView::onEmptyAreaContextMenu, this));
 		scrollVert->scroll = std::bind_front(&ListView::onScrollbarScroll, this);
 		scrollHorz->scroll = std::bind_front(&ListView::onScrollbarScroll, this);
 
@@ -350,6 +351,12 @@ namespace web
 		selectItem(nullptr);
 
 		showContextMenu(nullptr, event->clientX(), event->clientY());
+	}
+
+	void ListView::onEmptyAreaContextMenu(Event* event)
+	{
+		if (event->target() == element->handle)
+			onBodyContextMenu(event);
 	}
 
 	void ListView::showContextMenu(ListViewItem* item, double clientX, double clientY)

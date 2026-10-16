@@ -20,6 +20,7 @@ namespace web
 		bool getCtrlKey();
 		bool getMetaKey();
 		std::string getKey();
+		int getButton();
 
 		void stopPropagation();
 		void stopImmediatePropagation();
