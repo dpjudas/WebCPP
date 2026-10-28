@@ -42,6 +42,7 @@ namespace web
 
 		void clearItems();
 		int addItem(const std::string& icon, const std::string& text, const std::string& id = {});
+		void addSeparator();
 		std::vector<ComboBoxItem> getItems() const { return items; }
 		void sort();
 		void setValue(const std::string& text);
@@ -83,6 +84,7 @@ namespace web
 		std::shared_ptr<TextLabel> label;
 		std::shared_ptr<LineEdit> lineedit;
 		std::vector<ComboBoxItem> items;
+		std::vector<int> separators;
 		std::string typeAheadText;
 		double typeAheadTime = 0.0;
 
