@@ -78,6 +78,7 @@ namespace web
 	void ComboBox::clearItems()
 	{
 		items.clear();
+		separators.clear();
 		setSelectedIndex(-1);
 	}
 
@@ -87,6 +88,13 @@ namespace web
 		if (items.size() == 1)
 			setSelectedIndex(0);
 		return (items.size() - 1);
+	}
+
+	void ComboBox::addSeparator()
+	{
+		const int index = (int)items.size();
+		if (separators.empty() == true || separators.back() != index)
+			separators.push_back(index);
 	}
 
 	void ComboBox::sort()
@@ -103,7 +111,16 @@ namespace web
 		for (const auto& item : items)
 			sortitems.push_back(item);
 
-		std::stable_sort(sortitems.begin(), sortitems.end(), [](const SortItem& a, const SortItem& b) -> bool { return a.sortCompareString.call<int>("localeCompare", b.sortCompareString) < 0; });
+		// Separators stay where they are, and the items between them are sorted as a group
+		std::vector<int> bounds = separators;
+		bounds.push_back((int)sortitems.size());
+		int begin = 0;
+		for (int end : bounds)
+		{
+			if (end > begin)
+				std::stable_sort(sortitems.begin() + begin, sortitems.begin() + end, [](const SortItem& a, const SortItem& b) -> bool { return a.sortCompareString.call<int>("localeCompare", b.sortCompareString) < 0; });
+			begin = std::max(begin, end);
+		}
 
 		items.clear();
 		for (const SortItem& item : sortitems)
@@ -279,6 +296,10 @@ namespace web
 		popup->setMaxItems(getMaxItems());
 		for (int idx = 0, size = items.size(); idx < size; idx++)
 		{
+			// No separator above the first item; one after the last item has nothing to separate either
+			if (idx > 0 && std::find(separators.begin(), separators.end(), idx) != separators.end())
+				popup->addSeparator();
+
 			const auto& item = items.at(idx);
 			popup->addItem(item.icon, item.text, (getSelectedIndex() == idx), std::bind_front(&ComboBox::onPopupItemClick, this, idx));
 		}
