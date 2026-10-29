@@ -35,6 +35,7 @@ namespace web
 		void updateUi();
 		void onClick(Event* e);
 		void onFocusIn(Event* e);
+		void onFocusOut(Event* e);
 		void onPopupLayerClick(Event* e);
 		void onColorPickerChanged();
 
