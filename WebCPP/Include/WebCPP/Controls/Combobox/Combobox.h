@@ -25,6 +25,7 @@ namespace web
 		std::string icon;
 		std::string text;
 		std::string id;
+		std::string shortText;
 	};
 
 	class ComboBox : public View
@@ -41,7 +42,7 @@ namespace web
 		void setMaxItems(const int value);
 
 		void clearItems();
-		int addItem(const std::string& icon, const std::string& text, const std::string& id = {});
+		int addItem(const std::string& icon, const std::string& text, const std::string& id = {}, const std::string& shortText = {});
 		void addSeparator();
 		std::vector<ComboBoxItem> getItems() const { return items; }
 		void sort();
@@ -69,6 +70,8 @@ namespace web
 		void onFocusOut(Event* event);
 		void onLineEditInput(const std::string& text);
 		void onLineEditChange(const std::string& text);
+		void onResize(std::vector<ResizeObserverEntry> entries);
+		void updateLabelText();
 		void onPopupModalLayerClick(Event* event);
 		void onPopupItemClick(int index);
 		void updateSelectedIndexFromEdit();
@@ -85,8 +88,11 @@ namespace web
 		std::shared_ptr<LineEdit> lineedit;
 		std::vector<ComboBoxItem> items;
 		std::vector<int> separators;
+		ResizeObserver observer;
 		std::string typeAheadText;
 		double typeAheadTime = 0.0;
+
+		static constexpr double minVisibleTextShare = 0.75;
 
 		friend class ComboBoxPopup;
 	};

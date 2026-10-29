@@ -26,6 +26,31 @@ namespace web
 		element->addEventListener("focus", std::bind_front(&ComboBox::onFocus, this));
 		element->addEventListener("focusin", std::bind_front(&ComboBox::onFocusIn, this));
 		element->addEventListener("focusout", std::bind_front(&ComboBox::onFocusOut, this));
+
+		observer.onResize = std::bind_front(&ComboBox::onResize, this);
+		observer.observe(element.get());
+	}
+
+	void ComboBox::onResize(std::vector<ResizeObserverEntry> entries)
+	{
+		updateLabelText();
+	}
+
+	void ComboBox::updateLabelText()
+	{
+		if (selectedIndex < 0 || selectedIndex >= (int)items.size())
+			return;
+
+		// The full text when it fits, or when at least minVisibleTextShare of it fits and an ellipsis cuts the rest; otherwise the short text
+		const ComboBoxItem& item = items[selectedIndex];
+		label->setText(item.text);
+		if (item.shortText.empty() == false && isEditable() == false)
+		{
+			const double visible = label->element->handle["clientWidth"].as<double>();
+			const double needed = label->element->handle["scrollWidth"].as<double>();
+			if (visible > 0.0 && needed > 0.0 && visible < needed * minVisibleTextShare)
+				label->setText(item.shortText);
+		}
 	}
 
 	void ComboBox::setEditable()
@@ -82,9 +107,9 @@ namespace web
 		setSelectedIndex(-1);
 	}
 
-	int ComboBox::addItem(const std::string& icon, const std::string& text, const std::string& id)
+	int ComboBox::addItem(const std::string& icon, const std::string& text, const std::string& id, const std::string& shortText)
 	{
-		items.push_back({ icon, text, id });
+		items.push_back({ icon, text, id, shortText });
 		if (items.size() == 1)
 			setSelectedIndex(0);
 		return (items.size() - 1);
@@ -124,7 +149,7 @@ namespace web
 
 		items.clear();
 		for (const SortItem& item : sortitems)
-			addItem(item.item.icon, item.item.text, item.item.id);
+			addItem(item.item.icon, item.item.text, item.item.id, item.item.shortText);
 
 		setSelectedIndex(0);
 	}
@@ -209,10 +234,10 @@ namespace web
 				imagebox->hide();
 				label->removeClass("combobox-label-hasicon");
 			}
-			label->setText(item.text);
 			if (isEditable())
-				lineedit->setText(label->getText());
+				lineedit->setText(item.text);
 			selectedIndex = index;
+			updateLabelText();
 		}
 	}
 
