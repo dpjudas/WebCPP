@@ -11,7 +11,8 @@ namespace web
 		label = std::make_shared<TextLabel>();
 
 		auto buttonLayout = button->createHBoxLayout();
-		buttonLayout->addView(label, true, false);
+		buttonLayout->setJustifyContent(FlexJustifyContent::center);
+		buttonLayout->addView(label);
 
 		button->element->addEventListener("click", std::bind_front(&Button::onClicked, this));
 		button->element->addEventListener("keydown", std::bind_front(&Button::onKeyDown, this));
