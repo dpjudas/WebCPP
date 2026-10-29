@@ -15,6 +15,7 @@ namespace web
 		element->setTabIndex(0);
 		element->addEventListener("click", std::bind_front(&ColorPicker::onClick, this));
 		element->addEventListener("focusin", std::bind_front(&ColorPicker::onFocusIn, this));
+		element->addEventListener("focusout", std::bind_front(&ColorPicker::onFocusOut, this));
 
 		label->element->setStyle("background-color", "transparent");
 		label->setText("No Color");
@@ -76,6 +77,12 @@ namespace web
 	void ColorPicker::onFocusIn(Event* e)
 	{
 		addClass("focus");
+	}
+
+	void ColorPicker::onFocusOut(Event* e)
+	{
+		if (!popup)
+			removeClass("focus");
 	}
 
 	void ColorPicker::onColorPickerChanged()
