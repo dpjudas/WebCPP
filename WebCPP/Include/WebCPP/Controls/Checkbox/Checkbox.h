@@ -13,6 +13,8 @@ namespace web
 
 		void setChecked(bool value);
 		bool isChecked() const;
+		void setIndeterminate(bool value);
+		bool isIndeterminate() const;
 		void setEnabled(bool value);
 		bool getEnabled() const;
 
