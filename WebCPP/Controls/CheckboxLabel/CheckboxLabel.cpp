@@ -39,6 +39,16 @@ namespace web
 		return checkbox->isChecked();
 	}
 
+	void CheckboxLabel::setIndeterminate(const bool value)
+	{
+		checkbox->setIndeterminate(value);
+	}
+
+	bool CheckboxLabel::isIndeterminate() const
+	{
+		return checkbox->isIndeterminate();
+	}
+
 	void CheckboxLabel::setEnabled(const bool value)
 	{
 		checkbox->setEnabled(value);
@@ -79,6 +89,9 @@ namespace web
 	void CheckboxLabel::onClicked()
 	{
 		if (getEnabled())
+		{
+			checkbox->setIndeterminate(false);
 			setChecked(!isChecked());
+		}
 	}
 }

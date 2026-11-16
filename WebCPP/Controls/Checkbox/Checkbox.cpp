@@ -24,6 +24,16 @@ namespace web
 		return element->handle["checked"].as<bool>();
 	}
 
+	void Checkbox::setIndeterminate(bool value)
+	{
+		element->handle.set("indeterminate", value);
+	}
+
+	bool Checkbox::isIndeterminate() const
+	{
+		return element->handle["indeterminate"].as<bool>();
+	}
+
 	void Checkbox::setEnabled(bool value)
 	{
 		element->handle.set("disabled", value == false);

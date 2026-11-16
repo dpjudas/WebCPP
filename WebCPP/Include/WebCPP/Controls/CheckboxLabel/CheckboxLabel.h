@@ -22,6 +22,9 @@ namespace web
 		void setChecked(const bool value);
 		bool isChecked();
 
+		void setIndeterminate(const bool value);
+		bool isIndeterminate() const;
+
 		void setSrc(const std::string& src);
 		void setText(const std::string& text);
 
