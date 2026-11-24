@@ -17,6 +17,7 @@ namespace web
 
 		auto isVisible = [&](size_t i) { return header->getColumnWidth(i) > 0.0 || header->isColumnExpanding(i); };
 
+		bool foundExpanding = false;
 		std::vector<GridTrackSize> sizes;
 		for (size_t i = 0; i < count; i++)
 		{
@@ -40,9 +41,19 @@ namespace web
 			}
 
 			if (header->isColumnExpanding(i))
+			{
+				foundExpanding = true;
 				sizes.push_back(GridLayout::minmaxSize(width + gap, GridLayout::autoSize));
+			}
+			else if (i + 1 == count && !foundExpanding)
+			{
+				// If we don't have any expanding columns we force the last column to expand as we always want to have items cover the entire width of the body area
+				sizes.push_back(GridLayout::minmaxSize(width + gap, GridLayout::autoSize));
+			}
 			else
+			{
 				sizes.push_back(width + gap);
+			}
 		}
 
 		getLayout<GridLayout>()->setColumns(sizes);
