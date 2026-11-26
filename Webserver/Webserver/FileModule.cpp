@@ -19,6 +19,11 @@ namespace web
 			return File::readAllBytes(FilePath::combine(path, filename));
 		}
 
+		std::shared_ptr<DataBuffer> readAllBytesAsGzip(const std::string& filename) override
+		{
+			return {};
+		}
+
 		uint32_t getCrc32(const std::string& filename) override
 		{
 			auto data = readAllBytes(filename);
@@ -108,6 +113,12 @@ namespace web
 			return reader->readAllBytes(filename);
 		}
 
+		std::shared_ptr<DataBuffer> readAllBytesAsGzip(const std::string& filename) override
+		{
+			auto reader = ZipReader::open(File::openExisting(zipFilename));
+			return reader->readAllBytesAsGzip(filename);
+		}
+
 		uint32_t getCrc32(const std::string& filename) override
 		{
 			auto reader = ZipReader::open(File::openExisting(zipFilename));
@@ -164,12 +175,10 @@ namespace web
 
 			try
 			{
-				std::shared_ptr<DataBuffer> body;
 				std::string etag;
 				try
 				{
 					etag = "\"" + std::to_string(reader->getCrc32(urlPath)) + "\"";
-					body = reader->readAllBytes(urlPath);
 				}
 				catch (...)
 				{
@@ -177,8 +186,14 @@ namespace web
 						throw;
 					urlPath = singlePageApplicationFilename;
 					etag = "\"" + std::to_string(reader->getCrc32(urlPath)) + "\"";
-					body = reader->readAllBytes(urlPath);
 				}
+
+				std::shared_ptr<DataBuffer> body;
+				if (context->request.getHeader("Accept-Encoding").find("gzip") != std::string::npos)
+					body = reader->readAllBytesAsGzip(urlPath);
+				bool gzip = body != nullptr;
+				if (gzip)
+					etag.insert(etag.size() - 1, "-gzip"); // a different representation needs its own ETag
 
 				std::string ifNoneMatch = context->request.getHeader("If-None-Match");
 				if (ifNoneMatch == etag)
@@ -189,6 +204,9 @@ namespace web
 					return;
 				}
 
+				if (!body)
+					body = reader->readAllBytes(urlPath);
+
 				std::string contentType = "application/octet-stream";
 				auto it = extensionMimeTypes.find(FilePath::extension(urlPath));
 				if (it != extensionMimeTypes.end())
@@ -196,6 +214,9 @@ namespace web
 
 				context->response.status.code = 200;
 				context->response.status.text = "OK";
+				if (gzip)
+					context->response.headers["Content-Encoding"] = "gzip";
+				context->response.headers["Vary"] = "Accept-Encoding";
 				context->response.headers["ETag"] = etag;
 				context->response.headers["Content-Type"] = contentType;
 				context->response.content = std::move(body);

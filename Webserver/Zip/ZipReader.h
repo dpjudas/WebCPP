@@ -42,5 +42,7 @@ namespace web
 		virtual std::string readAllText(const std::string& filename) = 0;
 		virtual uint32_t getCrc32(uint32_t file_index) = 0;
 		virtual uint32_t getCrc32(const std::string& filename) = 0;
+		// Entry as a gzip stream without recompressing; null if the entry isn't deflated
+		virtual std::shared_ptr<DataBuffer> readAllBytesAsGzip(const std::string& filename) = 0;
 	};
 }
