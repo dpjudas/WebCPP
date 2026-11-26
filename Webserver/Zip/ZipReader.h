@@ -29,6 +29,13 @@ namespace web
 		std::string comment;
 	};
 
+	enum class ZipCompressionMethod
+	{
+		unknown,
+		uncompressed,
+		deflate,
+	};
+
 	class ZipReader
 	{
 	public:
@@ -42,5 +49,9 @@ namespace web
 		virtual std::string readAllText(const std::string& filename) = 0;
 		virtual uint32_t getCrc32(uint32_t file_index) = 0;
 		virtual uint32_t getCrc32(const std::string& filename) = 0;
+		virtual ZipCompressionMethod getCompressionMethod(uint32_t file_index) = 0;
+		virtual ZipCompressionMethod getCompressionMethod(const std::string& filename) = 0;
+		virtual std::shared_ptr<DataBuffer> readAllCompressedBytes(uint32_t file_index) = 0;
+		virtual std::shared_ptr<DataBuffer> readAllCompressedBytes(const std::string& filename) = 0;
 	};
 }

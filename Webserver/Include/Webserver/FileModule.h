@@ -10,12 +10,25 @@ namespace web
 {
 	class DataBuffer;
 
+	enum class FileCompressionMethod
+	{
+		unknown,
+		uncompressed,
+		gzip,
+		compress,
+		deflate,
+		br,
+		zstd,
+	};
+
 	class FileModuleReader
 	{
 	public:
 		virtual ~FileModuleReader() = default;
 		virtual uint32_t getCrc32(const std::string& filename) = 0;
+		virtual FileCompressionMethod getCompressionMethod(const std::string& filename) = 0;
 		virtual std::shared_ptr<DataBuffer> readAllBytes(const std::string& filename) = 0;
+		virtual std::shared_ptr<DataBuffer> readAllCompressedBytes(const std::string& filename) = 0;
 	};
 
 	class FileModule : public WebModule

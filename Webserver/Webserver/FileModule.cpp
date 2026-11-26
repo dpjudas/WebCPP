@@ -4,6 +4,7 @@
 #include "Zip/ZipReader.h"
 #include "IOData/File.h"
 #include "IOData/FilePath.h"
+#include <stdexcept>
 
 namespace web
 {
@@ -17,6 +18,16 @@ namespace web
 		std::shared_ptr<DataBuffer> readAllBytes(const std::string& filename) override
 		{
 			return File::readAllBytes(FilePath::combine(path, filename));
+		}
+
+		FileCompressionMethod getCompressionMethod(const std::string& filename) override
+		{
+			return FileCompressionMethod::uncompressed;
+		}
+
+		std::shared_ptr<DataBuffer> readAllCompressedBytes(const std::string& filename) override
+		{
+			return readAllBytes(filename);
 		}
 
 		uint32_t getCrc32(const std::string& filename) override
@@ -114,6 +125,27 @@ namespace web
 			return reader->getCrc32(filename);
 		}
 
+		FileCompressionMethod getCompressionMethod(const std::string& filename) override
+		{
+			auto reader = ZipReader::open(File::openExisting(zipFilename));
+			switch (reader->getCompressionMethod(filename))
+			{
+			default:
+			case ZipCompressionMethod::unknown:
+				return FileCompressionMethod::unknown;
+			case ZipCompressionMethod::deflate:
+				return FileCompressionMethod::deflate;
+			case ZipCompressionMethod::uncompressed:
+				return FileCompressionMethod::uncompressed;
+			}
+		}
+
+		std::shared_ptr<DataBuffer> readAllCompressedBytes(const std::string& filename) override
+		{
+			auto reader = ZipReader::open(File::openExisting(zipFilename));
+			return reader->readAllCompressedBytes(filename);
+		}
+
 		std::string zipFilename;
 	};
 
@@ -166,10 +198,28 @@ namespace web
 			{
 				std::shared_ptr<DataBuffer> body;
 				std::string etag;
+				std::string contentEncoding;
+				std::string acceptEncoding = context->request.getHeader("Accept-Encoding");
 				try
 				{
 					etag = "\"" + std::to_string(reader->getCrc32(urlPath)) + "\"";
-					body = reader->readAllBytes(urlPath);
+					FileCompressionMethod method = reader->getCompressionMethod(urlPath);
+					if (method == FileCompressionMethod::deflate && acceptEncoding.find("deflate") != std::string::npos)
+					{
+						body = reader->readAllCompressedBytes(urlPath);
+						contentEncoding = "deflate";
+						etag += "-deflate";
+					}
+					else if (method == FileCompressionMethod::gzip && acceptEncoding.find("gzip") != std::string::npos)
+					{
+						body = reader->readAllCompressedBytes(urlPath);
+						contentEncoding = "gzip";
+						etag += "-gzip";
+					}
+					else
+					{
+						body = reader->readAllBytes(urlPath);
+					}
 				}
 				catch (...)
 				{
@@ -196,8 +246,11 @@ namespace web
 
 				context->response.status.code = 200;
 				context->response.status.text = "OK";
+				context->response.headers["Vary"] = "Accept-Encoding";
 				context->response.headers["ETag"] = etag;
 				context->response.headers["Content-Type"] = contentType;
+				if (!contentEncoding.empty())
+					context->response.headers["Content-Encoding"] = contentEncoding;
 				context->response.content = std::move(body);
 				context->handled = true;
 			}

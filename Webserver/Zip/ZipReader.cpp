@@ -1,6 +1,7 @@
 
 #include "Precomp.h"
 #include "ZipReader.h"
+#define MINIZ_NO_DEFLATE_APIS
 #include "miniz.h"
 #include <algorithm>
 
@@ -109,10 +110,45 @@ namespace web
 		std::shared_ptr<DataBuffer> readAllBytes(uint32_t file_index) override
 		{
 			if (files[file_index].uncompSize == 0)
-				return {};
+				return DataBuffer::create(0);
 
 			auto data = DataBuffer::create(files[file_index].uncompSize);
 			mz_bool result = mz_zip_reader_extract_to_mem(&zip, file_index, data->data(), data->size(), 0);
+			if (!result)
+				throw std::runtime_error("Could not read all zip entry data");
+			return data;
+		}
+
+		ZipCompressionMethod getCompressionMethod(const std::string& filename) override
+		{
+			return getCompressionMethod(getFileIndex(filename));
+		}
+
+		ZipCompressionMethod getCompressionMethod(uint32_t file_index) override
+		{
+			switch (files[file_index].method)
+			{
+			case 0:
+				return ZipCompressionMethod::uncompressed;
+			case MZ_DEFLATED:
+				return ZipCompressionMethod::deflate;
+			default:
+				return ZipCompressionMethod::unknown;
+			}
+		}
+
+		std::shared_ptr<DataBuffer> readAllCompressedBytes(const std::string& filename) override
+		{
+			return readAllCompressedBytes(getFileIndex(filename));
+		}
+
+		std::shared_ptr<DataBuffer> readAllCompressedBytes(uint32_t file_index)
+		{
+			if (files[file_index].compSize == 0)
+				return DataBuffer::create(0);
+
+			auto data = DataBuffer::create(files[file_index].compSize);
+			mz_bool result = mz_zip_reader_extract_to_mem(&zip, file_index, data->data(), data->size(), MZ_ZIP_FLAG_COMPRESSED_DATA);
 			if (!result)
 				throw std::runtime_error("Could not read all zip entry data");
 			return data;
