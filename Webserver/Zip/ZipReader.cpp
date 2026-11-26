@@ -149,25 +149,15 @@ namespace web
 			return getCrc32(getFileIndex(filename));
 		}
 
-		std::shared_ptr<DataBuffer> readAllBytesAsGzip(const std::string& filename) override
+		std::shared_ptr<DataBuffer> readAllBytesDeflated(const std::string& filename) override
 		{
 			const ZipFileEntry& entry = files[getFileIndex(filename)];
 			if (entry.method != MZ_DEFLATED || entry.isEncrypted)
 				return {};
 
-			const uint8_t header[10] = { 0x1f, 0x8b, 8, 0, 0, 0, 0, 0, 0, 0xff }; // magic, deflate, no flags/mtime, unknown OS
-			auto data = DataBuffer::create(sizeof(header) + entry.compSize + 8);
-			uint8_t* p = data->data<uint8_t>();
-			memcpy(p, header, sizeof(header));
-			if (!mz_zip_reader_extract_to_mem(&zip, entry.fileIndex, p + sizeof(header), entry.compSize, MZ_ZIP_FLAG_COMPRESSED_DATA))
+			auto data = DataBuffer::create(entry.compSize);
+			if (!mz_zip_reader_extract_to_mem(&zip, entry.fileIndex, data->data(), data->size(), MZ_ZIP_FLAG_COMPRESSED_DATA))
 				throw std::runtime_error("Could not read zip entry data");
-
-			uint8_t* trailer = p + sizeof(header) + entry.compSize;
-			for (int i = 0; i < 4; i++)
-			{
-				trailer[i] = (uint8_t)(entry.fileCrc32 >> (i * 8));
-				trailer[4 + i] = (uint8_t)(entry.uncompSize >> (i * 8));
-			}
 			return data;
 		}
 

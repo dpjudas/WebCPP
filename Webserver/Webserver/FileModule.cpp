@@ -19,7 +19,7 @@ namespace web
 			return File::readAllBytes(FilePath::combine(path, filename));
 		}
 
-		std::shared_ptr<DataBuffer> readAllBytesAsGzip(const std::string& filename) override
+		std::shared_ptr<DataBuffer> readAllBytesDeflated(const std::string& filename) override
 		{
 			return {};
 		}
@@ -113,10 +113,10 @@ namespace web
 			return reader->readAllBytes(filename);
 		}
 
-		std::shared_ptr<DataBuffer> readAllBytesAsGzip(const std::string& filename) override
+		std::shared_ptr<DataBuffer> readAllBytesDeflated(const std::string& filename) override
 		{
 			auto reader = ZipReader::open(File::openExisting(zipFilename));
-			return reader->readAllBytesAsGzip(filename);
+			return reader->readAllBytesDeflated(filename);
 		}
 
 		uint32_t getCrc32(const std::string& filename) override
@@ -189,11 +189,11 @@ namespace web
 				}
 
 				std::shared_ptr<DataBuffer> body;
-				if (context->request.getHeader("Accept-Encoding").find("gzip") != std::string::npos)
-					body = reader->readAllBytesAsGzip(urlPath);
-				bool gzip = body != nullptr;
-				if (gzip)
-					etag.insert(etag.size() - 1, "-gzip"); // a different representation needs its own ETag
+				if (context->request.getHeader("Accept-Encoding").find("deflate") != std::string::npos)
+					body = reader->readAllBytesDeflated(urlPath);
+				bool deflate = body != nullptr;
+				if (deflate)
+					etag.insert(etag.size() - 1, "-deflate"); // a different representation needs its own ETag
 
 				std::string ifNoneMatch = context->request.getHeader("If-None-Match");
 				if (ifNoneMatch == etag)
@@ -214,8 +214,8 @@ namespace web
 
 				context->response.status.code = 200;
 				context->response.status.text = "OK";
-				if (gzip)
-					context->response.headers["Content-Encoding"] = "gzip";
+				if (deflate)
+					context->response.headers["Content-Encoding"] = "deflate";
 				context->response.headers["Vary"] = "Accept-Encoding";
 				context->response.headers["ETag"] = etag;
 				context->response.headers["Content-Type"] = contentType;

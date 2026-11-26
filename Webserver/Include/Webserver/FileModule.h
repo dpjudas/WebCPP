@@ -16,7 +16,7 @@ namespace web
 		virtual ~FileModuleReader() = default;
 		virtual uint32_t getCrc32(const std::string& filename) = 0;
 		virtual std::shared_ptr<DataBuffer> readAllBytes(const std::string& filename) = 0;
-		virtual std::shared_ptr<DataBuffer> readAllBytesAsGzip(const std::string& filename) = 0;
+		virtual std::shared_ptr<DataBuffer> readAllBytesDeflated(const std::string& filename) = 0;
 	};
 
 	class FileModule : public WebModule
