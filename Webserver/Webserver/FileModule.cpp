@@ -5,6 +5,7 @@
 #include "IOData/File.h"
 #include "IOData/FilePath.h"
 #include <stdexcept>
+#include <format>
 
 namespace web
 {
@@ -202,7 +203,6 @@ namespace web
 				std::string acceptEncoding = context->request.getHeader("Accept-Encoding");
 				try
 				{
-					etag = "\"" + std::to_string(reader->getCrc32(urlPath)) + "\"";
 					FileCompressionMethod method = reader->getCompressionMethod(urlPath);
 					if (method == FileCompressionMethod::deflate && acceptEncoding.find("deflate") != std::string::npos)
 					{
@@ -220,13 +220,18 @@ namespace web
 					{
 						body = reader->readAllBytes(urlPath);
 					}
+
+					if (contentEncoding.empty())
+						etag = std::format("\"{}\"", reader->getCrc32(urlPath));
+					else
+						etag = std::format("\"{}-{}\"", reader->getCrc32(urlPath), contentEncoding);
 				}
 				catch (...)
 				{
 					if (singlePageApplicationFilename.empty() || urlPath == "favicon.ico")
 						throw;
 					urlPath = singlePageApplicationFilename;
-					etag = "\"" + std::to_string(reader->getCrc32(urlPath)) + "\"";
+					etag = std::format("\"{}\"", reader->getCrc32(urlPath));
 					body = reader->readAllBytes(urlPath);
 				}
 
